@@ -7,8 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"/>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui.css"/>
     <link href="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/themes/css/cartodb.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/style-example.css">
 
@@ -21,8 +21,8 @@
     <script type="text/javascript" src="js/lib/jquery.min.js"></script>
     <script type="text/javascript" src="js/lib/cartodb.js"></script>
     <script type="text/javascript" src="js/lib/leaflet-google.js"></script>
-    <script type="text/javascript" src="js/cartoLib.js"></script>
-    <script type="text/javascript" src="js/cartoLibExample.js"></script>
+    <script type="text/javascript" src="js/lib/cartoLib.js"></script>
+    <script type="text/javascript" src="js/chicago_gardens.js"></script>
 
   </head>
   <body>
@@ -52,9 +52,7 @@
 
       <div class="row">
         <div class="col-md-4">
-          <h4>Find public libraries near you in Chicago.</h4>
-          <p>An interactive map built using CartoLib with data from the City of Chicago <a href="https://data.cityofchicago.org/" target="_blank">data portal</a>.</p>
-
+          <h4>Find public gardens near you in Chicago.</h4>
           <div class="form-group">
             <input class='form-control' id='search-address' placeholder='Enter an address or an intersection' type='text'>
           </div>

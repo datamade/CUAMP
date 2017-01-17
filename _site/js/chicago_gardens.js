@@ -41,11 +41,25 @@ $(function() {
 
 // Build this custom function yourself. It should format data from your Carto map into HTML.
 function makeInfoText(data) {
-  var name = "<h4>" + data.name + "</h4>"
-  var address = "<p><i class='fa fa-map-marker' aria-hidden='true'></i> " + data.full_address + "</p>"
-  var hours = "<p><i class='fa fa-calendar' aria-hidden='true'></i> " + data.hours_of_operation + "</p>"
-  var phone = "<p><i class='fa fa-phone' aria-hidden='true'></i> " + data.phone + "</p>"
-  var html = name + address + hours + phone
+  ownership        = ''
+  food_producing   = ''
+  community_garden = ''
+  site_name        = "<h4>" + data.growing_site_name + "</h4>"
+  address          = "<p><i class='fa fa-map-marker' aria-hidden='true'></i> " + data.garden_address + "</p>"
+
+  if (data.ownership) {
+      ownership = "<p><i class='fa fa-home' aria-hidden='true'></i> Ownership: " + data.ownership + "</p>"
+  }
+
+  if (data.food_producing == true) {
+      food_producing = "<p><i class='fa fa-cutlery' aria-hidden='true'></i> Food producing</p>"
+  }
+
+  if (data.community_garden == true) {
+      food_producing = "<p><i class='fa fa-users' aria-hidden='true'></i> Community garden</p>"
+  }
+
+  html = site_name + address + ownership + food_producing
 
   return html
 };
