@@ -23,28 +23,35 @@ div#mapCanvas {
   width: 100%;
 }
 
-/* Other Styling */
+/* General Styling */
 
-.navbar-brand {
-    float:left;
-    height:70px;
-    padding:15px;
-    font-size:28px;
+.navbar {
     font-family: 'Istok Web', sans-serif;
-    color: #f7fff4};
 }
 
-.navbar-nav > li > a {
+.navbar-inverse {
+  background-color: #3b961c;
+  border-color: #3b961c;
+}
+
+.center{
     float:left;
-    height:70px;
-    padding:15px;
-    font-size:18px;
-    font-family: 'Istok Web', sans-serif;
-    color: #f7fff4};
+    width: 80px;
+    height: 100%;
+    margin: 10px;
+}
+
+.navbar-inverse .navbar-brand {
+  color: #f7fff4;
+  margin: 27px;
+  font-size: 28px;
+  float: left;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+  color: #f7fff4;
+  margin-top: 27px;
+  font-size: 17px;
 }
 
 
-element {
-    --main-font = 'Istok Web', sans-serif;
-    font-family: var(--main-font);
-}
