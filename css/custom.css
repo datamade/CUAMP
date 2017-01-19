@@ -28,6 +28,8 @@ div#mapCanvas {
 .navbar {
   font-family: 'Istok Web', sans-serif;
   color: #f7fff4;
+  background-color: #3b961c;
+  border-color: #3b961c;
 }
 
 .navbar-inverse {
@@ -40,6 +42,13 @@ div#mapCanvas {
     width: 80px;
     height: 100%;
     margin: 10px;
+}
+
+.center2{
+    float:left;
+    width: 90px;
+    height: 100%;
+    margin: 8px;
 }
 
 .navbar-inverse .navbar-brand {
@@ -55,12 +64,19 @@ div#mapCanvas {
   font-size: 17px;
 }
 
+.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:focus, .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:visited {
+  color: #f7fff4;
+  background-color: #73AD63;
+  border: 0px;
+}
+
+
 .container {
-  font-family: 'Istok Web', sans-serif;
+  font-family: 'Noto Sans', sans-serif;
   color: black;
   font-size: 15px;
   background-color: #f2f2f2;
-
+  padding:25px;
 }
 
 a { color: inherit !important; }
@@ -68,12 +84,13 @@ a { color: inherit !important; }
 .panel-footer {
   background-color: #3b961c;
   border-color: #3b961c;
+  text-align: center;
   margin-top: 20px;
-  padding: 1px;
+  padding: 10px;
   font-family: 'Istok Web', sans-serif;
   font-size: 12px;
   color: #f7fff4;
-  height: 200px;
+  height: 160px;
 
 }
 
