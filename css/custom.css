@@ -26,7 +26,8 @@ div#mapCanvas {
 /* General Styling */
 
 .navbar {
-    font-family: 'Istok Web', sans-serif;
+  font-family: 'Istok Web', sans-serif;
+  color: #f7fff4;
 }
 
 .navbar-inverse {
@@ -52,6 +53,28 @@ div#mapCanvas {
   color: #f7fff4;
   margin-top: 27px;
   font-size: 17px;
+}
+
+.container {
+  font-family: 'Istok Web', sans-serif;
+  color: black;
+  font-size: 15px;
+  background-color: #f2f2f2;
+
+}
+
+a { color: inherit !important; }
+
+.panel-footer {
+  background-color: #3b961c;
+  border-color: #3b961c;
+  margin-top: 20px;
+  padding: 1px;
+  font-family: 'Istok Web', sans-serif;
+  font-size: 12px;
+  color: #f7fff4;
+  height: 200px;
+
 }
 
 
