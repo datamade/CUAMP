@@ -27,7 +27,7 @@ CartoLib = (function() {
       // Initiate leaflet map
       var div = this.mapDivName;
       // var geocoder = new google.maps.Geocoder();
-      var layer = new L.Google('ROADMAP');
+      var layer = new L.Google('SATELLITE');
 
       this.map = new L.Map('mapCanvas', {
         center: this.mapCentroid,
@@ -147,8 +147,8 @@ CartoLib = (function() {
 
   CartoLib.prototype.addCircle = function(radius) {
     this.radiusCircle = new L.circle(this.currentPinpoint, radius, {
-        fillColor:'#1d5492',
-        fillOpacity:'0.2',
+        fillColor:'#478DFF',
+        fillOpacity:'0.25',
         stroke: false,
         clickable: false
     });

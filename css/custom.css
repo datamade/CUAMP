@@ -79,7 +79,13 @@ div#mapCanvas {
   padding:25px;
 }
 
-a { color: inherit !important; }
+a { 
+  color: inherit; 
+}
+
+body {
+  background-color: #f2f2f2;
+}
 
 .panel-footer {
   background-color: #3b961c;
