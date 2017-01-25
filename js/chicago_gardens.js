@@ -10,12 +10,15 @@ $(function() {
   exMap.initiateMap()
   exMap.addInfoBox('bottomright', 'infoBox');
   var layer1 = exMap.defineSublayer("select * from all_garden_answers", '#carto-result-style');
+
   var layer2 = {
-      sql: "select * from chicago_wards_2015",
+      sql: "select * from boundaries_for_wards_2015",
       cartocss: $('#carto-result-style2').html().trim(),
     }
-  exMap.createCartoLayer(layer2).addTo(exMap.map)
+
+  exMap.createCartoLayer(layer1, layer2).addTo(exMap.map)
       .done(function(layer) {
+        console.log(layer)
         var mapName = "#" + exMap.mapDivName + " div"
 
         layerZero = layer.getSubLayer(0);
@@ -33,31 +36,7 @@ $(function() {
         layerZero.on('featureClick', function(data){
           // You can add something here, too, e.g., a modal window.
         });
-      })
-  // exMap.createCartoLayer(layer2).addTo(exMap.map)
-  //   console.log(layer2)
-      // .done(function(layer) {
-      //   var mapName = "#" + exMap.mapDivName + " div"
-
-      //   layerZero = layer.getSubLayer(0);
-      //   layerZero.setInteraction(true);
-      //   layerZero.on('featureOver', function(e, latlng, pos, data, subLayerIndex) {
-      //     $(mapName).css('cursor','pointer');
-      //     // Add custom text to the info window.
-      //     var text = makeInfoText(data);
-      //     CartoLib.prototype.updateInfoBox(text, "infoBox");
-      //   });
-      //   layerZero.on('featureOut', function() {
-      //     $(mapName).css('cursor','inherit');
-      //     CartoLib.prototype.clearInfoBox("infoBox");
-      //   });
-      //   layerZero.on('featureClick', function(data){
-      //     // You can add something here, too, e.g., a modal window.
-      //   });
-      // }).error(function(e) 
-      // {
-      //   console.log(e)
-      // });
+      });
 
       $("#btnSearch").on("click", function() {
         exMap.doSearch();
