@@ -29,7 +29,7 @@ body {
 }
 
 a { 
-  color: inherit; 
+  color: inherit !important; 
 }
 
 iframe {
@@ -40,19 +40,18 @@ iframe {
 .navbar {
   font-family: 'Istok Web', sans-serif;
   color: #f7fff4;
-  background-color: #3b961c;
-  border-color: #3b961c;
+  background-color: #8A2B85;
+  border-color: #8A2B85;
 }
 
 .navbar-inverse {
-  background-color: #3b961c; /* This background color is a little gross. I woner if you can find something to compliment the logo, not match it.*/
-  border-color: #3b961c;
+  background-color: #8A2B85;
+  border-color: #8A2B85;
 }
 
 
 /* You do not need to "float" elements with bootstrap. Try putting the logo inside the navbar-brand class.*/
 .center {
-    float:left;
     width: 80px;
     height: 100%;
     margin: 10px;
@@ -80,7 +79,7 @@ iframe {
 
 .navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:focus, .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:visited {
   color: #f7fff4;
-  background-color: #73AD63;
+  background-color: #A0499C;
   border: 0px;
 }
 
@@ -92,8 +91,8 @@ iframe {
 }
 
 .panel-footer {
-  background-color: #3b961c;
-  border-color: #3b961c;
+  background-color: #8A2B85;
+  border-color: #8A2B85;
   text-align: center;
   margin-top: 20px;
   padding: 10px;
