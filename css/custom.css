@@ -24,6 +24,18 @@ div#mapCanvas {
 }
 
 /* General Styling */
+body {
+  background-color: #e7e7e7;
+}
+
+a { 
+  color: inherit; 
+}
+
+iframe {
+  width: 100%;
+  height: 1950px;
+}
 
 .navbar {
   font-family: 'Istok Web', sans-serif;
@@ -70,21 +82,11 @@ div#mapCanvas {
   border: 0px;
 }
 
-
 .container {
-  font-family: 'Noto Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
   color: black;
   font-size: 15px;
-  background-color: #f2f2f2;
   padding:25px;
-}
-
-a { 
-  color: inherit; 
-}
-
-body {
-  background-color: #f2f2f2;
 }
 
 .panel-footer {
@@ -99,5 +101,4 @@ body {
   height: 160px;
 
 }
-
 
