@@ -16,6 +16,7 @@ CartoLib = (function() {
     this.currentPinpoint  = '';
     this.centerMark       = '';
     this.radiusCircle     = '';
+    this.wardBorder       = '';
     // Create geocoder object to access Google Maps API. Add underscore to insure variable safety.
     this._geocoder      = new google.maps.Geocoder();
     // Turn on autocomplete to predict address when user begins to type.
@@ -27,7 +28,7 @@ CartoLib = (function() {
       // Initiate leaflet map
       var div = this.mapDivName;
       // var geocoder = new google.maps.Geocoder();
-      var layer = new L.Google('ROADMAP');
+      var layer = new L.Google('Roadmap');
 
       this.map = new L.Map('mapCanvas', {
         center: this.mapCentroid,
@@ -73,8 +74,9 @@ CartoLib = (function() {
       cartodb_logo: false,
       sublayers: sublayerArr
     }
-
+    console.log(layerOpts)
     var createdLayer = cartodb.createLayer(this.map, layerOpts, { https: true });
+    console.log(createdLayer)
     return createdLayer;
   }
 
@@ -101,6 +103,14 @@ CartoLib = (function() {
     this.map.setView(new L.LatLng( this.currentPinpoint[0], this.currentPinpoint[1] ), zoom)
   }
 
+  CartoLib.prototype.setZoom = function(ward) {
+    var zoom = '';
+    if (ward) zoom = 13; // 2 miles
+    else zoom = 12;
+
+    this.map.setView(new L.LatLng( this.currentPinpoint[0], this.currentPinpoint[1] ), zoom)
+  }
+
   CartoLib.prototype.doSearch = function() {
     this.clearSearch();
 
@@ -108,6 +118,7 @@ CartoLib = (function() {
     // #search-address refers to a div id in map-example.html. You can rename this div.
     var address = $("#search-address").val();
     var radius = $("#search-radius").val();
+    var ward = $("#ward-number").val();
     var location = this.locationScope;
 
     if (radius == null && address != "") {
@@ -147,8 +158,8 @@ CartoLib = (function() {
 
   CartoLib.prototype.addCircle = function(radius) {
     this.radiusCircle = new L.circle(this.currentPinpoint, radius, {
-        fillColor:'#1d5492',
-        fillOpacity:'0.2',
+        fillColor:'#478DFF',
+        fillOpacity:'0.25',
         stroke: false,
         clickable: false
     });

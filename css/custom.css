@@ -24,8 +24,24 @@ div#mapCanvas {
 }
 
 /* General Styling */
+body {
+  background-color: #e7e7e7;
+}
+
+a { 
+  color: inherit; 
+}
+
+iframe {
+  width: 100%;
+  height: 1950px;
+}
+
 .navbar {
-    font-family: 'Istok Web', sans-serif;
+  font-family: 'Istok Web', sans-serif;
+  color: #f7fff4;
+  background-color: #3b961c;
+  border-color: #3b961c;
 }
 
 .navbar-inverse {
@@ -42,6 +58,13 @@ div#mapCanvas {
     margin: 10px;
 }
 
+.center2{
+    float:left;
+    width: 90px;
+    height: 100%;
+    margin: 8px;
+}
+
 .navbar-inverse .navbar-brand {
   color: #f7fff4; /* Repeated color attributes (see bleow): a good opportunity for a CSS variable! */
   margin: 27px; /* I think you can use percents for these margin measurements...there's certainly controversy about this: EM vs. Percent vs. Pixels. Generally, if I find myself putting something as exact as "27px", I assume something could go wrong, especially with responsive design. */
@@ -55,4 +78,29 @@ div#mapCanvas {
   font-size: 17px;
 }
 
+.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:focus, .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:visited {
+  color: #f7fff4;
+  background-color: #73AD63;
+  border: 0px;
+}
+
+.container {
+  font-family: 'Roboto', sans-serif;
+  color: black;
+  font-size: 15px;
+  padding:25px;
+}
+
+.panel-footer {
+  background-color: #3b961c;
+  border-color: #3b961c;
+  text-align: center;
+  margin-top: 20px;
+  padding: 10px;
+  font-family: 'Istok Web', sans-serif;
+  font-size: 12px;
+  color: #f7fff4;
+  height: 160px;
+
+}
 

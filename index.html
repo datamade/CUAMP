@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang='en'>
+
+<!-- Default Layout -->
+
   <head>
     <title>CartoLib</title>
 
@@ -15,6 +18,7 @@
     <!-- CDN for getting Font Awesome icons -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Istok+Web" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 
 
     <!-- JavaScript -->
@@ -32,13 +36,23 @@
       #carto-result {
         marker-fill-opacity: 0.9;
         marker-line-color: #FFF;
-        marker-line-width: 1;
+        marker-line-width: 1.3;
         marker-line-opacity: 1;
         marker-placement: point;
         marker-type: ellipse;
-        marker-width: 8;
-        marker-fill: #3E7BB6;
+        marker-width: 9;
+        marker-fill: #3B961C;
         marker-allow-overlap: true;
+      }
+    </style>
+
+    <style id="carto-result-style2">
+      #carto-result2 {
+        polygon-fill: #A1285D;
+        polygon-opacity: 0.7;
+        line-color: #680D35;
+        line-width: 0.5;
+        line-opacity: 1;
       }
     </style>
 
@@ -53,19 +67,16 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="index.html">Chicago Urban Agriculture Mapping Project</a>
+          <a class="navbar-brand" href="index.html">The Chicago Urban Agriculture Mapping Project</a>
         </div>
 
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav pull-right" id="dropdown-results">
               <li>
-                <a href="about.html"><i class="fa fa-info-circle" aria-hidden="true"></i> Who We Are</a>
+                <a href="about.html"><i class="fa fa-info-circle" aria-hidden="true"></i> What We Are</a>
               </li>
               <li>
                 <a href="form.html"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a New Location</a>
-              </li>
-              <li>
-                <a href="contact.html"><i class="fa fa-phone" aria-hidden="true"></i> Contact Us</a>
               </li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -74,10 +85,9 @@
 
 
     <div class="container">
-
       <div class="row">
         <div class="col-md-4">
-          <h4>Find public gardens near you in Chicago.</h4>
+          <h4>Find Chicago public gardens near you:</h4>
           <div class="form-group">
             <input class='form-control' id='search-address' placeholder='Enter an address or an intersection' type='text'>
           </div>
@@ -89,6 +99,63 @@
               <option value='1610'>1 mile</option>
               <option value='3220'>2 miles</option>
               <option value='8050'>5 miles</option>
+            </select>
+          </div>
+
+          <div class='form-group'>
+            Filter by Ward
+            <select id='ward-number' class='form-control'>
+              <option></option>
+              <option value='1'>1st</option>
+              <option value='2'>2nd</option>
+              <option value='3'>3rd</option>
+              <option value='4'>4th</option>
+              <option value='5'>5th</option>
+              <option value='6'>6th</option>
+              <option value='7'>7th</option>
+              <option value='8'>8th</option>
+              <option value='9'>9th</option>
+              <option value='10'>10th</option>
+              <option value='11'>11th</option>
+              <option value='12'>12th</option>
+              <option value='13'>13th</option>
+              <option value='14'>14th</option>
+              <option value='15'>15th</option>
+              <option value='16'>16th</option>
+              <option value='17'>17th</option>
+              <option value='18'>18th</option>
+              <option value='19'>19th</option>
+              <option value='20'>20th</option>
+              <option value='21'>21st</option>
+              <option value='22'>22nd</option>
+              <option value='23'>23rd</option>
+              <option value='24'>24th</option>
+              <option value='25'>25th</option>
+              <option value='26'>26th</option>
+              <option value='27'>27th</option>
+              <option value='28'>28th</option>
+              <option value='29'>29th</option>
+              <option value='30'>30th</option>
+              <option value='31'>31st</option>
+              <option value='32'>32nd</option>
+              <option value='33'>33rd</option>
+              <option value='34'>34th</option>
+              <option value='35'>35th</option>
+              <option value='36'>36th</option>
+              <option value='37'>37th</option>
+              <option value='38'>38th</option>
+              <option value='39'>39th</option>
+              <option value='40'>40th</option>
+              <option value='41'>41st</option>
+              <option value='42'>42nd</option>
+              <option value='43'>43rd</option>
+              <option value='44'>44th</option>
+              <option value='45'>45th</option>
+              <option value='46'>46th</option>
+              <option value='47'>47th</option>
+              <option value='48'>48th</option>
+              <option value='49'>49th</option>
+              <option value='50'>50th</option>
             </select>
           </div>
 
@@ -104,8 +171,30 @@
       </div>
 
     </div>
-
   </body>
+
+  <footer>  
+    <div class="panel-footer">
+      <div class='col-md-1'>
+        <br><img class="center2" src="images/logo.png"/>
+      </div>
+      <div class='col-md-2'>
+        <h3 style="text-align: center"><br>Connect With Us:</h3>
+      </div>
+      <div class='col-md-3'>
+        <h4><a href="http://neighbor-space.org/" target="_blank">NeighborSpace</a></h4>
+          <p>445 N Sacramento Blvd, Suite 204<br>Chicago, IL 60612<br>Phone: (773) 826-3240<br>Fax: (773) 442-0299<br><a href="mailto:info@neighbor-space.org">info@neighbor-space.org</a></p>
+      </div>
+      <div class='col-md-3'>
+        <h4><a href="https://auachicago.org/" target="_blank">Advocates for Urban Agriculture</a></h4>
+          <p><a href="https://www.facebook.com/AUAChicago"><i class="fa fa-facebook-square" aria-hidden="true"></i> Facebook</a><br><a href="https://twitter.com/AUAChicago"><i class="fa fa-twitter-square" aria-hidden="true"></i> Twitter</a><br><a href="mailto:info@auachicago.org">info@auachicago.org</a></p>
+      </div>
+      <div class='col-md-3'>
+        <h4><a href="http://steans.depaul.edu/" target="_blank">DePaul University — Steans Center</a></h4>
+          <p>2233 N. Kenmore Ave.<br>Chicago, IL 60614<br>Phone: (773) 325-7457<br>Fax: (773) 325-7459</p>
+      </div>
+    </div>
+  </footer>
 </html>
 
 
