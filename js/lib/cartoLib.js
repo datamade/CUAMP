@@ -74,9 +74,9 @@ CartoLib = (function() {
       cartodb_logo: false,
       sublayers: sublayerArr
     }
-    console.log(layerOpts)
+
     var createdLayer = cartodb.createLayer(this.map, layerOpts, { https: true });
-    console.log(createdLayer)
+
     return createdLayer;
   }
 
