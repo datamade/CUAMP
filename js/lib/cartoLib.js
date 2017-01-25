@@ -103,14 +103,6 @@ CartoLib = (function() {
     this.map.setView(new L.LatLng( this.currentPinpoint[0], this.currentPinpoint[1] ), zoom)
   }
 
-  CartoLib.prototype.setZoom = function(ward) {
-    var zoom = '';
-    if (ward) zoom = 13; // 2 miles
-    else zoom = 12;
-
-    this.map.setView(new L.LatLng( this.currentPinpoint[0], this.currentPinpoint[1] ), zoom)
-  }
-
   CartoLib.prototype.doSearch = function() {
     this.clearSearch();
 
@@ -158,7 +150,7 @@ CartoLib = (function() {
 
   CartoLib.prototype.addCircle = function(radius) {
     this.radiusCircle = new L.circle(this.currentPinpoint, radius, {
-        fillColor:'#478DFF',
+        fillColor:'#8A2B85',
         fillOpacity:'0.25',
         stroke: false,
         clickable: false

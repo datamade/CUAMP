@@ -10,7 +10,7 @@
 /* Styles for info window. */
 .infoBox {
     padding: 6px 8px;
-    font: 14px/16px Arial, Helvetica, sans-serif; /* Let's change this to a custom Google font.*/
+    font-family: 'Roboto', sans-serif;
     background: #fff;
     background: rgba(255,255,255,0.8);
     box-shadow: 0 0 15px rgba(0,0,0,0.2);
@@ -37,9 +37,13 @@ iframe {
   height: 1950px;
 }
 
+:root {
+  --text-color: #f7fff4;
+}
+
 .navbar {
   font-family: 'Istok Web', sans-serif;
-  color: #f7fff4;
+  color: var(--text-color);
   background-color: #8A2B85;
   border-color: #8A2B85;
 }
@@ -49,36 +53,21 @@ iframe {
   border-color: #8A2B85;
 }
 
-
-/* You do not need to "float" elements with bootstrap. Try putting the logo inside the navbar-brand class.*/
-.center {
-    width: 80px;
-    height: 100%;
-    margin: 10px;
-}
-
-.center2{
-    float:left;
-    width: 90px;
-    height: 100%;
-    margin: 8px;
-}
-
 .navbar-inverse .navbar-brand {
-  color: #f7fff4; /* Repeated color attributes (see bleow): a good opportunity for a CSS variable! */
-  margin: 27px; /* I think you can use percents for these margin measurements...there's certainly controversy about this: EM vs. Percent vs. Pixels. Generally, if I find myself putting something as exact as "27px", I assume something could go wrong, especially with responsive design. */
+  color: var(--text-color); /* Repeated color attributes (see bleow): a good opportunity for a CSS variable! */
+  margin: 0.3em; 
   font-size: 28px;
-  float: left;
+  line-height: 2.5em;
 }
 
 .navbar-inverse .navbar-nav > li > a {
-  color: #f7fff4;
-  margin-top: 27px;
+  color: var(--text-color);
   font-size: 17px;
+  margin-top: 2em;
 }
 
 .navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:focus, .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:visited {
-  color: #f7fff4;
+  color: var(--text-color);
   background-color: #A0499C;
   border: 0px;
 }
@@ -94,12 +83,11 @@ iframe {
   background-color: #8A2B85;
   border-color: #8A2B85;
   text-align: center;
-  margin-top: 20px;
-  padding: 10px;
+  margin-top: 1em;
   font-family: 'Istok Web', sans-serif;
   font-size: 12px;
-  color: #f7fff4;
-  height: 160px;
+  color: var(--text-color);
+  height: 13em;
 
 }
 
