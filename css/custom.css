@@ -7,11 +7,11 @@
     z-index: 100;
 }
 
-/* Styles for info window. Class names can vary. */
+/* Styles for info window. */
 .infoBox {
     padding: 6px 8px;
-    font: 14px/16px Arial, Helvetica, sans-serif;
-    background: white;
+    font: 14px/16px Arial, Helvetica, sans-serif; /* Let's change this to a custom Google font.*/
+    background: #fff;
     background: rgba(255,255,255,0.8);
     box-shadow: 0 0 15px rgba(0,0,0,0.2);
     border-radius: 5px;
@@ -45,11 +45,13 @@ iframe {
 }
 
 .navbar-inverse {
-  background-color: #3b961c;
+  background-color: #3b961c; /* This background color is a little gross. I woner if you can find something to compliment the logo, not match it.*/
   border-color: #3b961c;
 }
 
-.center{
+
+/* You do not need to "float" elements with bootstrap. Try putting the logo inside the navbar-brand class.*/
+.center {
     float:left;
     width: 80px;
     height: 100%;
@@ -64,8 +66,8 @@ iframe {
 }
 
 .navbar-inverse .navbar-brand {
-  color: #f7fff4;
-  margin: 27px;
+  color: #f7fff4; /* Repeated color attributes (see bleow): a good opportunity for a CSS variable! */
+  margin: 27px; /* I think you can use percents for these margin measurements...there's certainly controversy about this: EM vs. Percent vs. Pixels. Generally, if I find myself putting something as exact as "27px", I assume something could go wrong, especially with responsive design. */
   font-size: 28px;
   float: left;
 }
