@@ -29,7 +29,7 @@ body {
 }
 
 a { 
-  color: inherit !important; 
+  color: inherit !important;
 }
 
 iframe {
@@ -39,31 +39,48 @@ iframe {
 
 :root {
   --text-color: #f7fff4;
+  --green-color: #3B961C;
+  --purple-color: #8A2B85;
+}
+
+.btn-primary {
+  background-color: var(--purple-color);
+  border-color: var(--purple-color);
+}
+
+.btn-primary:hover {
+  background-color: #A0499C;
+  border-color: #A0499C;
 }
 
 .navbar {
   font-family: 'Istok Web', sans-serif;
   color: var(--text-color);
-  background-color: #8A2B85;
-  border-color: #8A2B85;
+  background-color: var(--purple-color);
+  border-color: var(--purple-color);
+  line-height: 1em;
 }
 
 .navbar-inverse {
-  background-color: #8A2B85;
-  border-color: #8A2B85;
+  background-color: var(--purple-color);
+  border-color: var(--purple-color);
 }
 
 .navbar-inverse .navbar-brand {
   color: var(--text-color); /* Repeated color attributes (see bleow): a good opportunity for a CSS variable! */
-  margin: 0.3em; 
-  font-size: 28px;
-  line-height: 2.5em;
+  margin: 0.25em; 
+  font-size: 1.8em;
+  line-height: 0.9em;
+}
+
+.navbar-brand:hover {
+text-decoration: none 
 }
 
 .navbar-inverse .navbar-nav > li > a {
   color: var(--text-color);
-  font-size: 17px;
-  margin-top: 2em;
+  font-size: 1.25em;
+  margin-top: 1em;
 }
 
 .navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:focus, .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:visited {
@@ -80,14 +97,13 @@ iframe {
 }
 
 .panel-footer {
-  background-color: #8A2B85;
-  border-color: #8A2B85;
+  background-color: var(--purple-color);
+  border-color: var(--purple-color);
   text-align: center;
   margin-top: 1em;
   font-family: 'Istok Web', sans-serif;
-  font-size: 12px;
+  font-size: 0.9em;
   color: var(--text-color);
-  height: 13em;
 
 }
 

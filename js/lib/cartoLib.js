@@ -16,7 +16,6 @@ CartoLib = (function() {
     this.currentPinpoint  = '';
     this.centerMark       = '';
     this.radiusCircle     = '';
-    this.wardBorder       = '';
     // Create geocoder object to access Google Maps API. Add underscore to insure variable safety.
     this._geocoder      = new google.maps.Geocoder();
     // Turn on autocomplete to predict address when user begins to type.
@@ -101,7 +100,7 @@ CartoLib = (function() {
     else zoom = 16;
 
     this.map.setView(new L.LatLng( this.currentPinpoint[0], this.currentPinpoint[1] ), zoom)
-  }
+  };
 
   CartoLib.prototype.doSearch = function() {
     this.clearSearch();
@@ -110,7 +109,7 @@ CartoLib = (function() {
     // #search-address refers to a div id in map-example.html. You can rename this div.
     var address = $("#search-address").val();
     var radius = $("#search-radius").val();
-    var ward = $("#ward-number").val();
+    var ward_number = $("#search-ward").val();
     var location = this.locationScope;
 
     if (radius == null && address != "") {
@@ -133,7 +132,26 @@ CartoLib = (function() {
         }
       });
     }
-  }
+
+    if (ward_number != null) {
+      var address2 = "SELECT ward_addr FROM table_2015_ward_offices WHERE ward = " + ward_number; 
+      radius = 8050;
+      this._geocoder.geocode( { 'address' : address2 }, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          cartoLib.currentPinpoint = [results[0].geometry.location.lat(), results[0].geometry.location.lng()];
+          var geoFind = "ST_SetSRID(ST_POINT(" + cartoLib.currentPinpoint[1] + ", " + cartoLib.currentPinpoint[0] + "), 4326)";
+          var whereClause = " WHERE the_geom is not null AND " + geoFind;
+
+          cartoLib.addWard();
+          cartoLib.addIcon();
+          cartoLib.setZoom();
+          
+    };
+  })}
+
+    else {
+      alert("We could not find your ward")};
+  };
 
   CartoLib.prototype.addIcon = function() {
     this.centerMark = new L.Marker(this.currentPinpoint, {
@@ -165,6 +183,15 @@ CartoLib = (function() {
     if (this.radiusCircle)
       this.map.removeLayer(this.radiusCircle);
   }
+
+  CartoLib.prototype.addWard = function() {
+    var ward_match = {
+    sql: "SELECT * FROM boundaries_for_wards_2015 WHERE ward = " + ward_number, 
+    cartocss: $('#carto-result-style2').html().trim()};
+
+    exMap.createCartoLayer(ward_match).addTo(exMap.map)
+    this.map.removeLayer(layer2)
+  };
 
   return CartoLib;
 })();

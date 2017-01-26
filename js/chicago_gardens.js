@@ -4,19 +4,19 @@ $(function() {
   // Update map settings.
   exMap.cartoTableName  = 'all_garden_answers';
   exMap.cartoUserName   = 'clearstreets';
-  exMap.fields          = 'food_producing, community_garden, ownership, garden_address, growing_site_name';
+  exMap.fields          = 'food_producing, community_garden, ownership, garden_address, growing_site_name, the_geom';
   exMap.mapDivName      = 'mapCanvas';
   // Create a map!
   exMap.initiateMap()
   exMap.addInfoBox('bottomright', 'infoBox');
+
   var layer1 = exMap.defineSublayer("select * from all_garden_answers", '#carto-result-style');
 
   var layer2 = {
-      sql: "select * from boundaries_for_wards_2015",
-      cartocss: $('#carto-result-style2').html().trim(),
-    }
+    sql: "SELECT * FROM boundaries_for_wards_2015", 
+    cartocss: $('#carto-result-style2').html().trim()};
 
-  exMap.createCartoLayer(layer1).addTo(exMap.map)
+  exMap.createCartoLayer(layer1, layer2).addTo(exMap.map)
       .done(function(layer) {
         console.log(layer)
         var mapName = "#" + exMap.mapDivName + " div"
@@ -37,28 +37,7 @@ $(function() {
           // You can add something here, too, e.g., a modal window.
         });
       });
-  exMap.createCartoLayer(layer2).addTo(exMap.map)
-      // .done(function(layer) {
-      //   console.log(layer)
-      //   var mapName = "#" + exMap.mapDivName + " div"
-
-      //   layerZero = layer.getSubLayer(0);
-      //   layerZero.setInteraction(true);
-      //   layerZero.on('featureOver', function(e, latlng, pos, data, subLayerIndex) {
-      //     $(mapName).css('cursor','pointer');
-      //     // Add custom text to the info window.
-      //     var text = makeInfoText(data);
-      //     CartoLib.prototype.updateInfoBox(text, "infoBox");
-      //   });
-      //   layerZero.on('featureOut', function() {
-      //     $(mapName).css('cursor','inherit');
-      //     CartoLib.prototype.clearInfoBox("infoBox");
-      //   });
-      //   layerZero.on('featureClick', function(data){
-      //     // You can add something here, too, e.g., a modal window.
-      //   });
-      // });
-
+      
       $("#btnSearch").on("click", function() {
         exMap.doSearch();
       });
@@ -88,5 +67,15 @@ function makeInfoText(data) {
 
   return html
 };
+
+//Custom function to display the outline of whatever ward was searched for.
+function whichWard(data) {
+  the_geom = ''
+
+  if (data.the_geom) {
+
+  }
+
+}
 
 

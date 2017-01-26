@@ -34,16 +34,17 @@
   <body>
     <nav class="navbar navbar-inverse">
       <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <img class="navbar-brand" style="width: 3.5em; height: 100%;" src="images/logo.png"/>
-          <a class="navbar-brand" href="index.html">The Chicago Urban Agriculture Mapping Project</a>
-          </ahref="index.html">
+          <div class="navbar-header container-fluid">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <div class="navbar-brand">
+            <a class="hidden-xs" href="index.html"><img class="hidden-xs" style="width: 3.5em; height: 3.5em; margin-right: 1.25em" src="images/logo.png"/>The Chicago Urban Agriculture Mapping Project</a><a style="font-size: 0.75em; text-align: center;" class="visible-xs" href="index.html">Chicago Urban Agriculture Mapping Project</a></p>
+            </div>
+          </div>
         </div>
 
         <div id="navbar" class="collapse navbar-collapse">
@@ -94,22 +95,34 @@
 
   </body>
 
-    <footer>
-    <div class="panel-footer">
+  <footer>
+    <div class="panel panel-footer container-fluid">
       <div class='col-md-3'>  
-        <h3 style="line-height: 4em">Connect With Us:</h3>
+        <h3 style="line-height: 2em">Connect With Us:</h3>
       </div>
-      <div class='col-md-3'>
+      <div class='col-md-3 hidden-xs'>
         <h4><a href="http://neighbor-space.org/" target="_blank">NeighborSpace</a></h4>
           <p>445 N Sacramento Blvd, Suite 204<br>Chicago, IL 60612<br>Phone: (773) 826-3240<br>Fax: (773) 442-0299<br><a href="mailto:info@neighbor-space.org">info@neighbor-space.org</a></p>
       </div>
-      <div class='col-md-3'>
+      <div class='col-md-3 visible-xs'>
+        <h4><a href="http://neighbor-space.org/" target="_blank">NeighborSpace</a></h4>
+          <p>Phone: (773) 826-3240</p>
+      </div>
+      <div class='col-md-3 hidden-xs'>
         <h4><a href="https://auachicago.org/" target="_blank">Advocates for Urban Agriculture</a></h4>
           <p><a href="https://www.facebook.com/AUAChicago"><i class="fa fa-facebook-square" aria-hidden="true"></i> Facebook</a><br><a href="https://twitter.com/AUAChicago"><i class="fa fa-twitter-square" aria-hidden="true"></i> Twitter</a><br><a href="mailto:info@auachicago.org">info@auachicago.org</a></p>
       </div>
-      <div class='col-md-3'>
+      <div class='col-md-3 visible-xs'>
+        <h4><a href="https://auachicago.org/" target="_blank">Advocates for Urban Agriculture</a></h4>
+          <p><a href="mailto:info@auachicago.org">info@auachicago.org</a></p>
+      </div>
+      <div class='col-md-3 hidden-xs'>
         <h4><a href="http://steans.depaul.edu/" target="_blank">DePaul University — Steans Center</a></h4>
           <p>2233 N. Kenmore Ave.<br>Chicago, IL 60614<br>Phone: (773) 325-7457<br>Fax: (773) 325-7459</p>
+      </div>
+      <div class='col-md-3 visible-xs'>
+        <h4><a href="http://steans.depaul.edu/" target="_blank">DePaul University — Steans Center</a></h4>
+          <p>Phone: (773) 325-7457</p>
       </div>
     </div>
   </footer>
