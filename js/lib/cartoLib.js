@@ -11,11 +11,12 @@ CartoLib = (function() {
     this.mapCentroid      = new L.LatLng(41.901557, -87.630360),
     this.defaultZoom      = 11;
     this.lastClickedLayer = null;
-    this.geojson          = null;
+    this.geojson          = '';
     this.fields           = '';
     this.currentPinpoint  = '';
     this.centerMark       = '';
     this.radiusCircle     = '';
+    this.wardBorder       = '';
     // Create geocoder object to access Google Maps API. Add underscore to insure variable safety.
     this._geocoder      = new google.maps.Geocoder();
     // Turn on autocomplete to predict address when user begins to type.
@@ -110,6 +111,7 @@ CartoLib = (function() {
     var address = $("#search-address").val();
     var radius = $("#search-radius").val();
     var ward_number = $("#search-ward").val();
+    var owner = $("#search-ownership");
     var location = this.locationScope;
 
     if (radius == null && address != "") {
@@ -134,24 +136,71 @@ CartoLib = (function() {
     }
 
     if (ward_number != null) {
-      var address2 = "SELECT ward_addr FROM table_2015_ward_offices WHERE ward = " + ward_number; 
-      radius = 8050;
-      this._geocoder.geocode( { 'address' : address2 }, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-          cartoLib.currentPinpoint = [results[0].geometry.location.lat(), results[0].geometry.location.lng()];
-          var geoFind = "ST_SetSRID(ST_POINT(" + cartoLib.currentPinpoint[1] + ", " + cartoLib.currentPinpoint[0] + "), 4326)";
-          var whereClause = " WHERE the_geom is not null AND " + geoFind;
+      var sql_query = "SELECT ward_addr FROM table_2015_ward_offices WHERE ward=" + ward_number;
+      var sql = new cartodb.SQL({ user:'clearstreets' });
+      var searcher = this._geocoder
+      sql.execute(sql_query).done(function (data){
 
-          cartoLib.addWard();
-          cartoLib.addIcon();
-          cartoLib.setZoom();
-          
-    };
-  })}
+        content = data.rows[0].ward_addr
+        console.log(content)
+        searcher.geocode( { 'address' : content }, function(results, status) {
+          console.log(results)
+          if (status == google.maps.GeocoderStatus.OK) {
+            cartoLib.currentPinpoint = [results[0].geometry.location.lat(), results[0].geometry.location.lng()]
+            var geoFind = "ST_SetSRID(ST_POINT(" + cartoLib.currentPinpoint[1] + ", " + cartoLib.currentPinpoint[0] + "), 8050)";
+
+            radius = 8050;
+
+            // cartoLib.addWard();
+            cartoLib.addIcon();
+            cartoLib.setZoom(radius);
+          }
+        });
+
+      })
+    }
 
     else {
-      alert("We could not find your ward")};
+      alert("We could not find your ward")
+    };
+    
+    if (owner != '') {
+      var owner_query = "SELECT * FROM all_garden_answers WHERE Ownership=" + owner;
+      var sql = new cartodb.SQL({ user:'clearstreets' });
+      var searcher = this._geocoder
+      sql.execute(owner_query).done(function (data){
+        owner_filter = data.rows[i]
+        console.log(owner_filter)
+    })
+      //Carto Tables cannot be accessed, figure this out (1/27/17)
+
+    else{
+      alert("We could not find locations with this owner")
+    };
+    
   };
+
+    // CartoLib.prototype.addWard = function() {
+    //   var ward_number = $("#search-ward").val();
+    //   var sql = new cartodb.SQL({ user:'clearstreets' });
+    //   var sql_query2 = "SELECT the_geom,the_geom_webmercator FROM boundaries_for_wards_2015 WHERE ward=" + ward_number;
+    //   sql.execute(sql_query2).done(function (data){
+    //     ward_match = data.rows[0].the_geom
+    //   })
+
+    // this.wardBorder = new L.geoJson(this.ward_match, {
+    //   style: function (feature) {
+    //       return {color: feature.properties.color};
+    //   },
+
+    //   onEachFeature: function (feature, layer) {
+    //       layer.bindPopup(feature.properties.description);
+    //   }
+      
+    // }).addTo(this.map);
+    
+    // };
+
 
   CartoLib.prototype.addIcon = function() {
     this.centerMark = new L.Marker(this.currentPinpoint, {
@@ -183,15 +232,6 @@ CartoLib = (function() {
     if (this.radiusCircle)
       this.map.removeLayer(this.radiusCircle);
   }
-
-  CartoLib.prototype.addWard = function() {
-    var ward_match = {
-    sql: "SELECT * FROM boundaries_for_wards_2015 WHERE ward = " + ward_number, 
-    cartocss: $('#carto-result-style2').html().trim()};
-
-    exMap.createCartoLayer(ward_match).addTo(exMap.map)
-    this.map.removeLayer(layer2)
-  };
 
   return CartoLib;
 })();

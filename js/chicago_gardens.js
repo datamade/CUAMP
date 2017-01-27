@@ -18,9 +18,7 @@ $(function() {
 
   exMap.createCartoLayer(layer1, layer2).addTo(exMap.map)
       .done(function(layer) {
-        console.log(layer)
         var mapName = "#" + exMap.mapDivName + " div"
-
         layerZero = layer.getSubLayer(0);
         layerZero.setInteraction(true);
         layerZero.on('featureOver', function(e, latlng, pos, data, subLayerIndex) {
@@ -43,7 +41,21 @@ $(function() {
       });
 });
 
+if 
+
+
+function makeDataFilter(data) {
+  data_arr = []
+  for(var i = 0; i < array.length; i++) {
+    data_arr.push({ id: i, text: CartoDbLib.formatText(array[i]) })
+  }
+
+  return data_arr
+};
+
 // Build this custom function yourself. It should format data from your Carto map into HTML.
+
+
 function makeInfoText(data) {
   ownership        = ''
   food_producing   = ''
@@ -67,15 +79,5 @@ function makeInfoText(data) {
 
   return html
 };
-
-//Custom function to display the outline of whatever ward was searched for.
-function whichWard(data) {
-  the_geom = ''
-
-  if (data.the_geom) {
-
-  }
-
-}
 
 

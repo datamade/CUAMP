@@ -55,15 +55,6 @@
       }
     </style>
 
-    <style id="carto-result-style3">
-      #carto-result3 {
-        /*polygon-opacity: 0.2;
-        line-color: #155600;
-        line-width: 0.9;
-        line-opacity: 0.8;*/
-      }
-    </style>
-
     <nav class="navbar navbar-inverse">
       <div class="container-fluid">
           <div class="navbar-header container-fluid">
@@ -73,8 +64,11 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <div class="navbar-brand">
-            <a class="hidden-xs" href="index.html"><img class="hidden-xs" style="width: 3.5em; height: 3.5em; margin-right: 1.25em" src="images/logo.png"/>The Chicago Urban Agriculture Mapping Project</a><a style="font-size: 0.75em; text-align: center;" class="visible-xs" href="index.html">Chicago Urban Agriculture Mapping Project</a></p>
+            <div class="navbar-brand hidden-xs">
+              <a href="index.html"><img style="width: 3.5em; height: 3.5em; margin-right: 1.25em" src="images/logo.png"/>The Chicago Urban Agriculture Mapping Project</a>
+            </div>
+            <div class="navbar-brand visible-xs">
+              <a style="font-size: 0.75em; text-align: center;" href="index.html">Chicago Urban Agriculture Mapping Project</a>
             </div>
           </div>
         </div>
@@ -103,6 +97,7 @@
           <div class='form-group'>
             Within
             <select id='search-radius' class='form-control'>
+              <option></option>
               <option value='400'>2 blocks</option>
               <option value='805'>1/2 mile</option>
               <option value='1610'>1 mile</option>
@@ -165,6 +160,21 @@
               <option value='48'>48th</option>
               <option value='49'>49th</option>
               <option value='50'>50th</option>
+            </select>
+          </div>
+
+          <div class='form-group'>
+            Ownership
+            <select id='search-Ownership' class='form-control'>
+              <option></option>
+              <option value='Private'>Private</option>
+              <option value='NeighborSpace'>NeighborSpace</option>
+              <option value='City of Chicago'>City of Chicago</option>
+              <option value='Chicago Housing Authority'>Chicago Housing Authority</option>
+              <option value='Chicago Public Schools'>Chicago Public Schools</option>
+              <option value='Chicago Public Library'>Chicago Public Library</option>
+              <option value='Chicago Park District'>Chicago Park District</option>
+              <option value=''>Unofficial Ownership</option>
             </select>
           </div>
 
