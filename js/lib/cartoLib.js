@@ -111,7 +111,7 @@ CartoLib = (function() {
     var address = $("#search-address").val();
     var radius = $("#search-radius").val();
     var ward_number = $("#search-ward").val();
-    var owner = $("#search-ownership");
+    // var owner = $("#search-ownership");
     var location = this.locationScope;
 
     if (radius == null && address != "") {
@@ -164,19 +164,19 @@ CartoLib = (function() {
       alert("We could not find your ward")
     };
     
-    if (owner != '') {
-      var owner_query = "SELECT * FROM all_garden_answers WHERE Ownership=" + owner;
-      var sql = new cartodb.SQL({ user:'clearstreets' });
-      var searcher = this._geocoder
-      sql.execute(owner_query).done(function (data){
-        owner_filter = data.rows[i]
-        console.log(owner_filter)
-    })
+    // if (owner != '') {
+    //   var owner_query = "SELECT * FROM all_garden_answers WHERE Ownership=" + owner;
+    //   var sql = new cartodb.SQL({ user:'clearstreets' });
+    //   var searcher = this._geocoder
+    //   sql.execute(owner_query).done(function (data){
+    //     owner_filter = data.rows[i]
+    //     console.log(owner_filter)
+    // })
       //Carto Tables cannot be accessed, figure this out (1/27/17)
 
-    else{
-      alert("We could not find locations with this owner")
-    };
+    // else{
+    //   alert("We could not find locations with this owner")
+    // };
     
   };
 

@@ -41,17 +41,17 @@ $(function() {
       });
 });
 
-if 
+// if 
 
 
-function makeDataFilter(data) {
-  data_arr = []
-  for(var i = 0; i < array.length; i++) {
-    data_arr.push({ id: i, text: CartoDbLib.formatText(array[i]) })
-  }
+// function makeDataFilter(data) {
+//   data_arr = []
+//   for(var i = 0; i < array.length; i++) {
+//     data_arr.push({ id: i, text: CartoDbLib.formatText(array[i]) })
+//   }
 
-  return data_arr
-};
+//   return data_arr
+// };
 
 // Build this custom function yourself. It should format data from your Carto map into HTML.
 
@@ -63,17 +63,17 @@ function makeInfoText(data) {
   site_name        = "<h4>" + data.growing_site_name + "</h4>"
   address          = "<p><i class='fa fa-map-marker' aria-hidden='true'></i> " + data.garden_address + "</p>"
 
-  if (data.ownership) {
-      ownership = "<p><i class='fa fa-home' aria-hidden='true'></i> Ownership: " + data.ownership + "</p>"
-  }
+  // if (data.ownership) {
+  //     ownership = "<p><i class='fa fa-home' aria-hidden='true'></i> Ownership: " + data.ownership + "</p>"
+  // }
 
-  if (data.food_producing == true) {
-      food_producing = "<p><i class='fa fa-cutlery' aria-hidden='true'></i> Food producing</p>"
-  }
+  // if (data.food_producing == true) {
+  //     food_producing = "<p><i class='fa fa-cutlery' aria-hidden='true'></i> Food producing</p>"
+  // }
 
-  if (data.community_garden == true) {
-      food_producing = "<p><i class='fa fa-users' aria-hidden='true'></i> Community garden</p>"
-  }
+  // if (data.community_garden == true) {
+  //     food_producing = "<p><i class='fa fa-users' aria-hidden='true'></i> Community garden</p>"
+  // }
 
   html = site_name + address + ownership + food_producing
 

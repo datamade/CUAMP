@@ -67,14 +67,10 @@ iframe {
 }
 
 .navbar-inverse .navbar-brand {
-  color: var(--text-color); /* Repeated color attributes (see bleow): a good opportunity for a CSS variable! */
+  color: var(--text-color);
   margin: 0.25em; 
   font-size: 1.8em;
   line-height: 0.9em;
-}
-
-.navbar-brand:hover {
-text-decoration: none 
 }
 
 .navbar-inverse .navbar-nav > li > a {
