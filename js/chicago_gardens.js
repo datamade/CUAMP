@@ -16,7 +16,7 @@ $(function() {
     sql: "SELECT * FROM boundaries_for_wards_2015", 
     cartocss: $('#carto-result-style2').html().trim()};
 
-  exMap.createCartoLayer(layer1, layer2).addTo(exMap.map)
+  exMap.createCartoLayer(layer1).addTo(exMap.map)
       .done(function(layer) {
         var mapName = "#" + exMap.mapDivName + " div"
         layerZero = layer.getSubLayer(0);
@@ -25,6 +25,7 @@ $(function() {
           $(mapName).css('cursor','pointer');
           // Add custom text to the info window.
           var text = makeInfoText(data);
+          
           CartoLib.prototype.updateInfoBox(text, "infoBox");
         });
         layerZero.on('featureOut', function() {
@@ -39,45 +40,58 @@ $(function() {
       $("#btnSearch").on("click", function() {
         exMap.doSearch();
       });
+
+      $("#btnReset").on("click", function() {
+        exMap.clearSearch();
+      });
+
+
+  $('#search-ward, #search-ownership, #search-community, #search-production').select2();
+
+  var ward_data = makeSelectData(wardOptions);
+  var ownership_data = makeSelectData(ownerOptions);
+  var community_garden_data = makeSelectData(communityOptions);
+  var food_production_data = makeSelectData(foodProductionOptions);
+
+
+  $(".data-array-ward").select2({
+    placeholder: "Ward",
+    data: ward_data
+  });
+
+  $(".data-array-ownership").select2({
+    placeholder: "Owner",
+    data: ownership_data
+  });
+
+  $(".data-array-community").select2({
+    placeholder: "Community Garden?",
+    data: community_garden_data
+  });
+
+  $(".data-array-production").select2({
+    placeholder: "Food Producing?",
+    data: food_production_data
+  });
 });
 
-// if 
+  function makeSelectData(array) {
+    data_arr = []
+    for(var i = 0; i < array.length; i++) {
+      data_arr.push({ id: i, text: array[i]})
+    }
+    return data_arr
+  };
 
+  function makeInfoText(data) {
+    ownership        = ''
+    food_producing   = ''
+    community_garden = ''
+    site_name        = "<h4>" + data.growing_site_name + "</h4>"
+    address          = "<p><i class='fa fa-map-marker' aria-hidden='true'></i> " + data.garden_address + "</p>"
 
-// function makeDataFilter(data) {
-//   data_arr = []
-//   for(var i = 0; i < array.length; i++) {
-//     data_arr.push({ id: i, text: CartoDbLib.formatText(array[i]) })
-//   }
+    html = site_name + address + ownership + food_producing
 
-//   return data_arr
-// };
-
-// Build this custom function yourself. It should format data from your Carto map into HTML.
-
-
-function makeInfoText(data) {
-  ownership        = ''
-  food_producing   = ''
-  community_garden = ''
-  site_name        = "<h4>" + data.growing_site_name + "</h4>"
-  address          = "<p><i class='fa fa-map-marker' aria-hidden='true'></i> " + data.garden_address + "</p>"
-
-  // if (data.ownership) {
-  //     ownership = "<p><i class='fa fa-home' aria-hidden='true'></i> Ownership: " + data.ownership + "</p>"
-  // }
-
-  // if (data.food_producing == true) {
-  //     food_producing = "<p><i class='fa fa-cutlery' aria-hidden='true'></i> Food producing</p>"
-  // }
-
-  // if (data.community_garden == true) {
-  //     food_producing = "<p><i class='fa fa-users' aria-hidden='true'></i> Community garden</p>"
-  // }
-
-  html = site_name + address + ownership + food_producing
-
-  return html
-};
-
+    return html
+  };
 

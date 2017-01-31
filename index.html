@@ -14,6 +14,7 @@
     <link rel="stylesheet" type="text/css" href="css/jquery-ui.css"/>
     <link href="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/themes/css/cartodb.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/custom.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
 
     <!-- CDN for getting Font Awesome icons -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
@@ -29,18 +30,19 @@
     <script type="text/javascript" src="js/lib/leaflet-google.js"></script>
     <script type="text/javascript" src="js/lib/cartoLib.js"></script>
     <script type="text/javascript" src="js/chicago_gardens.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 
   </head>
   <body>
     <style id="carto-result-style">
       #carto-result {
-        marker-fill-opacity: 0.9;
+        marker-fill-opacity: 0.99;
         marker-line-color: #FFF;
-        marker-line-width: 1.3;
+        marker-line-width: 1.7;
         marker-line-opacity: 1;
         marker-placement: point;
         marker-type: ellipse;
-        marker-width: 9;
+        marker-width: 14;
         marker-fill: #3B961C;
         marker-allow-overlap: true;
       }
@@ -106,7 +108,31 @@
             </select>
           </div>
 
-          <div class='form-group'>
+          <p><strong>Refine your search</strong><br>You can pick more than option for each filter.</p>
+
+          <div>
+            <div class="input-group select2-bootstrap-prepend m-top-sm">
+              <span class="input-group-addon"><i class="fa fa-university" aria-hidden="true"></i></span>
+              <select class="data-array-ward form-control" id="search-ward" multiple="multiple"></select>
+            </div>
+
+            <div class="input-group select2-bootstrap-prepend m-top-sm">
+              <span class="input-group-addon"><i class="fa fa-usd" aria-hidden="true"></i></span>
+              <select class="data-array-ownership form-control" id="search-ownership" multiple="multiple"></select>
+            </div>
+
+            <div class="input-group select2-bootstrap-prepend m-top-sm">
+              <span class="input-group-addon"><i class="fa fa-users" aria-hidden="true"></i></span>
+              <select class="data-array-community form-control" id="search-community" multiple="multiple"></select>
+            </div>
+
+            <div class="input-group select2-bootstrap-prepend m-top-sm m-bottom-sm">
+              <span class="input-group-addon"><i class="fa fa-cutlery" aria-hidden="true"></i></span>
+              <select class="data-array-production form-control" id="search-production" multiple="multiple"></select>
+            </div>
+          </div>
+
+          <!-- <div class='form-group'>
             Filter by Ward
             <select id='search-ward' class='form-control'>
               <option></option>
@@ -176,10 +202,11 @@
               <option value='Chicago Park District'>Chicago Park District</option>
               <option value=''>Unofficial Ownership</option>
             </select>
-          </div>
+          </div> -->
 
           <div>
             <button class='btn btn-primary' id="btnSearch"><i class='fa fa-search'></i> Search</button>
+            <a href="index.html" class='btn btn-reset' id="btnReset" data-toggle="tooltip" data-placement="bottom" title="Reset"><i class="fa fa-repeat" aria-hidden="true"></i></a>
           </div>
 
         </div>
