@@ -154,3 +154,66 @@ iframe {
 .m-bottom-sm { 
   margin-bottom: 15px;
 }
+
+.modal-header {
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--green-color);
+  color: #FFF;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+#modal-main > p {
+  font-family: 'Roboto', sans-serif;
+  margin-bottom: 2px;
+  word-wrap: break-word;
+  font-size: 20px;
+}
+
+.modal-p {
+  font-family: 'Roboto', sans-serif;
+  margin-bottom: 0.8em;
+  word-wrap: break-word;
+  line-height: 1;
+}
+
+.modal-bottom {
+  border-top: 1px solid #CECECE;
+  margin-top: 2em;
+}
+
+.modal-body-bottom { border-top: 1px solid #F0F0F0; }
+
+.modal-directions { 
+  font-weight: 700; 
+  font-size: 17px;
+  color: #A81F32 ;
+}
+
+#post-shortlink {
+  width: 50%;
+  border-radius: 5px;
+  margin-right: 0.5em;
+  margin-bottom: 1em;
+  color: #CECECE;
+}
+
+.modal-backdrop {
+    z-index: 1040 !important;
+}
+.modal-dialog {
+    margin: 2px auto;
+    z-index: 1100 !important;
+}
+
+.modal-body-bottom .input-group {
+  width: 100%;
+}
+
+.fa-times-circle {
+  margin-top: .15em;
+}
+
+.facility-name:hover, .locate-name:hover {
+  color: #7F7F7F;
+

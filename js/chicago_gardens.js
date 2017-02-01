@@ -32,11 +32,15 @@ $(function() {
           $(mapName).css('cursor','inherit');
           CartoLib.prototype.clearInfoBox("infoBox");
         });
-        layerZero.on('featureClick', function(data){
-          // You can add something here, too, e.g., a modal window.
+        layerZero.on('featureClick', function(e, latlng, pos, data, subLayerIndex){
+          modalPop(data);
         });
       });
       
+      $(".close-btn").on('click', function() {
+        modalPop(null);
+      });
+
       $("#btnSearch").on("click", function() {
         exMap.doSearch();
       });
@@ -52,7 +56,6 @@ $(function() {
   var ownership_data = makeSelectData(ownerOptions);
   var community_garden_data = makeSelectData(communityOptions);
   var food_production_data = makeSelectData(foodProductionOptions);
-
 
   $(".data-array-ward").select2({
     placeholder: "Ward",
@@ -83,6 +86,14 @@ $(function() {
     return data_arr
   };
 
+  function convertBoolean(text) {
+    if (text.toLower() == "Yes")
+      return "true"
+    else {
+      return "false"
+    }
+  }
+
   function makeInfoText(data) {
     ownership        = ''
     food_producing   = ''
@@ -95,3 +106,33 @@ $(function() {
     return html
   };
 
+  function modalPop(data) {
+    var contact = "<p id='modal-address'><i class='fa fa-map-marker' aria-hidden='true'></i> <strong>Address:</strong> " + data.garden_address + '</p><br>' + '<p class="modal-directions"><a href="http://maps.google.com/?q=' + data.garden_address + '" target="_blank">Get Directions</a></p>'
+    $('#modal-pop').appendTo('body').modal();
+    $('#modal-title, #address-header, #owner-header, #community-header, #production-header, #address-subsection, #owner-subsection, #community-subsection, #production-subsection').empty();
+    $('#modal-title').html(data.growing_site_name);
+    $('#modal-main').html(contact);
+
+
+    var address_list = data.garden_address
+    var owner_list = data.ownership
+    var community_list = data.community_garden
+    var production_list = data.food_producing
+    // Find all instances of "yes."
+    if (address_list != null) {
+        $("#address-header").append('<i class="fa fa-user" aria-hidden="true"></i> Address:');
+        $("#address-subsection").append("<p>" + address_list + "</p>");
+    } 
+    if (owner_list != null) {
+        $("#owner-header").append('<i class="fa fa-usd" aria-hidden="true"></i> Ownership:');
+        $("#owner-subsection").append("<p>" + owner_list + "</p>");
+    }
+    if (community_list != null) {
+      $("#community-header").append('<i class="fa fa-users" aria-hidden="true"></i> Community Garden:');
+      $("#community-subsection").append("<p>" + community_list + "</p>");
+    }
+    if (production_list != null) {
+      $("#production-header").append('<i class="fa fa-cutlery" aria-hidden="true"></i> Food Producing:');
+      $("#production-subsection").append("<p>" + production_list + "</p>")
+    }
+  };

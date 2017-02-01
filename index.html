@@ -1,255 +1,106 @@
-<!DOCTYPE html>
-<html lang='en'>
+---
+layout: default
+---
 
-<!-- Default Layout -->
-
-  <head>
-    <title>CartoLib</title>
-
-    <meta charset='utf-8'>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Styles -->
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/jquery-ui.css"/>
-    <link href="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/themes/css/cartodb.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="css/custom.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
-
-    <!-- CDN for getting Font Awesome icons -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Istok+Web" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-
-
-    <!-- JavaScript -->
-    <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false&libraries=places"></script>
-
-    <script type="text/javascript" src="js/lib/jquery.min.js"></script>
-    <script type="text/javascript" src="js/lib/cartodb.js"></script>
-    <script type="text/javascript" src="js/lib/leaflet-google.js"></script>
-    <script type="text/javascript" src="js/lib/cartoLib.js"></script>
-    <script type="text/javascript" src="js/chicago_gardens.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-
-  </head>
-  <body>
-    <style id="carto-result-style">
-      #carto-result {
-        marker-fill-opacity: 0.99;
-        marker-line-color: #FFF;
-        marker-line-width: 1.7;
-        marker-line-opacity: 1;
-        marker-placement: point;
-        marker-type: ellipse;
-        marker-width: 14;
-        marker-fill: #3B961C;
-        marker-allow-overlap: true;
-      }
-    </style>
-
-    <style id="carto-result-style2">
-      #carto-result2 {
-        polygon-opacity: 0.2;
-        line-color: #155600;
-        line-width: 0.9;
-        line-opacity: 0.8;
-      }
-    </style>
-
-    <nav class="navbar navbar-inverse">
-      <div class="container-fluid">
-          <div class="navbar-header container-fluid">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <div class="navbar-brand hidden-xs">
-              <a href="index.html"><img style="width: 3.5em; height: 3.5em; margin-right: 1.25em" src="images/logo.png"/>The Chicago Urban Agriculture Mapping Project</a>
-            </div>
-            <div class="navbar-brand visible-xs">
-              <a style="font-size: 0.75em; text-align: center;" href="index.html">Chicago Urban Agriculture Mapping Project</a>
-            </div>
-          </div>
-        </div>
-
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav pull-right" id="dropdown-results">
-              <li>
-                <a href="about.html"><i class="fa fa-info-circle" aria-hidden="true"></i> What We Are</a>
-              </li>
-              <li>
-                <a href="form.html"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a New Location</a>
-              </li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
-
-
-    <div class="container">
-      <div class="row">
-        <div class="col-md-4">
-          <h4>Find Chicago public gardens near you:</h4>
-          <div class="form-group">
-            <input class='form-control' id='search-address' placeholder='Enter an address or an intersection' type='text'>
-          </div>
-          <div class='form-group'>
-            Within
-            <select id='search-radius' class='form-control'>
-              <option></option>
-              <option value='400'>2 blocks</option>
-              <option value='805'>1/2 mile</option>
-              <option value='1610'>1 mile</option>
-              <option value='3220'>2 miles</option>
-              <option value='8050'>5 miles</option>
-            </select>
+    <div class="modal fade bd-example-modal-md" id="modal-pop" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle" aria-hidden="true"></i></span></button>
+            <h4 class="modal-title" id="modal-title"></h4>
           </div>
 
-          <p><strong>Refine your search</strong><br>You can pick more than option for each filter.</p>
+          <div class="modal-body">
+            <div class="container-fluid bd-example-row">
+              <div class="row">
+                <div class="col-md-12 get-sm">
+                  <div id="modal-main"></div>
+                  </div>
+                </div>
+                <div class="col-md-4 hidden-xs hidden-s" id="modal-image"></div>
+              </div>
 
-          <div>
-            <div class="input-group select2-bootstrap-prepend m-top-sm">
-              <span class="input-group-addon"><i class="fa fa-university" aria-hidden="true"></i></span>
-              <select class="data-array-ward form-control" id="search-ward" multiple="multiple"></select>
-            </div>
+              <div class="row modal-bottom">
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="col-md-12 get-sm">
+                      <h4 id="owner-header"></h4>
+                      <div id="owner-subsection"></div>
+                    </div>
+                  </div>
 
-            <div class="input-group select2-bootstrap-prepend m-top-sm">
-              <span class="input-group-addon"><i class="fa fa-usd" aria-hidden="true"></i></span>
-              <select class="data-array-ownership form-control" id="search-ownership" multiple="multiple"></select>
-            </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <h4 id="community-header"></h4>
+                      <div id="community-subsection"></div>
+                    </div>
+                  </div>
 
-            <div class="input-group select2-bootstrap-prepend m-top-sm">
-              <span class="input-group-addon"><i class="fa fa-users" aria-hidden="true"></i></span>
-              <select class="data-array-community form-control" id="search-community" multiple="multiple"></select>
-            </div>
-
-            <div class="input-group select2-bootstrap-prepend m-top-sm m-bottom-sm">
-              <span class="input-group-addon"><i class="fa fa-cutlery" aria-hidden="true"></i></span>
-              <select class="data-array-production form-control" id="search-production" multiple="multiple"></select>
+                  <div class="row">
+                    <div class="col-md-12 get-sm">
+                      <h4 id="production-header"></h4>
+                      <div id="production-subsection"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-
-          <!-- <div class='form-group'>
-            Filter by Ward
-            <select id='search-ward' class='form-control'>
-              <option></option>
-              <option value='1'>1st</option>
-              <option value='2'>2nd</option>
-              <option value='3'>3rd</option>
-              <option value='4'>4th</option>
-              <option value='5'>5th</option>
-              <option value='6'>6th</option>
-              <option value='7'>7th</option>
-              <option value='8'>8th</option>
-              <option value='9'>9th</option>
-              <option value='10'>10th</option>
-              <option value='11'>11th</option>
-              <option value='12'>12th</option>
-              <option value='13'>13th</option>
-              <option value='14'>14th</option>
-              <option value='15'>15th</option>
-              <option value='16'>16th</option>
-              <option value='17'>17th</option>
-              <option value='18'>18th</option>
-              <option value='19'>19th</option>
-              <option value='20'>20th</option>
-              <option value='21'>21st</option>
-              <option value='22'>22nd</option>
-              <option value='23'>23rd</option>
-              <option value='24'>24th</option>
-              <option value='25'>25th</option>
-              <option value='26'>26th</option>
-              <option value='27'>27th</option>
-              <option value='28'>28th</option>
-              <option value='29'>29th</option>
-              <option value='30'>30th</option>
-              <option value='31'>31st</option>
-              <option value='32'>32nd</option>
-              <option value='33'>33rd</option>
-              <option value='34'>34th</option>
-              <option value='35'>35th</option>
-              <option value='36'>36th</option>
-              <option value='37'>37th</option>
-              <option value='38'>38th</option>
-              <option value='39'>39th</option>
-              <option value='40'>40th</option>
-              <option value='41'>41st</option>
-              <option value='42'>42nd</option>
-              <option value='43'>43rd</option>
-              <option value='44'>44th</option>
-              <option value='45'>45th</option>
-              <option value='46'>46th</option>
-              <option value='47'>47th</option>
-              <option value='48'>48th</option>
-              <option value='49'>49th</option>
-              <option value='50'>50th</option>
-            </select>
-          </div>
-
-          <div class='form-group'>
-            Ownership
-            <select id='search-Ownership' class='form-control'>
-              <option></option>
-              <option value='Private'>Private</option>
-              <option value='NeighborSpace'>NeighborSpace</option>
-              <option value='City of Chicago'>City of Chicago</option>
-              <option value='Chicago Housing Authority'>Chicago Housing Authority</option>
-              <option value='Chicago Public Schools'>Chicago Public Schools</option>
-              <option value='Chicago Public Library'>Chicago Public Library</option>
-              <option value='Chicago Park District'>Chicago Park District</option>
-              <option value=''>Unofficial Ownership</option>
-            </select>
-          </div> -->
-
-          <div>
-            <button class='btn btn-primary' id="btnSearch"><i class='fa fa-search'></i> Search</button>
-            <a href="index.html" class='btn btn-reset' id="btnReset" data-toggle="tooltip" data-placement="bottom" title="Reset"><i class="fa fa-repeat" aria-hidden="true"></i></a>
-          </div>
-
-        </div>
-
-        <div class="col-md-8">
-          <div id="mapCanvas"></div>
         </div>
       </div>
 
+
+
+<div class="row">
+  <div class="col-md-4">
+    <h4>Find Chicago public gardens near you:</h4>
+    <div class="form-group">
+      <input class='form-control' id='search-address' placeholder='Enter an address or an intersection' type='text'>
     </div>
-  </body>
+    <div class='form-group'>
+      Within
+      <select id='search-radius' class='form-control'>
+        <option></option>
+        <option value='400'>2 blocks</option>
+        <option value='805'>1/2 mile</option>
+        <option value='1610'>1 mile</option>
+        <option value='3220'>2 miles</option>
+        <option value='8050'>5 miles</option>
+      </select>
+    </div>
 
-  <footer>
-    <div class="panel panel-footer container-fluid">
-      <div class='col-md-3'>  
-        <h3 style="line-height: 2em">Connect With Us:</h3>
+    <p><strong>Refine your search</strong><br>You can pick more than option for each filter.</p>
+
+    <div>
+      <div class="input-group select2-bootstrap-prepend m-top-sm">
+        <span class="input-group-addon"><i class="fa fa-university fa-fw" aria-hidden="true"></i></span>
+        <select class="data-array-ward form-control" id="search-ward" multiple="multiple"></select>
       </div>
-      <div class='col-md-3 hidden-xs'>
-        <h4><a href="http://neighbor-space.org/" target="_blank">NeighborSpace</a></h4>
-          <p>445 N Sacramento Blvd, Suite 204<br>Chicago, IL 60612<br>Phone: (773) 826-3240<br>Fax: (773) 442-0299<br><a href="mailto:info@neighbor-space.org">info@neighbor-space.org</a></p>
+
+      <div class="input-group select2-bootstrap-prepend m-top-sm">
+        <span class="input-group-addon"><i class="fa fa-usd fa-fw" aria-hidden="true"></i></span>
+        <select class="data-array-ownership form-control" id="search-ownership" multiple="multiple"></select>
       </div>
-      <div class='col-md-3 visible-xs'>
-        <h4><a href="http://neighbor-space.org/" target="_blank">NeighborSpace</a></h4>
-          <p>Phone: (773) 826-3240</p>
+
+      <div class="input-group select2-bootstrap-prepend m-top-sm">
+        <span class="input-group-addon"><i class="fa fa-users fa-fw" aria-hidden="true"></i></span>
+        <select class="data-array-community form-control" id="search-community" multiple="multiple"></select>
       </div>
-      <div class='col-md-3 hidden-xs'>
-        <h4><a href="https://auachicago.org/" target="_blank">Advocates for Urban Agriculture</a></h4>
-          <p><a href="https://www.facebook.com/AUAChicago"><i class="fa fa-facebook-square" aria-hidden="true"></i> Facebook</a><br><a href="https://twitter.com/AUAChicago"><i class="fa fa-twitter-square" aria-hidden="true"></i> Twitter</a><br><a href="mailto:info@auachicago.org">info@auachicago.org</a></p>
-      </div>
-      <div class='col-md-3 visible-xs'>
-        <h4><a href="https://auachicago.org/" target="_blank">Advocates for Urban Agriculture</a></h4>
-          <p><a href="mailto:info@auachicago.org">info@auachicago.org</a></p>
-      </div>
-      <div class='col-md-3 hidden-xs'>
-        <h4><a href="http://steans.depaul.edu/" target="_blank">DePaul University — Steans Center</a></h4>
-          <p>2233 N. Kenmore Ave.<br>Chicago, IL 60614<br>Phone: (773) 325-7457<br>Fax: (773) 325-7459</p>
-      </div>
-      <div class='col-md-3 visible-xs'>
-        <h4><a href="http://steans.depaul.edu/" target="_blank">DePaul University — Steans Center</a></h4>
-          <p>Phone: (773) 325-7457</p>
+
+      <div class="input-group select2-bootstrap-prepend m-top-sm m-bottom-sm">
+        <span class="input-group-addon"><i class="fa fa-cutlery fa-fw" aria-hidden="true"></i></span>
+        <select class="data-array-production form-control" id="search-production" multiple="multiple"></select>
       </div>
     </div>
-  </footer>
-</html>
 
+    <div>
+      <button class='btn btn-primary' id="btnSearch"><i class='fa fa-search'></i> Search</button>
+      <a href="index.html" class='btn btn-reset' id="btnReset" data-toggle="tooltip" data-placement="bottom" title="Reset"><i class="fa fa-repeat" aria-hidden="true"></i></a>
+    </div>
 
+  </div>
+
+  <div class="col-md-8">
+    <div id="mapCanvas"></div>
+  </div>
+</div>

@@ -1,7 +1,7 @@
  // Filter Options
 var ownerOptions = ["Private", "NeighborSpace", "City of Chicago", "Chicago Park District", "Chicago Public Schools", "Chicago Public Library"];
-var communityOptions = ["True", "False"];
-var foodProductionOptions = ["True", "False"];
+var communityOptions = ["Yes", "No"];
+var foodProductionOptions = ["Yes", "No"];
 var wardOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50"];
 // Wrap library inside IFFE for safe variable scoping.
 CartoLib = (function() {
@@ -38,16 +38,23 @@ CartoLib = (function() {
       // Initiate leaflet map
       var div = this.mapDivName;
       // var geocoder = new google.maps.Geocoder();
-      var layer = new L.Google('SATELLITE');
+      var satellite = new L.Google('SATELLITE');
+      var roadmap = new L.Google('ROADMAP');
+
+      var baseLayers = {
+        "Satellite" : satellite,
+        "Roadmap" : roadmap
+      };
 
       this.map = new L.Map('mapCanvas', {
         center: this.mapCentroid,
         zoom: this.defaultZoom,
         scrollWheelZoom: false,
-        tapTolerance: 30
+        tapTolerance: 30,
+        layers: satellite
       });
 
-      this.map.addLayer(layer);
+      L.control.layers(baseLayers).addTo(this.map);
   }
 
   CartoLib.prototype.addInfoBox = function(mapPosition, divName, text) {
@@ -100,15 +107,6 @@ CartoLib = (function() {
 
     return layer
   }
-
-
-
-
-
-
-
-
-
 
 // Call this in createSearch, when creating SQL queries from user selection.
   CartoLib.prototype.userSelectSQL = function(array) {
@@ -257,10 +255,6 @@ CartoLib = (function() {
           };
         })
       })
-    }
-
-    if (owner != null) {
-
     }
   
   };
