@@ -1,3 +1,6 @@
+
+@import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+
 /* Styles to prevent Google layer from covering Carto results */
 .leaflet-google-layer {
     z-index: 0 !important;
@@ -62,8 +65,8 @@ iframe {
 
 .btn-reset, .label, .fa-repeat {
   color: #ffffff;
-  background-color: var(--green-color);
-  border-color: var(--green-color);
+  background-color: #828282;
+  border-color: #828282;
 }
 
 .navbar {
@@ -204,6 +207,7 @@ iframe {
 .modal-dialog {
     margin: 2px auto;
     z-index: 1100 !important;
+    margin-top: 10%
 }
 
 .modal-body-bottom .input-group {
@@ -216,4 +220,28 @@ iframe {
 
 .facility-name:hover, .locate-name:hover {
   color: #7F7F7F;
+}
 
+
+.checkbox {
+  margin-top: 1em;
+  margin-bottom: 1.5em;
+  margin-left: -0.5em;
+}
+
+.leaf-box input[type="checkbox"],
+.leaf-box .checked{ 
+  display: none;
+}
+
+.leaf-box input[type="checkbox"]:checked ~ .checked {
+  display: inline-block;
+}
+
+.leaf-box input[type="checkbox"]:checked ~ .unchecked {
+  display: none;
+}
+
+#leafbox {
+  color: var(--green-color);
+}

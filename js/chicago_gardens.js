@@ -50,12 +50,10 @@ $(function() {
       });
 
 
-  $('#search-ward, #search-ownership, #search-community, #search-production').select2();
+  $('#search-ward, #search-ownership').select2();
 
   var ward_data = makeSelectData(wardOptions);
   var ownership_data = makeSelectData(ownerOptions);
-  var community_garden_data = makeSelectData(communityOptions);
-  var food_production_data = makeSelectData(foodProductionOptions);
 
   $(".data-array-ward").select2({
     placeholder: "Ward",
@@ -65,16 +63,6 @@ $(function() {
   $(".data-array-ownership").select2({
     placeholder: "Owner",
     data: ownership_data
-  });
-
-  $(".data-array-community").select2({
-    placeholder: "Community Garden?",
-    data: community_garden_data
-  });
-
-  $(".data-array-production").select2({
-    placeholder: "Food Producing?",
-    data: food_production_data
   });
 });
 
