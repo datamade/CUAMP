@@ -1,130 +1,107 @@
 <!DOCTYPE html>
 <html lang='en'>
 
-  <head>
-    <title>CartoLib</title>
+<head>
+  <title>CartoLib</title>
 
-    <meta charset='utf-8'>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset='utf-8'>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Styles -->
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/jquery-ui.css"/>
-    <link href="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/themes/css/cartodb.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="css/custom.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+  <!-- Styles -->
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/jquery-ui.css"/>
+  <link href="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/themes/css/cartodb.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="css/custom.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
 
-    <!-- CDN for getting Font Awesome icons -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Istok+Web" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-
-
-    <!-- JavaScript -->
-    <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false&libraries=places"></script>
-
-    <script type="text/javascript" src="js/lib/jquery.min.js"></script>
-    <script type="text/javascript" src="js/lib/bootstrap.min.js"></script>
-    <script type="text/javascript" src="js/lib/cartodb.js"></script>
-    <script type="text/javascript" src="js/lib/leaflet-google.js"></script>
-    <script type="text/javascript" src="js/lib/cartoLib.js"></script>
-    <script type="text/javascript" src="js/chicago_gardens.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-
-  </head>
+  <!-- CDN for getting Font Awesome icons -->
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Istok+Web" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 
 
-  <body>
-    <style id="carto-result-style">
-      #carto-result {
-        marker-fill-opacity: 1;
-        marker-line-color: #FFF;
-        marker-line-width: 1.7;
-        marker-line-opacity: 1;
-        marker-placement: point;
-        marker-type: ellipse;
-        marker-width: 14;
-        marker-fill: #3B961C;
-        marker-allow-overlap: true;
-      }
-    </style>
+  <!-- JavaScript -->
+  <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false&libraries=places"></script>
 
-    <style id="carto-result-style2">
-      #carto-result2 {
-        polygon-opacity: 0.2;
-        line-color: #155600;
-        line-width: 0.9;
-        line-opacity: 0.8;
-      }
-    </style>
+  <script type="text/javascript" src="js/lib/jquery.min.js"></script>
+  <script type="text/javascript" src="js/lib/bootstrap.min.js"></script>
+  <script type="text/javascript" src="js/lib/cartodb.js"></script>
+  <script type="text/javascript" src="js/lib/leaflet-google.js"></script>
+  <script type="text/javascript" src="js/lib/cartoLib.js"></script>
+  <script type="text/javascript" src="js/chicago_gardens.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 
-    <nav class="navbar navbar-inverse">
-      <div class="container-fluid">
-          <div class="navbar-header container-fluid">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <div class="navbar-brand hidden-xs">
-              <a href="index.html"><img style="width: 3.5em; height: 3.5em; margin-right: 1.25em" src="images/logo.png"/>The Chicago Urban Agriculture Mapping Project</a>
-            </div>
-            <div class="navbar-brand visible-xs">
-              <a style="font-size: 0.75em; text-align: center;" href="index.html">Chicago Urban Agriculture Mapping Project</a>
-            </div>
-          </div>
+</head>
+
+
+<body>
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header container-fluid">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <div class="navbar-brand hidden-xs">
+          <a href="index.html"><img style="width: 3.5em; height: 3.5em; margin-right: 1.25em" src="images/logo.png"/>The Chicago Urban Agriculture Mapping Project</a>
         </div>
-
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav pull-right" id="dropdown-results">
-              <li>
-                <a href="about.html"><i class="fa fa-info-circle" aria-hidden="true"></i> What We Are</a>
-              </li>
-              <li>
-                <a href="form.html"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a New Location</a>
-              </li>
-          </ul>
-        </div><!--/.nav-collapse -->
+        <div class="navbar-brand visible-xs">
+          <a style="font-size: 0.75em; text-align: center;" href="index.html">Chicago Urban Agriculture Mapping Project</a>
+        </div>
       </div>
-    </nav>
-
-    <div class='container'>
-      {{content}}
     </div>
+
+      <div id="navbar" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav pull-right" id="dropdown-results">
+          <li>
+            <a href="about.html"><i class="fa fa-info-circle" aria-hidden="true"></i> What We Are</a>
+          </li>
+          <li>
+            <a href="form.html"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a New Location</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class='container'>
+    {{content}}
+  </div>
 
 </body>
 
 <footer>
-    <div class="panel panel-footer container-fluid">
-      <div class='col-md-3'>  
-        <h3 style="line-height: 2em">Connect With Us:</h3>
-      </div>
-      <div class='col-md-3 hidden-xs'>
-        <h4><a href="http://neighbor-space.org/" target="_blank">NeighborSpace</a></h4>
-          <p>445 N Sacramento Blvd, Suite 204<br>Chicago, IL 60612<br>Phone: (773) 826-3240<br>Fax: (773) 442-0299<br><a href="mailto:info@neighbor-space.org">info@neighbor-space.org</a></p>
-      </div>
-      <div class='col-md-3 visible-xs'>
-        <h4><a href="http://neighbor-space.org/" target="_blank">NeighborSpace</a></h4>
-          <p>Phone: (773) 826-3240</p>
-      </div>
-      <div class='col-md-3 hidden-xs'>
-        <h4><a href="https://auachicago.org/" target="_blank">Advocates for Urban Agriculture</a></h4>
-          <p><a href="https://www.facebook.com/AUAChicago"><i class="fa fa-facebook-square" aria-hidden="true"></i> Facebook</a><br><a href="https://twitter.com/AUAChicago"><i class="fa fa-twitter-square" aria-hidden="true"></i> Twitter</a><br><a href="mailto:info@auachicago.org">info@auachicago.org</a></p>
-      </div>
-      <div class='col-md-3 visible-xs'>
-        <h4><a href="https://auachicago.org/" target="_blank">Advocates for Urban Agriculture</a></h4>
-          <p><a href="mailto:info@auachicago.org">info@auachicago.org</a></p>
-      </div>
-      <div class='col-md-3 hidden-xs'>
-        <h4><a href="http://steans.depaul.edu/" target="_blank">DePaul University — Steans Center</a></h4>
-          <p>2233 N. Kenmore Ave.<br>Chicago, IL 60614<br>Phone: (773) 325-7457<br>Fax: (773) 325-7459</p>
-      </div>
-      <div class='col-md-3 visible-xs'>
-        <h4><a href="http://steans.depaul.edu/" target="_blank">DePaul University — Steans Center</a></h4>
-          <p>Phone: (773) 325-7457</p>
-      </div>
+  <div class="panel panel-footer container-fluid">
+    <div class='col-md-3'>  
+      <h3 style="line-height: 2em">Connect With Us:</h3>
     </div>
-    </footer>
+    <div class='col-md-3 hidden-xs'>
+      <h4><a href="http://neighbor-space.org/" target="_blank">NeighborSpace</a></h4>
+        <p>445 N Sacramento Blvd, Suite 204<br>Chicago, IL 60612<br>Phone: (773) 826-3240<br>Fax: (773) 442-0299<br><a href="mailto:info@neighbor-space.org">info@neighbor-space.org</a></p>
+    </div>
+    <div class='col-md-3 visible-xs'>
+      <h4><a href="http://neighbor-space.org/" target="_blank">NeighborSpace</a></h4>
+        <p>Phone: (773) 826-3240</p>
+    </div>
+    <div class='col-md-3 hidden-xs'>
+      <h4><a href="https://auachicago.org/" target="_blank">Advocates for Urban Agriculture</a></h4>
+        <p><a href="https://www.facebook.com/AUAChicago"><i class="fa fa-facebook-square" aria-hidden="true"></i> Facebook</a><br><a href="https://twitter.com/AUAChicago"><i class="fa fa-twitter-square" aria-hidden="true"></i> Twitter</a><br><a href="mailto:info@auachicago.org">info@auachicago.org</a></p>
+    </div>
+    <div class='col-md-3 visible-xs'>
+      <h4><a href="https://auachicago.org/" target="_blank">Advocates for Urban Agriculture</a></h4>
+        <p><a href="mailto:info@auachicago.org">info@auachicago.org</a></p>
+    </div>
+    <div class='col-md-3 hidden-xs'>
+      <h4><a href="http://steans.depaul.edu/" target="_blank">DePaul University — Steans Center</a></h4>
+        <p>2233 N. Kenmore Ave.<br>Chicago, IL 60614<br>Phone: (773) 325-7457<br>Fax: (773) 325-7459</p>
+    </div>
+    <div class='col-md-3 visible-xs'>
+      <h4><a href="http://steans.depaul.edu/" target="_blank">DePaul University — Steans Center</a></h4>
+        <p>Phone: (773) 325-7457</p>
+    </div>
+  </div>
+</footer>
 
 </html>

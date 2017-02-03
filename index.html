@@ -2,54 +2,75 @@
 layout: default
 ---
 
-    <div class="modal fade bd-example-modal-md" id="modal-pop" tabindex="-1" role="dialog">
-      <div class="modal-dialog modal-md">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle" aria-hidden="true"></i></span></button>
-            <h4 class="modal-title" id="modal-title"></h4>
-          </div>
+<style id="carto-result-style">
+  #carto-result {
+    marker-fill-opacity: 0.9;
+    marker-line-color: #FFF;
+    marker-line-width: 1.7;
+    marker-line-opacity: 1;
+    marker-placement: point;
+    marker-type: ellipse;
+    marker-width: 14;
+    marker-fill: #3B961C;
+    marker-allow-overlap: true;
+  }
+</style>
 
-          <div class="modal-body">
-            <div class="container-fluid bd-example-row">
-              <div class="row">
-                <div class="col-md-12 get-sm">
-                  <div id="modal-main"></div>
-                  </div>
-                </div>
-                <div class="col-md-4 hidden-xs hidden-s" id="modal-image"></div>
+<style id="carto-result-style2">
+  #carto-result2 {
+    polygon-opacity: 0.2;
+    line-color: #155600;
+    line-width: 0.9;
+    line-opacity: 0.8;
+  }
+</style>
+
+<div class="modal fade bd-example-modal-md" id="modal-pop" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle" aria-hidden="true"></i></span></button>
+        <h4 class="modal-title" id="modal-title"></h4>
+      </div>
+
+      <div class="modal-body">
+        <div class="container-fluid bd-example-row">
+          <div class="row">
+            <div class="col-md-12 get-sm">
+              <div id="modal-main"></div>
               </div>
+            </div>
+          <div class="col-md-4 hidden-xs hidden-s" id="modal-image"></div>
+        </div>
 
-              <div class="row modal-bottom">
-                <div class="col-md-12">
-                  <div class="row">
-                    <div class="col-md-12 get-sm">
-                      <h4 id="owner-header"></h4>
-                      <div id="owner-subsection"></div>
-                    </div>
-                  </div>
+        <div class="row modal-bottom">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-12 get-sm">
+                <h4 id="owner-header"></h4>
+                <div id="owner-subsection"></div>
+              </div>
+            </div>
 
-                  <div class="row">
-                    <div class="col-md-12">
-                      <h4 id="community-header"></h4>
-                      <div id="community-subsection"></div>
-                    </div>
-                  </div>
+            <div class="row">
+              <div class="col-md-12">
+                <h4 id="community-header"></h4>
+                <div id="community-subsection"></div>
+              </div>
+            </div>
 
-                  <div class="row">
-                    <div class="col-md-12 get-sm">
-                      <h4 id="production-header"></h4>
-                      <div id="production-subsection"></div>
-                    </div>
-                  </div>
-                </div>
+            <div class="row">
+              <div class="col-md-12 get-sm">
+                <h4 id="production-header"></h4>
+                <div id="production-subsection"></div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-
+    </div>
+  </div>
+</div>
 
 <div class="row">
   <div class="col-md-4">
@@ -87,7 +108,7 @@ layout: default
     <div>
       <div class="checkbox m-top-sm">
         <label class="leaf-box">
-          <input type="checkbox" id="search-community">
+          <input type="checkbox" id="search-community" value="true">
             <i class="fa fa-fw fa-circle-o unchecked"></i>
             <i class="fa fa-fw fa-leaf checked" id="leafbox"></i>
           Community Garden
@@ -96,7 +117,7 @@ layout: default
 
       <div class="checkbox m-top-sm m-bottom-sm">
         <label class="leaf-box">
-          <input type="checkbox" id="search-production">
+          <input type="checkbox" id="search-production" value="true">
             <i class="fa fa-fw fa-circle-o unchecked"></i>
             <i class="fa fa-fw fa-leaf checked" id="leafbox"></i>
           Food Producing

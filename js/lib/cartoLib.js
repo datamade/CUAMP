@@ -8,25 +8,25 @@ CartoLib = (function() {
 // Declaration of CartoLib function.
   function CartoLib() {
     // Quick variable reference to map settings.
-    this.cartoTableName     = '';
-    this.cartoUserName      = '';
-    this.locationScope      = 'chicago';
-    this.mapDivName         = '';
-    this.map                = null;
-    this.mapCentroid        = new L.LatLng(41.901557, -87.630360),
-    this.defaultZoom        = 11;
-    this.lastClickedLayer   = null;
-    this.geojson            = '';
-    this.fields             = '';
-    this.currentPinpoint    = '';
-    this.userSelection      = '';
-    this.wardSelection      = '';
-    this.ownerSelection     = '';
-    this.communitySelection = '';
-    this.productionSelection= '';
-    this.centerMark         = '';
-    this.radiusCircle       = '';
-    this.wardBorder         = '';
+    this.cartoTableName       = '';
+    this.cartoUserName        = '';
+    this.locationScope        = 'chicago';
+    this.mapDivName           = '';
+    this.map                  = null;
+    this.mapCentroid          = new L.LatLng(41.901557, -87.630360),
+    this.defaultZoom          = 11;
+    this.lastClickedLayer     = null;
+    this.geojson              = '';
+    this.fields               = '';
+    this.currentPinpoint      = '';
+    this.userSelection        = '';
+    this.wardSelections       = '';
+    this.ownerSelections      = '';
+    this.communitySelections  = '';
+    this.productionSelections = '';
+    this.centerMark           = '';
+    this.radiusCircle         = '';
+    this.wardBorder           = '';
     // Create geocoder object to access Google Maps API. Add underscore to insure variable safety.
     this._geocoder      = new google.maps.Geocoder();
     // Turn on autocomplete to predict address when user begins to type.
@@ -108,17 +108,16 @@ CartoLib = (function() {
     return layer
   }
 
-// Call this in createSearch, when creating SQL queries from user selection.
-  CartoLib.prototype.userSelectSQL = function(array) {
-    var results = '';
 
-    $.each( array, function(index, obj) {
-      CartoLib.userSelection += " AND LOWER(" + CartoDbLib.addUnderscore(obj.text) + ") LIKE '%yes%'"
-      results += (obj.text + ", ")
-    })
+  // CartoLib.prototype.userSelectionSQL = function(array) {
+  //   var results = '';
+  //   $.each( array, function(index, obj) {
+  //     userSelection += " AND LOWER(" + CartoDbLib.addUnderscore(obj.text) + ") LIKE '%yes%'"
+  //     results += (obj.text + ", ")
+  //   })
 
-    return results
-  },
+  //   return results
+  // },
 
 
   CartoLib.prototype.runSQL = function() {
@@ -132,36 +131,29 @@ CartoLib = (function() {
       CartoLib.geoSearch = ''
     }
 
+
     CartoLib.userSelection = '';
     // Gets selected elements in dropdown (represented as an array of objects).
-    var wardUserSelections = ($("#select-ward").select2('data'))
-    var ownerUserSelections = ($("#select-ownership").select2('data'))
-    var communityUserSelections = ($("#select-community").select2('data'))
-    var productionUserSelections = ($("#select-production").select2('data'))
+    var wardUserSelections = ($("#search-ward").select2('data'))
+    var ownerUserSelections = ($("#search-ownership").select2('data'))
 
-    // Set results equal to varaible – to be used when creating cookies.
-    var wardResults = CartoLib.prototype.userSelectSQL(wardUserSelections);
-    CartoLib.wardSelections = wardResults;
-
-    var ownerResults = CartoLib.prototype.userSelectSQL(ownerUserSelections);
-    CartoLib.ownerSelections = ownerResults;
-
-    var communityTypeResults = CartoLib.prototype.userSelectSQL(communityUserSelections);
-    CartoLib.communitySelections = communityTypeResults;
-
-    var productionResults = CartoLib.prototype.userSelectSQL(productionUserSelections);
-    CartoLib.productionselections = productionResults;
-
-    CartoLib.whereClause = " WHERE the_geom is not null AND ";
-
-    if (CartoLib.geoSearch != "") {
-      CartoLib.whereClause += CartoLib.geoSearch;
-      CartoLib.whereClause += CartoLib.userSelection;
+    if ($('#search-community').is(':checked')) {
+      var communityUserSelections = 'true';
     }
     else {
-      CartoLib.whereClause = " WHERE the_geom is not null ";
-      CartoLib.whereClause += CartoLib.userSelection;
+      var communityUserSelections = 'false';
     }
+
+    if ($('#search-production').is(':checked')) {
+      var productionUserSelections = 'true';
+    }
+    else {
+      var productionUserSelections = 'false';
+    }
+
+    var userSelection = [wardUserSelections, ownerUserSelections, communityUserSelections, productionUserSelections];
+    console.log(userSelection)
+
   };
 
   CartoLib.prototype.setZoom = function(radius) {
@@ -176,88 +168,107 @@ CartoLib = (function() {
     this.map.setView(new L.LatLng( this.currentPinpoint[0], this.currentPinpoint[1] ), zoom)
   };
 
-  CartoLib.prototype.doSearch = function() {
-    this.clearSearch();
+  // CartoLib.prototype.doSearch = function() {
+  //   this.clearSearch();
 
-    var cartoLib = this;
-    // #search-address refers to a div id in map-example.html. You can rename this div.
-    var address = $("#search-address").val();
-    var radius = $("#search-radius").val();
-    var ward_number = $("#search-ward").val();
-    var owner = $("#search-ownership").val();
-    var community_garden = $("#search-community").val();
-    var food_production = $("#search-production").val();
-    var location = this.locationScope;
+  //   var cartoLib = this;
+  //   // #search-address refers to a div id in map-example.html. You can rename this div.
+  //   var address = $("#search-address").val();
+  //   var radius = $("#search-radius").val();
+  //   var ward_number = $("#search-ward").val();
+  //   var owner = $("#search-ownership").val();
+  //   var community_garden = $("#search-community").val();
+  //   var food_production = $("#search-production").val();
+  //   var location = this.locationScope;
 
-    if (radius == null && address != "") {
-      radius = 8050;
-    }
+  //   if (radius == null && address != "") {
+  //     radius = 8050;
+  //   }
 
-    if (address != "") {
-      this._geocoder.geocode( { 'address' : address }, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-         cartoLib.currentPinpoint = [results[0].geometry.location.lat(), results[0].geometry.location.lng()];
-          var geoSearch = "ST_DWithin(ST_SetSRID(ST_POINT(" + cartoLib.currentPinpoint[1] + ", " + cartoLib.currentPinpoint[0] + "), 4326)::geography, the_geom::geography, " + radius + ")";
-          var whereClause = " WHERE the_geom is not null AND " + geoSearch;
+  //   if (address != "") {
+  //     this._geocoder.geocode( { 'address' : address }, function(results, status) {
+  //       if (status == google.maps.GeocoderStatus.OK) {
+  //        cartoLib.currentPinpoint = [results[0].geometry.location.lat(), results[0].geometry.location.lng()];
+  //         var geoSearch = "ST_DWithin(ST_SetSRID(ST_POINT(" + cartoLib.currentPinpoint[1] + ", " + cartoLib.currentPinpoint[0] + "), 4326)::geography, the_geom::geography, " + radius + ")";
+  //         var whereClause = " WHERE the_geom is not null AND " + geoSearch;
 
-          // CartoLib.prototype.runSQL()
-          // $.address.parameter('ward', encodeURIComponent(CartoLib.wardSelections));
-          // $.address.parameter('owner', encodeURIComponent(CartoLib.ownerSelections));
-          // $.address.parameter('community', encodeURIComponent(CartoLib.communityTypeSelections));
-          // $.address.parameter('production', encodeURIComponent(CartoLib.productionSelections));
+  //         var path = $.address.value();
+  //         var parameters = {
+  //           "address": CartoLib.address,
+  //           "radius": CartoLib.radius,
+  //           "ward": CartoLib.wardSelections,
+  //           "owner": CartoLib.ownerSelections,
+  //           "community": CartoLib.communitySelections,
+  //           "production": CCartoLib.productionSelections,
+  //           "path": path
+  //         }
 
-          cartoLib.setZoom(radius);
-          cartoLib.addIcon();
-          cartoLib.addCircle(radius);
-        }
-        else {
-          alert("We could not find your address: " + status);
-        }
-      });
-    }
+  //         CartoLib.prototype.runSQL();
+  //         $.address.parameter('ward', CartoLib.wardSelections);
+  //         $.address.parameter('owner', CartoLib.ownerSelections);
+  //         $.address.parameter('community', CartoLib.communitySelections);
+  //         $.address.parameter('production', CartoLib.productionSelections);
 
-    //search without geocoding callback
-    // if (address = "") { 
-    //   CartoLib.map.setView(new L.LatLng( CartoLib.map_centroid[0], CartoLib.map_centroid[1] ), CartoLib.defaultZoom)
+  //         cartoLib.setZoom(radius);
+  //         cartoLib.addIcon();
+  //         cartoLib.addCircle(radius);
+  //       }
+  //       else {
+  //         alert("We could not find your address: " + status);
+  //       }
+  //     });
+  //   }
 
-    //   CartoLib.prototype.runSQL();
-    //   $.address.parameter('ward', encodeURIComponent(CartoLib.wardSelections));
-    //   $.address.parameter('owner', encodeURIComponent(CartoLib.ownerSelections));
-    //   $.address.parameter('community', encodeURIComponent(CartoLib.communityTypeSelections));
-    //   $.address.parameter('production', encodeURIComponent(CartoLib.productionSelections));
+  //   if (ward_number != null) {
+  //     var sql_query = "SELECT ward_addr FROM table_2015_ward_offices WHERE ward=" + ward_number;
+  //     var sql = new cartodb.SQL({ user:'clearstreets' });
+  //     var searcher = this._geocoder
+  //     sql.execute(sql_query).done(function (data){
 
-    // }
+  //       content = data.rows[0].ward_addr
+  //       searcher.geocode( { 'address' : content }, function(results, status) {
+  //         if (status == google.maps.GeocoderStatus.OK) {
+  //           cartoLib.currentPinpoint = [results[0].geometry.location.lat(), results[0].geometry.location.lng()]
+  //           var geoFind = "ST_SetSRID(ST_POINT(" + cartoLib.currentPinpoint[1] + ", " + cartoLib.currentPinpoint[0] + "), 8050)";
 
-    if (ward_number != null) {
-      var sql_query = "SELECT ward_addr FROM table_2015_ward_offices WHERE ward=" + ward_number;
-      var sql = new cartodb.SQL({ user:'clearstreets' });
-      var searcher = this._geocoder
-      sql.execute(sql_query).done(function (data){
+  //           radius = 8050;
 
-        content = data.rows[0].ward_addr
-        console.log(content)
-        searcher.geocode( { 'address' : content }, function(results, status) {
-          console.log(results)
-          if (status == google.maps.GeocoderStatus.OK) {
-            cartoLib.currentPinpoint = [results[0].geometry.location.lat(), results[0].geometry.location.lng()]
-            var geoFind = "ST_SetSRID(ST_POINT(" + cartoLib.currentPinpoint[1] + ", " + cartoLib.currentPinpoint[0] + "), 8050)";
+  //           cartoLib.addIcon();
+  //           cartoLib.setZoom(radius);
 
-            radius = 8050;
+  //         }
 
-            // cartoLib.addWard();
-            cartoLib.addIcon();
-            cartoLib.setZoom(radius);
+  //         else {
+  //           alert("We could not find your ward")
+  //         };
+  //       })
+  //     })
+  //   }
 
-          }
+  //   else {
+  //     this.map.setView(this.mapCentroid, this.defaultZoom)
+  //     // var parameters = {
+  //     //   "address": CartoLib.address,
+  //     //   "radius": CartoLib.radius,
+  //     //   "ward": CartoLib.wardSelections,
+  //     //   "owner": CartoLib.ownerSelections,
+  //     //   "community": CartoLib.communitySelections,
+  //     //   "production": CartoLib.productionSelections
+  //     // }
 
-          else {
-            alert("We could not find your ward")
-          };
-        })
-      })
-    }
+  //     CartoLib.prototype.runSQL();
+
+  //     // $.address.parameter('ward', CartoLib.wardSelections);
+  //     // $.address.parameter('owner', CartoLib.ownerSelections);
+  //     // $.address.parameter('community', CartoLib.communitySelections);
+  //     // $.address.parameter('production', CartoLib.productionSelections);
+
+  //     cartoLib.setZoom(radius);
+  //     cartoLib.addIcon();
+  //     cartoLib.addCircle(radius);
+  //   }
   
-  };
+  // };
 
   CartoLib.prototype.addUnderscore = function() {
     var newText = this.text.replace(/\s/g, '_').replace(/[\/]/g, '_').replace(/[\:]/g, '')
