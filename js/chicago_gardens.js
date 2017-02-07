@@ -137,6 +137,7 @@ CartoLib.prototype.doSearch = function() {
     var owner = $("#search-ownership").val();
     var community_garden = $("#search-community").val();
     var food_production = $("#search-production").val();
+    var whereClause = " WHERE the_geom is not null";
     var location = this.locationScope;
 
     if (radius == null && address != "") {
@@ -148,7 +149,7 @@ CartoLib.prototype.doSearch = function() {
         if (status == google.maps.GeocoderStatus.OK) {
          cartoLib.currentPinpoint = [results[0].geometry.location.lat(), results[0].geometry.location.lng()];
           var geoSearch = "ST_DWithin(ST_SetSRID(ST_POINT(" + cartoLib.currentPinpoint[1] + ", " + cartoLib.currentPinpoint[0] + "), 4326)::geography, the_geom::geography, " + radius + ")";
-          var whereClause = " WHERE the_geom is not null AND " + geoSearch;
+          whereClause += " AND " + geoSearch
 
           // var path = $.address.value();
           // var parameters = {
@@ -203,27 +204,27 @@ CartoLib.prototype.doSearch = function() {
       })
     }
 
-    else {
-      // this.map.setView(this.mapCentroid, this.defaultZoom)
-      // var parameters = {
-      //   "address": CartoLib.address,
-      //   "radius": CartoLib.radius,
-      //   "ward": CartoLib.wardSelections,
-      //   "owner": CartoLib.ownerSelections,
-      //   "community": CartoLib.communitySelections,
-      //   "production": CartoLib.productionSelections
-      // }
+    // if {
+    //   // this.map.setView(this.mapCentroid, this.defaultZoom)
+    //   // var parameters = {
+    //   //   "address": CartoLib.address,
+    //   //   "radius": CartoLib.radius,
+    //   //   "ward": CartoLib.wardSelections,
+    //   //   "owner": CartoLib.ownerSelections,
+    //   //   "community": CartoLib.communitySelections,
+    //   //   "production": CartoLib.productionSelections
+    //   // }
 
-      CartoLib.prototype.runSQL();
+    //   CartoLib.prototype.runSQL();
 
-      // $.address.parameter('ward', CartoLib.wardSelections);
-      // $.address.parameter('owner', CartoLib.ownerSelections);
-      // $.address.parameter('community', CartoLib.communitySelections);
-      // $.address.parameter('production', CartoLib.productionSelections);
+    //   // $.address.parameter('ward', CartoLib.wardSelections);
+    //   // $.address.parameter('owner', CartoLib.ownerSelections);
+    //   // $.address.parameter('community', CartoLib.communitySelections);
+    //   // $.address.parameter('production', CartoLib.productionSelections);
 
-      // cartoLib.setZoom(radius);
-      // cartoLib.addIcon();
-      // cartoLib.addCircle(radius);
-    }
+    //   // cartoLib.setZoom(radius);
+    //   // cartoLib.addIcon();
+    //   // cartoLib.addCircle(radius);
+    // }
   
   };
