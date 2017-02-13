@@ -29,3 +29,10 @@ markdown: kramdown
 exclude:
   - Gemfile
   - Gemfile.lock
+
+...
+defaults:
+  -
+    values:
+      layout: "default"
+...

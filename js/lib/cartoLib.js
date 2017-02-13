@@ -1,22 +1,32 @@
+ // Filter Options
+var ownerOptions = ["Private", "NeighborSpace", "City of Chicago", "Chicago Park District", "Chicago Public Schools", "Chicago Public Library"];
+var communityOptions = ["Yes", "No"];
+var foodProductionOptions = ["Yes", "No"];
+var wardOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50"];
 // Wrap library inside IFFE for safe variable scoping.
 CartoLib = (function() {
 // Declaration of CartoLib function.
   function CartoLib() {
     // Quick variable reference to map settings.
-    this.cartoTableName   = '';
-    this.cartoUserName    = '';
-    this.locationScope    = 'chicago';
-    this.mapDivName       = '';
-    this.map              = null;
-    this.mapCentroid      = new L.LatLng(41.901557, -87.630360),
-    this.defaultZoom      = 11;
-    this.lastClickedLayer = null;
-    this.geojson          = null;
-    this.fields           = '';
-    this.currentPinpoint  = '';
-    this.centerMark       = '';
-    this.radiusCircle     = '';
-    this.wardBorder       = '';
+    this.cartoTableName       = '';
+    this.cartoUserName        = '';
+    this.locationScope        = 'chicago';
+    this.mapDivName           = '';
+    this.map                  = null;
+    this.mapCentroid          = new L.LatLng(41.901557, -87.630360),
+    this.defaultZoom          = 11;
+    this.lastClickedLayer     = null;
+    this.geojson              = '';
+    this.fields               = '';
+    this.currentPinpoint      = '';
+    this.userSelection        = '';
+    this.wardSelections       = '';
+    this.ownerSelections      = '';
+    this.communitySelections  = '';
+    this.productionSelections = '';
+    this.centerMark           = '';
+    this.radiusCircle         = '';
+    this.wardBorder           = '';
     // Create geocoder object to access Google Maps API. Add underscore to insure variable safety.
     this._geocoder      = new google.maps.Geocoder();
     // Turn on autocomplete to predict address when user begins to type.
@@ -28,16 +38,23 @@ CartoLib = (function() {
       // Initiate leaflet map
       var div = this.mapDivName;
       // var geocoder = new google.maps.Geocoder();
-      var layer = new L.Google('Roadmap');
+      var satellite = new L.Google('SATELLITE');
+      var roadmap = new L.Google('ROADMAP');
+
+      var baseLayers = {
+        "Satellite" : satellite,
+        "Roadmap" : roadmap
+      };
 
       this.map = new L.Map('mapCanvas', {
         center: this.mapCentroid,
         zoom: this.defaultZoom,
         scrollWheelZoom: false,
-        tapTolerance: 30
+        tapTolerance: 30,
+        layers: satellite
       });
 
-      this.map.addLayer(layer);
+      L.control.layers(baseLayers).addTo(this.map);
   }
 
   CartoLib.prototype.addInfoBox = function(mapPosition, divName, text) {
@@ -91,6 +108,54 @@ CartoLib = (function() {
     return layer
   }
 
+
+  // CartoLib.prototype.userSelectionSQL = function(array) {
+  //   var results = '';
+  //   $.each( array, function(index, obj) {
+  //     userSelection += " AND LOWER(" + CartoDbLib.addUnderscore(obj.text) + ") LIKE '%yes%'"
+  //     results += (obj.text + ", ")
+  //   })
+
+  //   return results
+  // },
+
+
+  CartoLib.prototype.runSQL = function() {
+     // Devise SQL calls for geosearch and language search.
+    var address = $("#search-address").val();
+
+    if(CartoLib.currentPinpoint != null && address != '') {
+      CartoLib.geoSearch = "ST_DWithin(ST_SetSRID(ST_POINT(" + CartoLib.currentPinpoint[1] + ", " + CartoLib.currentPinpoint[0] + "), 4326)::geography, the_geom::geography, " + CartoLib.radius + ")";
+    }
+    else {
+      CartoLib.geoSearch = ''
+    }
+
+
+    CartoLib.userSelection = '';
+    // Gets selected elements in dropdown (represented as an array of objects).
+    var wardUserSelections = ($("#search-ward").select2('data'))
+    var ownerUserSelections = ($("#search-ownership").select2('data'))
+
+    if ($('#search-community').is(':checked')) {
+      var communityUserSelections = 'true';
+    }
+    else {
+      var communityUserSelections = 'false';
+    }
+
+    if ($('#search-production').is(':checked')) {
+      var productionUserSelections = 'true';
+    }
+    else {
+      var productionUserSelections = 'false';
+    }
+
+    var userSelection = [wardUserSelections, ownerUserSelections, communityUserSelections, productionUserSelections];
+    console.log(userSelection)
+
+  };
+
   CartoLib.prototype.setZoom = function(radius) {
     var zoom = '';
     if (radius >= 8050) zoom = 12; // 5 miles
@@ -101,47 +166,71 @@ CartoLib = (function() {
     else zoom = 16;
 
     this.map.setView(new L.LatLng( this.currentPinpoint[0], this.currentPinpoint[1] ), zoom)
-  }
+  };
 
-  CartoLib.prototype.setZoom = function(ward) {
-    var zoom = '';
-    if (ward) zoom = 13; // 2 miles
-    else zoom = 12;
+  CartoLib.prototype.renderMap = function() {
+      var layerOpts = {
+        user_name: CartoDbLib.userName,
+        type: 'cartodb',
+        cartodb_logo: false,
+        sublayers: [
+          {
+            sql: "SELECT * FROM " + CartoDbLib.tableName + CartoDbLib.whereClause,
+            cartocss: $('#probation-maps-styles').html().trim(),
+            interactivity: CartoDbLib.fields
+          }
+        ]
+      }
 
-    this.map.setView(new L.LatLng( this.currentPinpoint[0], this.currentPinpoint[1] ), zoom)
-  }
+      CartoDbLib.dataLayer = cartodb.createLayer(CartoDbLib.map, layerOpts, { https: true })
+        .addTo(CartoDbLib.map)
+        .done(function(layer) {
+          CartoDbLib.sublayer = layer.getSubLayer(0);
+          CartoDbLib.sublayer.setInteraction(true);
+          CartoDbLib.sublayer.on('featureOver', function(e, latlng, pos, data, subLayerIndex) {
+            $('#mapCanvas div').css('cursor','pointer');
+            CartoDbLib.info.update(data);
+          })
+          CartoDbLib.sublayer.on('featureOut', function(e, latlng, pos, data, subLayerIndex) {
+            $('#mapCanvas div').css('cursor','inherit');
+            CartoDbLib.info.clear();
+          })
+          CartoDbLib.sublayer.on('featureClick', function(e, latlng, pos, data) {
+              CartoDbLib.modalPop(data);
+          })
+          CartoDbLib.sublayer.on('error', function(err) {
+            console.log('error: ' + err);
+          })
+        }).on('error', function(e) {
+          console.log('ERROR')
+          console.log(e)
+        });
+  },
 
-  CartoLib.prototype.doSearch = function() {
-    this.clearSearch();
-
-    var cartoLib = this;
-    // #search-address refers to a div id in map-example.html. You can rename this div.
-    var address = $("#search-address").val();
-    var radius = $("#search-radius").val();
-    var ward = $("#ward-number").val();
-    var location = this.locationScope;
-
-    if (radius == null && address != "") {
-      radius = 8050;
+  CartoLib.prototype.clearSearch = function(){
+    if (CartoDbLib.sublayer) {
+      CartoDbLib.sublayer.remove();
     }
+    if (CartoDbLib.centerMark)
+      CartoDbLib.map.removeLayer( CartoDbLib.centerMark );
+    if (CartoDbLib.radiusCircle)
+      CartoDbLib.map.removeLayer( CartoDbLib.radiusCircle );
+  },
 
-    if (address != "") {
-      this._geocoder.geocode( { 'address': address }, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-         cartoLib.currentPinpoint = [results[0].geometry.location.lat(), results[0].geometry.location.lng()];
-          var geoSearch = "ST_DWithin(ST_SetSRID(ST_POINT(" + cartoLib.currentPinpoint[1] + ", " + cartoLib.currentPinpoint[0] + "), 4326)::geography, the_geom::geography, " + radius + ")";
-          var whereClause = " WHERE the_geom is not null AND " + geoSearch;
 
-          cartoLib.setZoom(radius);
-          cartoLib.addIcon();
-          cartoLib.addCircle(radius);
-        }
-        else {
-          alert("We could not find your address: " + status);
-        }
-      });
+  CartoLib.prototype.addUnderscore = function() {
+    var newText = this.text.replace(/\s/g, '_').replace(/[\/]/g, '_').replace(/[\:]/g, '')
+    if (newText[0].match(/^[1-9]\d*/)) {
+      newText = "_" + newText
     }
-  }
+    if (newText.includes("True")) {
+      newText = "Yes"
+    }
+    if (newText.includes("False")) {
+      newText = "No"
+    }
+    return newText.toLowerCase();
+  };
 
   CartoLib.prototype.addIcon = function() {
     this.centerMark = new L.Marker(this.currentPinpoint, {
@@ -158,8 +247,8 @@ CartoLib = (function() {
 
   CartoLib.prototype.addCircle = function(radius) {
     this.radiusCircle = new L.circle(this.currentPinpoint, radius, {
-        fillColor:'#478DFF',
-        fillOpacity:'0.25',
+        fillColor:'#8A2B85',
+        fillOpacity:'0.4',
         stroke: false,
         clickable: false
     });

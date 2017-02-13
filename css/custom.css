@@ -1,3 +1,6 @@
+
+@import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+
 /* Styles to prevent Google layer from covering Carto results */
 .leaflet-google-layer {
     z-index: 0 !important;
@@ -10,7 +13,7 @@
 /* Styles for info window. */
 .infoBox {
     padding: 6px 8px;
-    font: 14px/16px Arial, Helvetica, sans-serif; /* Let's change this to a custom Google font.*/
+    font-family: 'Roboto', sans-serif;
     background: #fff;
     background: rgba(255,255,255,0.8);
     box-shadow: 0 0 15px rgba(0,0,0,0.2);
@@ -29,7 +32,7 @@ body {
 }
 
 a { 
-  color: inherit; 
+  color: inherit !important;
 }
 
 iframe {
@@ -37,50 +40,64 @@ iframe {
   height: 1950px;
 }
 
+:root {
+  --text-color: #f7fff4;
+  --green-color: #3B961C;
+  --purple-color: #8A2B85;
+}
+
+.btn {
+  margin-right: 0.1%;
+  margin-left: 0;
+  margin-bottom: 1em;
+  font-size: 16px;
+}
+
+.btn-primary {
+  background-color: var(--purple-color);
+  border-color: var(--purple-color);
+}
+
+.btn-primary:hover {
+  background-color: #A0499C;
+  border-color: #A0499C;
+}
+
+.btn-reset, .label, .fa-repeat {
+  color: #ffffff;
+  background-color: #828282;
+  border-color: #828282;
+}
+
 .navbar {
   font-family: 'Istok Web', sans-serif;
-  color: #f7fff4;
-  background-color: #3b961c;
-  border-color: #3b961c;
+  color: var(--text-color);
+  background-color: var(--purple-color);
+  border-color: var(--purple-color);
+  line-height: 1em;
 }
 
 .navbar-inverse {
-  background-color: #3b961c; /* This background color is a little gross. I woner if you can find something to compliment the logo, not match it.*/
-  border-color: #3b961c;
-}
-
-
-/* You do not need to "float" elements with bootstrap. Try putting the logo inside the navbar-brand class.*/
-.center {
-    float:left;
-    width: 80px;
-    height: 100%;
-    margin: 10px;
-}
-
-.center2{
-    float:left;
-    width: 90px;
-    height: 100%;
-    margin: 8px;
+  background-color: var(--purple-color);
+  border-color: var(--purple-color);
 }
 
 .navbar-inverse .navbar-brand {
-  color: #f7fff4; /* Repeated color attributes (see bleow): a good opportunity for a CSS variable! */
-  margin: 27px; /* I think you can use percents for these margin measurements...there's certainly controversy about this: EM vs. Percent vs. Pixels. Generally, if I find myself putting something as exact as "27px", I assume something could go wrong, especially with responsive design. */
-  font-size: 28px;
-  float: left;
+  color: var(--text-color);
+  margin: 0.25em; 
+  font-size: 1.8em;
+  line-height: 0.9em;
 }
 
 .navbar-inverse .navbar-nav > li > a {
-  color: #f7fff4;
-  margin-top: 27px;
-  font-size: 17px;
+  color: var(--text-color);
+  font-size: 1.25em;
+  margin-top: 1em;
 }
 
 .navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:focus, .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:visited {
-  color: #f7fff4;
-  background-color: #73AD63;
+  color: var(--text-color);
+  background-color: #A0499C;
   border: 0px;
 }
 
@@ -92,15 +109,139 @@ iframe {
 }
 
 .panel-footer {
-  background-color: #3b961c;
-  border-color: #3b961c;
+  background-color: var(--purple-color);
+  border-color: var(--purple-color);
   text-align: center;
-  margin-top: 20px;
-  padding: 10px;
+  margin-top: 1em;
   font-family: 'Istok Web', sans-serif;
-  font-size: 12px;
-  color: #f7fff4;
-  height: 160px;
-
+  font-size: 0.9em;
+  color: var(--text-color);
 }
 
+.form-control {
+  height: 36px;
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+.modal-body-bottom .input-group {
+  width: 100%;
+  height: 36px;
+  font-size: 14px;
+}
+
+
+.select2-container {
+   width: 94% !important;
+}
+
+.select2-container--default .select2-selection--multiple {
+    border-bottom-left-radius: 0 !important;
+    border-top-left-radius: 0 !important;
+    border-left: 0;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+  margin-top: 2%;
+}
+
+.dropdown-menu > li > a {
+  display: inline;
+  padding: 5px 4px;
+}
+
+.m-top-sm { 
+  margin-top: 15px;
+}
+
+.m-bottom-sm { 
+  margin-bottom: 15px;
+}
+
+.modal-header {
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--green-color);
+  color: #FFF;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+#modal-main > p {
+  font-family: 'Roboto', sans-serif;
+  margin-bottom: 2px;
+  word-wrap: break-word;
+  font-size: 20px;
+}
+
+.modal-p {
+  font-family: 'Roboto', sans-serif;
+  margin-bottom: 0.8em;
+  word-wrap: break-word;
+  line-height: 1;
+}
+
+.modal-bottom {
+  border-top: 1px solid #CECECE;
+  margin-top: 2em;
+}
+
+.modal-body-bottom { border-top: 1px solid #F0F0F0; }
+
+.modal-directions { 
+  font-weight: 700; 
+  font-size: 17px;
+  color: #A81F32 ;
+}
+
+#post-shortlink {
+  width: 50%;
+  border-radius: 5px;
+  margin-right: 0.5em;
+  margin-bottom: 1em;
+  color: #CECECE;
+}
+
+.modal-backdrop {
+    z-index: 1040 !important;
+}
+.modal-dialog {
+    margin: 2px auto;
+    z-index: 1100 !important;
+    margin-top: 10%
+}
+
+.modal-body-bottom .input-group {
+  width: 100%;
+}
+
+.fa-times-circle {
+  margin-top: .15em;
+}
+
+.facility-name:hover, .locate-name:hover {
+  color: #7F7F7F;
+}
+
+
+.checkbox {
+  margin-top: 1em;
+  margin-bottom: 1.5em;
+  margin-left: -0.5em;
+}
+
+.leaf-box input[type="checkbox"],
+.leaf-box .checked{ 
+  display: none;
+}
+
+.leaf-box input[type="checkbox"]:checked ~ .checked {
+  display: inline-block;
+}
+
+.leaf-box input[type="checkbox"]:checked ~ .unchecked {
+  display: none;
+}
+
+#leafbox {
+  color: var(--green-color);
+}
