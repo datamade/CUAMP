@@ -94,41 +94,40 @@ var chicagoGardens = {
     return createdLayer;
   },
 
-  runSQL: function() {
-     // Devise SQL calls for geosearch and language search.
-    var address = $("#search-address").val();
+  // runSQL: function() {
+  //    // Devise SQL calls for geosearch and language search.
+  //   var address = $("#search-address").val();
 
-    if(CartoLib.currentPinpoint != null && address != '') {
-      CartoLib.geoSearch = "ST_DWithin(ST_SetSRID(ST_POINT(" + CartoLib.currentPinpoint[1] + ", " + CartoLib.currentPinpoint[0] + "), 4326)::geography, the_geom::geography, " + CartoLib.radius + ")";
-    }
-    else {
-      CartoLib.geoSearch = ''
-    }
+  //   if(CartoLib.currentPinpoint != null && address != '') {
+  //     CartoLib.geoSearch = "ST_DWithin(ST_SetSRID(ST_POINT(" + CartoLib.currentPinpoint[1] + ", " + CartoLib.currentPinpoint[0] + "), 4326)::geography, the_geom::geography, " + CartoLib.radius + ")";
+  //   }
+  //   else {
+  //     CartoLib.geoSearch = ''
+  //   }
 
 
-    CartoLib.userSelection = '';
-    // Gets selected elements in dropdown (represented as an array of objects).
-    var wardUserSelections = ($("#search-ward").select2('data'))
-    var ownerUserSelections = ($("#search-ownership").select2('data'))
+  //   CartoLib.userSelection = '';
+  //   // Gets selected elements in dropdown (represented as an array of objects).
+  //   var wardUserSelections = ($("#search-ward").select2('data'))
+  //   var ownerUserSelections = ($("#search-ownership").select2('data'))
 
-    if ($('#search-community').is(':checked')) {
-      var communityUserSelections = 'true';
-    }
-    else {
-      var communityUserSelections = 'false';
-    }
+  //   if ($('#search-community').is(':checked')) {
+  //     var communityUserSelections = 'true';
+  //   }
+  //   else {
+  //     var communityUserSelections = 'false';
+  //   }
 
-    if ($('#search-production').is(':checked')) {
-      var productionUserSelections = 'true';
-    }
-    else {
-      var productionUserSelections = 'false';
-    }
+  //   if ($('#search-production').is(':checked')) {
+  //     var productionUserSelections = 'true';
+  //   }
+  //   else {
+  //     var productionUserSelections = 'false';
+  //   }
 
-    var userSelection = [wardUserSelections, ownerUserSelections, communityUserSelections, productionUserSelections];
-    console.log(userSelection)
+  //   var userSelection = [wardUserSelections, ownerUserSelections, communityUserSelections, productionUserSelections];
 
-  },
+  // },
 
   setZoom: function(radius) {
     var zoom = '';
@@ -142,7 +141,7 @@ var chicagoGardens = {
     this.map.setView(new L.LatLng( this.currentPinpoint[0], this.currentPinpoint[1] ), zoom)
   },
 
-    clearSearch: function(){
+  clearSearch: function(){
     if (CartoDbLib.sublayer) {
       CartoDbLib.sublayer.remove();
     }
@@ -153,17 +152,8 @@ var chicagoGardens = {
   },
 
 
-  addUnderscore: function() {
-    var newText = this.text.replace(/\s/g, '_').replace(/[\/]/g, '_').replace(/[\:]/g, '')
-    if (newText[0].match(/^[1-9]\d*/)) {
-      newText = "_" + newText
-    }
-    if (newText.includes("True")) {
-      newText = "Yes"
-    }
-    if (newText.includes("False")) {
-      newText = "No"
-    }
+  addUnderscore: function(text) {
+    var newText = text.replace(/\s/g, '_').replace(/[\/]/g, '_').replace(/[\:]/g, '')
     return newText.toLowerCase();
   },
 
@@ -201,14 +191,19 @@ var chicagoGardens = {
   doSearch: function() {
     this.clearSearch();
     var gardenMap = this;
-    console.log('searching')
     // // #search-address refers to a div id in map-example.html. You can rename this div.
     var address = $("#search-address").val();
     var radius = $("#search-radius").val();
     // var ward_number = $("#search-ward").val();
-    // var owner = $("#search-ownership").val();
+    var owner = $("#search-ownership").select2('data');
+    var ownerSQL = this.userSelectionSQL(owner)
     // var community_garden = $("#search-community").val();
-    // var food_production = $("#search-production").val();
+    var food_production = $("#search-production").val();
+
+    if (food_production) {
+      var foodSQL = ' WHERE food_production = true';
+    }
+
     var whereClause = " WHERE the_geom is not null";
     var location = gardenMap.locationScope;
 
@@ -222,7 +217,8 @@ var chicagoGardens = {
         if (status == google.maps.GeocoderStatus.OK) {
          gardenMap.currentPinpoint = [results[0].geometry.location.lat(), results[0].geometry.location.lng()];
           var geoSearch = "ST_DWithin(ST_SetSRID(ST_POINT(" + gardenMap.currentPinpoint[1] + ", " + gardenMap.currentPinpoint[0] + "), 4326)::geography, the_geom::geography, " + radius + ")";
-          whereClause += " AND " + geoSearch
+          whereClause += " AND " + geoSearch + foodSQL
+          console.log(whereClause)
 
           // var path = $.address.value();
           // var parameters = {
@@ -231,7 +227,7 @@ var chicagoGardens = {
           //   "ward": gardenMap.wardSelections,
           //   "owner": gardenMap.ownerSelections,
           //   "community": gardenMap.communitySelections,
-          //   "production": CgardenMap.productionSelections,
+          //   "production": gardenMap.productionSelections,
           //   "path": path
           // }
 
@@ -277,41 +273,40 @@ var chicagoGardens = {
     //   })
     // }
 
-    // // if {
-    // //   // gardenMap.map.setView(gardenMap.mapCentroid, gardenMap.defaultZoom)
-    // //   // var parameters = {
-    // //   //   "address": gardenMap.address,
-    // //   //   "radius": gardenMap.radius,
-    // //   //   "ward": gardenMap.wardSelections,
-    // //   //   "owner": gardenMap.ownerSelections,
-    // //   //   "community": gardenMap.communitySelections,
-    // //   //   "production": gardenMap.productionSelections
-    // //   // }
+    // if {
+    //   // gardenMap.map.setView(gardenMap.mapCentroid, gardenMap.defaultZoom)
+    //   // var parameters = {
+    //   //   "address": gardenMap.address,
+    //   //   "radius": gardenMap.radius,
+    //   //   "ward": gardenMap.wardSelections,
+    //   //   "owner": gardenMap.ownerSelections,
+    //   //   "community": gardenMap.communitySelections,
+    //   //   "production": gardenMap.productionSelections
+    //   // }
 
-    // //   gardenMap.prototype.runSQL();
+    //   gardenMap.prototype.runSQL();
 
-    // //   // $.address.parameter('ward', gardenMap.wardSelections);
-    // //   // $.address.parameter('owner', gardenMap.ownerSelections);
-    // //   // $.address.parameter('community', gardenMap.communitySelections);
-    // //   // $.address.parameter('production', gardenMap.productionSelections);
+    //   // $.address.parameter('ward', gardenMap.wardSelections);
+    //   // $.address.parameter('owner', gardenMap.ownerSelections);
+    //   // $.address.parameter('community', gardenMap.communitySelections);
+    //   // $.address.parameter('production', gardenMap.productionSelections);
 
-    // //   // gardenMap.setZoom(radius);
-    // //   // gardenMap.addIcon();
-    // //   // gardenMap.addCircle(radius);
-  }
+    //   // gardenMap.setZoom(radius);
+    //   // gardenMap.addIcon();
+    //   // gardenMap.addCircle(radius);
+  },
+
+  userSelectionSQL: function(array) {
+  var results = '';
+  $.each( array, function(index, obj) {
+    chicagoGardens.userSelection += " AND LOWER(" + chicagoGardens.addUnderscore(obj.text) + ") = 'true'"
+    results += (obj.text + ", ")
+  })
+
+  return results
+  },
 }
 
-
-
-  // CartoLib.prototype.userSelectionSQL = function(array) {
-  //   var results = '';
-  //   $.each( array, function(index, obj) {
-  //     userSelection += " AND LOWER(" + CartoDbLib.addUnderscore(obj.text) + ") LIKE '%yes%'"
-  //     results += (obj.text + ", ")
-  //   })
-
-  //   return results
-  // },
 
 
 
@@ -403,6 +398,8 @@ chicagoGardens.createCartoLayer(layer1).addTo(chicagoGardens.map)
 //       return "false"
 //     }
 //   }
+
+
 
 
   function modalPop(data) {
