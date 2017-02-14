@@ -25,6 +25,8 @@ var chicagoGardens = {
   centerMark           : '',
   radiusCircle         : '',
   wardBorder           : '',
+  sublayerOne          : '',
+  whereClause          : '',
 
   // Create geocoder object to access Google Maps API. Add underscore to insure variable safety.
    _geocoder      : new google.maps.Geocoder(),
@@ -52,6 +54,7 @@ var chicagoGardens = {
     });
 
     L.control.layers(baseLayers).addTo(this.map);
+    this.renderMap();
   },
 
   addInfoBox: function(mapPosition, divName, text) {
@@ -117,7 +120,6 @@ var chicagoGardens = {
     else {
       var communityUserSelections = 'false';
     }
-
     if ($('#search-production').is(':checked')) {
       var productionUserSelections = 'true';
     }
@@ -126,7 +128,6 @@ var chicagoGardens = {
     }
 
     var userSelection = [wardUserSelections, ownerUserSelections, communityUserSelections, productionUserSelections];
-    console.log(userSelection)
 
   },
 
@@ -142,28 +143,8 @@ var chicagoGardens = {
     this.map.setView(new L.LatLng( this.currentPinpoint[0], this.currentPinpoint[1] ), zoom)
   },
 
-    clearSearch: function(){
-    if (CartoDbLib.sublayer) {
-      CartoDbLib.sublayer.remove();
-    }
-    if (CartoDbLib.centerMark)
-      CartoDbLib.map.removeLayer( CartoDbLib.centerMark );
-    if (CartoDbLib.radiusCircle)
-      CartoDbLib.map.removeLayer( CartoDbLib.radiusCircle );
-  },
-
-
-  addUnderscore: function() {
-    var newText = this.text.replace(/\s/g, '_').replace(/[\/]/g, '_').replace(/[\:]/g, '')
-    if (newText[0].match(/^[1-9]\d*/)) {
-      newText = "_" + newText
-    }
-    if (newText.includes("True")) {
-      newText = "Yes"
-    }
-    if (newText.includes("False")) {
-      newText = "No"
-    }
+  addUnderscore: function(text) {
+    var newText = text.replace(/\s/g, '_').replace(/[\/]/g, '_').replace(/[\:]/g, '')
     return newText.toLowerCase();
   },
 
@@ -192,6 +173,8 @@ var chicagoGardens = {
   },
 
   clearSearch: function() {
+    if (this.sublayerOne)
+      this.sublayerOne.remove();
     if (this.centerMark)
       this.map.removeLayer(this.centerMark);
     if (this.radiusCircle)
@@ -200,16 +183,28 @@ var chicagoGardens = {
 
   doSearch: function() {
     this.clearSearch();
+    chicagoGardens.whereClause = " WHERE the_geom is not null";
     var gardenMap = this;
-    console.log('searching')
     // // #search-address refers to a div id in map-example.html. You can rename this div.
     var address = $("#search-address").val();
     var radius = $("#search-radius").val();
     // var ward_number = $("#search-ward").val();
-    // var owner = $("#search-ownership").val();
-    // var community_garden = $("#search-community").val();
-    // var food_production = $("#search-production").val();
-    var whereClause = " WHERE the_geom is not null";
+    var owner = $("#search-ownership").select2('data');
+    var ownerSQL = this.ownerSelectionSQL(owner)
+
+
+    if (owner != '') {
+      chicagoGardens.whereClause += ' AND (' + ownerSQL + ')'
+    }
+
+    if ($('#search-production').is(':checked')) {
+      chicagoGardens.whereClause += ' AND food_producing = true'
+    }
+
+    if ($('#search-community').is(':checked')) {
+      chicagoGardens.whereClause += ' AND community_garden = true'
+    }
+
     var location = gardenMap.locationScope;
 
     if (radius == null && address != "") {
@@ -217,33 +212,16 @@ var chicagoGardens = {
     }
 
     if (address != "") {
-      console.log('address')
       gardenMap._geocoder.geocode( { 'address' : address }, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
          gardenMap.currentPinpoint = [results[0].geometry.location.lat(), results[0].geometry.location.lng()];
           var geoSearch = "ST_DWithin(ST_SetSRID(ST_POINT(" + gardenMap.currentPinpoint[1] + ", " + gardenMap.currentPinpoint[0] + "), 4326)::geography, the_geom::geography, " + radius + ")";
-          whereClause += " AND " + geoSearch
+          chicagoGardens.whereClause += " AND " + geoSearch
 
-          // var path = $.address.value();
-          // var parameters = {
-          //   "address": gardenMap.address,
-          //   "radius": gardenMap.radius,
-          //   "ward": gardenMap.wardSelections,
-          //   "owner": gardenMap.ownerSelections,
-          //   "community": gardenMap.communitySelections,
-          //   "production": CgardenMap.productionSelections,
-          //   "path": path
-          // }
-
-          // gardenMap.prototype.runSQL();
-          // $.address.parameter('ward', gardenMap.wardSelections);
-          // $.address.parameter('owner', gardenMap.ownerSelections);
-          // $.address.parameter('community', gardenMap.communitySelections);
-          // $.address.parameter('production', gardenMap.productionSelections);
-
-          gardenMap.setZoom(radius);
-          gardenMap.addIcon();
-          gardenMap.addCircle(radius);
+          chicagoGardens.setZoom(radius);
+          chicagoGardens.addIcon();
+          chicagoGardens.addCircle(radius);
+          chicagoGardens.renderMap();
         }
         else {
           alert("We could not find your address: " + status);
@@ -277,43 +255,69 @@ var chicagoGardens = {
     //   })
     // }
 
-    // // if {
-    // //   // gardenMap.map.setView(gardenMap.mapCentroid, gardenMap.defaultZoom)
-    // //   // var parameters = {
-    // //   //   "address": gardenMap.address,
-    // //   //   "radius": gardenMap.radius,
-    // //   //   "ward": gardenMap.wardSelections,
-    // //   //   "owner": gardenMap.ownerSelections,
-    // //   //   "community": gardenMap.communitySelections,
-    // //   //   "production": gardenMap.productionSelections
-    // //   // }
+    else {
+      chicagoGardens.renderMap();
+    }
+  },
 
-    // //   gardenMap.prototype.runSQL();
+  renderMap: function() {
+    var layerOpts = {
+      user_name: chicagoGardens.cartoUserName,
+      type: 'cartodb',
+      cartodb_logo: false,
+      sublayers: [
+        {
+          sql: "select * from all_garden_answers" + chicagoGardens.whereClause,
+          cartocss: $('#carto-result-style').html().trim(),
+          interactivity: 'food_producing, community_garden, ownership, garden_address, growing_site_name, the_geom',
+        },
+      ]
+    }
 
-    // //   // $.address.parameter('ward', gardenMap.wardSelections);
-    // //   // $.address.parameter('owner', gardenMap.ownerSelections);
-    // //   // $.address.parameter('community', gardenMap.communitySelections);
-    // //   // $.address.parameter('production', gardenMap.productionSelections);
+    var createdLayer = cartodb.createLayer(chicagoGardens.map, layerOpts, { https: true });
 
-    // //   // gardenMap.setZoom(radius);
-    // //   // gardenMap.addIcon();
-    // //   // gardenMap.addCircle(radius);
-  }
+    createdLayer.addTo(chicagoGardens.map)
+    .done(function(layer) {
+      var mapName = "#" + chicagoGardens.mapDivName + " div"
+      chicagoGardens.sublayerOne = layer.getSubLayer(0);
+      chicagoGardens.sublayerOne.setInteraction(true);
+
+      chicagoGardens.sublayerOne.on('featureOver', function(e, latlng, pos, data, subLayerIndex) {
+          $(mapName).css('cursor','pointer');
+          ownership        = ''
+          food_producing   = ''
+          community_garden = ''
+          site_name        = "<h4>" + data.growing_site_name + "</h4>"
+          address          = "<p><i class='fa fa-map-marker' aria-hidden='true'></i> " + data.garden_address + "</p>"
+
+          html = site_name + address + ownership + food_producing
+
+          chicagoGardens.updateInfoBox(html, "infoBox");
+      });
+
+      chicagoGardens.sublayerOne.on('featureOut', function() {
+          $(mapName).css('cursor','inherit');
+          chicagoGardens.clearInfoBox("infoBox");
+      });
+
+      chicagoGardens.sublayerOne.on('featureClick', function(e, latlng, pos, data, subLayerIndex){
+          modalPop(data);
+      });
+    });
+  },
+
+
+  ownerSelectionSQL: function(array) {
+  var results = '';
+  $.each( array, function(index, obj) {
+    // chicagoGardens.userSelection += " AND LOWER(" + chicagoGardens.addUnderscore(obj.text) + ") = 'true'"
+    results += ("ownership = '" + obj.text + "' OR ")
+  })
+
+  results_final = results.substring(0, results.length -4);
+  return results_final
+  },
 }
-
-
-
-  // CartoLib.prototype.userSelectionSQL = function(array) {
-  //   var results = '';
-  //   $.each( array, function(index, obj) {
-  //     userSelection += " AND LOWER(" + CartoDbLib.addUnderscore(obj.text) + ") LIKE '%yes%'"
-  //     results += (obj.text + ", ")
-  //   })
-
-  //   return results
-  // },
-
-
 
   // Create a map!
 chicagoGardens.initialize();
@@ -329,36 +333,6 @@ var layer2 = {
   sql: "SELECT * FROM boundaries_for_wards_2015", 
   cartocss: $('#carto-result-style2').html().trim()
 };
-
-chicagoGardens.createCartoLayer(layer1).addTo(chicagoGardens.map)
-    .done(function(layer) {
-      var mapName = "#" + chicagoGardens.mapDivName + " div"
-      layerZero = layer.getSubLayer(0);
-      layerZero.setInteraction(true);
-
-      layerZero.on('featureOver', function(e, latlng, pos, data, subLayerIndex) {
-          $(mapName).css('cursor','pointer');
-          ownership        = ''
-          food_producing   = ''
-          community_garden = ''
-          site_name        = "<h4>" + data.growing_site_name + "</h4>"
-          address          = "<p><i class='fa fa-map-marker' aria-hidden='true'></i> " + data.garden_address + "</p>"
-
-          html = site_name + address + ownership + food_producing
-
-          chicagoGardens.updateInfoBox(html, "infoBox");
-      });
-
-      layerZero.on('featureOut', function() {
-          $(mapName).css('cursor','inherit');
-          chicagoGardens.clearInfoBox("infoBox");
-      });
-
-      layerZero.on('featureClick', function(e, latlng, pos, data, subLayerIndex){
-          modalPop(data);
-      });
-
-    });
     
     $(".close-btn").on('click', function() {
       modalPop(null);
@@ -396,14 +370,14 @@ chicagoGardens.createCartoLayer(layer1).addTo(chicagoGardens.map)
     return data_arr
   };
 
-//   function convertBoolean(text) {
-//     if (text.toLower() == "Yes")
-//       return "true"
-//     else {
-//       return "false"
-//     }
-//   }
 
+  function convertBoolean(text) {
+    if (text = true)
+      return "Yes"
+    else {
+      return "No"
+    }
+  }
 
   function modalPop(data) {
     var contact = "<p id='modal-address'><i class='fa fa-map-marker' aria-hidden='true'></i> <strong>Address:</strong> " + data.garden_address + '</p><br>' + '<p class="modal-directions"><a href="http://maps.google.com/?q=' + data.garden_address + '" target="_blank">Get Directions</a></p>'
@@ -411,7 +385,6 @@ chicagoGardens.createCartoLayer(layer1).addTo(chicagoGardens.map)
     $('#modal-title, #address-header, #owner-header, #community-header, #production-header, #address-subsection, #owner-subsection, #community-subsection, #production-subsection').empty();
     $('#modal-title').html(data.growing_site_name);
     $('#modal-main').html(contact);
-
 
     var address_list = data.garden_address
     var owner_list = data.ownership
@@ -428,15 +401,13 @@ chicagoGardens.createCartoLayer(layer1).addTo(chicagoGardens.map)
     }
     if (community_list != null) {
       $("#community-header").append('<i class="fa fa-users" aria-hidden="true"></i> Community Garden:');
-      $("#community-subsection").append("<p>" + community_list + "</p>");
+      $("#community-subsection").append("<p>" + convertBoolean(community_list) + "</p>");
+      console.log(community_list)
     }
     if (production_list != null) {
       $("#production-header").append('<i class="fa fa-cutlery" aria-hidden="true"></i> Food Producing:');
-      $("#production-subsection").append("<p>" + production_list + "</p>")
+      $("#production-subsection").append("<p>" + convertBoolean(production_list) + "</p>")
     }
   };
 
-
-
-  
 });
