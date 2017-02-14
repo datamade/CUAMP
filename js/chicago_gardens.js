@@ -319,9 +319,6 @@ var chicagoGardens = {
   },
 }
 
-
-
-
   // Create a map!
 chicagoGardens.initialize();
 chicagoGardens.addInfoBox('bottomright', 'infoBox');
@@ -336,36 +333,6 @@ var layer2 = {
   sql: "SELECT * FROM boundaries_for_wards_2015", 
   cartocss: $('#carto-result-style2').html().trim()
 };
-
-// chicagoGardens.createCartoLayer(layer1).addTo(chicagoGardens.map)
-//     .done(function(layer) {
-//       var mapName = "#" + chicagoGardens.mapDivName + " div"
-//       layerZero = layer.getSubLayer(0);
-//       layerZero.setInteraction(true);
-
-//       layerZero.on('featureOver', function(e, latlng, pos, data, subLayerIndex) {
-//           $(mapName).css('cursor','pointer');
-//           ownership        = ''
-//           food_producing   = ''
-//           community_garden = ''
-//           site_name        = "<h4>" + data.growing_site_name + "</h4>"
-//           address          = "<p><i class='fa fa-map-marker' aria-hidden='true'></i> " + data.garden_address + "</p>"
-
-//           html = site_name + address + ownership + food_producing
-
-//           chicagoGardens.updateInfoBox(html, "infoBox");
-//       });
-
-//       layerZero.on('featureOut', function() {
-//           $(mapName).css('cursor','inherit');
-//           chicagoGardens.clearInfoBox("infoBox");
-//       });
-
-//       layerZero.on('featureClick', function(e, latlng, pos, data, subLayerIndex){
-//           modalPop(data);
-//       });
-
-//     });
     
     $(".close-btn").on('click', function() {
       modalPop(null);
@@ -443,7 +410,4 @@ var layer2 = {
     }
   };
 
-
-
-  
 });
