@@ -25,6 +25,8 @@ var chicagoGardens = {
   centerMark           : '',
   radiusCircle         : '',
   wardBorder           : '',
+  sublayerOne          : '',
+  whereClause          : '',
 
   // Create geocoder object to access Google Maps API. Add underscore to insure variable safety.
    _geocoder      : new google.maps.Geocoder(),
@@ -52,6 +54,7 @@ var chicagoGardens = {
     });
 
     L.control.layers(baseLayers).addTo(this.map);
+    this.renderMap();
   },
 
   addInfoBox: function(mapPosition, divName, text) {
@@ -94,40 +97,39 @@ var chicagoGardens = {
     return createdLayer;
   },
 
-  // runSQL: function() {
-  //    // Devise SQL calls for geosearch and language search.
-  //   var address = $("#search-address").val();
+  runSQL: function() {
+     // Devise SQL calls for geosearch and language search.
+    var address = $("#search-address").val();
 
-  //   if(CartoLib.currentPinpoint != null && address != '') {
-  //     CartoLib.geoSearch = "ST_DWithin(ST_SetSRID(ST_POINT(" + CartoLib.currentPinpoint[1] + ", " + CartoLib.currentPinpoint[0] + "), 4326)::geography, the_geom::geography, " + CartoLib.radius + ")";
-  //   }
-  //   else {
-  //     CartoLib.geoSearch = ''
-  //   }
+    if(CartoLib.currentPinpoint != null && address != '') {
+      CartoLib.geoSearch = "ST_DWithin(ST_SetSRID(ST_POINT(" + CartoLib.currentPinpoint[1] + ", " + CartoLib.currentPinpoint[0] + "), 4326)::geography, the_geom::geography, " + CartoLib.radius + ")";
+    }
+    else {
+      CartoLib.geoSearch = ''
+    }
 
 
-  //   CartoLib.userSelection = '';
-  //   // Gets selected elements in dropdown (represented as an array of objects).
-  //   var wardUserSelections = ($("#search-ward").select2('data'))
-  //   var ownerUserSelections = ($("#search-ownership").select2('data'))
+    CartoLib.userSelection = '';
+    // Gets selected elements in dropdown (represented as an array of objects).
+    var wardUserSelections = ($("#search-ward").select2('data'))
+    var ownerUserSelections = ($("#search-ownership").select2('data'))
 
-  //   if ($('#search-community').is(':checked')) {
-  //     var communityUserSelections = 'true';
-  //   }
-  //   else {
-  //     var communityUserSelections = 'false';
-  //   }
+    if ($('#search-community').is(':checked')) {
+      var communityUserSelections = 'true';
+    }
+    else {
+      var communityUserSelections = 'false';
+    }
+    if ($('#search-production').is(':checked')) {
+      var productionUserSelections = 'true';
+    }
+    else {
+      var productionUserSelections = 'false';
+    }
 
-  //   if ($('#search-production').is(':checked')) {
-  //     var productionUserSelections = 'true';
-  //   }
-  //   else {
-  //     var productionUserSelections = 'false';
-  //   }
+    var userSelection = [wardUserSelections, ownerUserSelections, communityUserSelections, productionUserSelections];
 
-  //   var userSelection = [wardUserSelections, ownerUserSelections, communityUserSelections, productionUserSelections];
-
-  // },
+  },
 
   setZoom: function(radius) {
     var zoom = '';
@@ -140,17 +142,6 @@ var chicagoGardens = {
 
     this.map.setView(new L.LatLng( this.currentPinpoint[0], this.currentPinpoint[1] ), zoom)
   },
-
-  clearSearch: function(){
-    if (CartoDbLib.sublayer) {
-      CartoDbLib.sublayer.remove();
-    }
-    if (CartoDbLib.centerMark)
-      CartoDbLib.map.removeLayer( CartoDbLib.centerMark );
-    if (CartoDbLib.radiusCircle)
-      CartoDbLib.map.removeLayer( CartoDbLib.radiusCircle );
-  },
-
 
   addUnderscore: function(text) {
     var newText = text.replace(/\s/g, '_').replace(/[\/]/g, '_').replace(/[\:]/g, '')
@@ -182,6 +173,8 @@ var chicagoGardens = {
   },
 
   clearSearch: function() {
+    if (this.sublayerOne)
+      this.sublayerOne.remove();
     if (this.centerMark)
       this.map.removeLayer(this.centerMark);
     if (this.radiusCircle)
@@ -189,7 +182,10 @@ var chicagoGardens = {
   },
 
   doSearch: function() {
+    console.log(chicagoGardens.sublayerOne)
     this.clearSearch();
+    chicagoGardens.whereClause = " WHERE the_geom is not null";
+    console.log(chicagoGardens.whereClause)
     var gardenMap = this;
     // // #search-address refers to a div id in map-example.html. You can rename this div.
     var address = $("#search-address").val();
@@ -197,14 +193,15 @@ var chicagoGardens = {
     // var ward_number = $("#search-ward").val();
     var owner = $("#search-ownership").select2('data');
     var ownerSQL = this.userSelectionSQL(owner)
-    // var community_garden = $("#search-community").val();
-    var food_production = $("#search-production").val();
 
-    if (food_production) {
-      var foodSQL = ' WHERE food_production = true';
+    if ($('#search-production').is(':checked')) {
+      chicagoGardens.whereClause += ' AND food_producing = true';
     }
 
-    var whereClause = " WHERE the_geom is not null";
+    if ($('#search-community').is(':checked')) {
+      chicagoGardens.whereClause += ' AND community_garden = true'
+    }
+
     var location = gardenMap.locationScope;
 
     if (radius == null && address != "") {
@@ -217,8 +214,13 @@ var chicagoGardens = {
         if (status == google.maps.GeocoderStatus.OK) {
          gardenMap.currentPinpoint = [results[0].geometry.location.lat(), results[0].geometry.location.lng()];
           var geoSearch = "ST_DWithin(ST_SetSRID(ST_POINT(" + gardenMap.currentPinpoint[1] + ", " + gardenMap.currentPinpoint[0] + "), 4326)::geography, the_geom::geography, " + radius + ")";
-          whereClause += " AND " + geoSearch + foodSQL
-          console.log(whereClause)
+          chicagoGardens.whereClause += " AND " + geoSearch
+          console.log(chicagoGardens.whereClause)
+          // var sql = new cartodb.SQL({ user: chicagoGardens.cartoUserName });
+          // sql.execute("SELECT * FROM " + chicagoGardens.cartoTableName + whereClause)
+          //   .done(function(data) {
+          //   console.log("Ahahahaha");
+          // });
 
           // var path = $.address.value();
           // var parameters = {
@@ -237,9 +239,10 @@ var chicagoGardens = {
           // $.address.parameter('community', gardenMap.communitySelections);
           // $.address.parameter('production', gardenMap.productionSelections);
 
-          gardenMap.setZoom(radius);
-          gardenMap.addIcon();
-          gardenMap.addCircle(radius);
+          chicagoGardens.setZoom(radius);
+          chicagoGardens.addIcon();
+          chicagoGardens.addCircle(radius);
+          chicagoGardens.renderMap();
         }
         else {
           alert("We could not find your address: " + status);
@@ -296,6 +299,84 @@ var chicagoGardens = {
     //   // gardenMap.addCircle(radius);
   },
 
+  renderMap: function() {
+    console.log(chicagoGardens.whereClause)
+    var layerOpts = {
+      user_name: chicagoGardens.cartoUserName,
+      type: 'cartodb',
+      cartodb_logo: false,
+      sublayers: [
+          {
+            sql: "select * from all_garden_answers" + chicagoGardens.whereClause,
+            cartocss: $('#carto-result-style').html().trim(),
+            interactivity: 'food_producing, community_garden, ownership, garden_address, growing_site_name, the_geom',
+          },
+          // {
+          //   sql: "SELECT * FROM boundaries_for_wards_2015", 
+          //   cartocss: $('#carto-result-style2').html().trim()
+          // },
+      ]
+    }
+
+    var createdLayer = cartodb.createLayer(chicagoGardens.map, layerOpts, { https: true });
+
+    createdLayer.addTo(chicagoGardens.map)
+    .done(function(layer) {
+      var mapName = "#" + chicagoGardens.mapDivName + " div"
+      chicagoGardens.sublayerOne = layer.getSubLayer(0);
+      chicagoGardens.sublayerOne.setInteraction(true);
+
+      chicagoGardens.sublayerOne.on('featureOver', function(e, latlng, pos, data, subLayerIndex) {
+          $(mapName).css('cursor','pointer');
+          ownership        = ''
+          food_producing   = ''
+          community_garden = ''
+          site_name        = "<h4>" + data.growing_site_name + "</h4>"
+          address          = "<p><i class='fa fa-map-marker' aria-hidden='true'></i> " + data.garden_address + "</p>"
+
+          html = site_name + address + ownership + food_producing
+
+          chicagoGardens.updateInfoBox(html, "infoBox");
+      });
+
+      chicagoGardens.sublayerOne.on('featureOut', function() {
+          $(mapName).css('cursor','inherit');
+          chicagoGardens.clearInfoBox("infoBox");
+      });
+
+      chicagoGardens.sublayerOne.on('featureClick', function(e, latlng, pos, data, subLayerIndex){
+          modalPop(data);
+      });
+          console.log(chicagoGardens.sublayerOne)
+    });
+
+
+      // CartoDbLib.dataLayer = cartodb.createLayer(CartoDbLib.map, layerOpts, { https: true })
+      //   .addTo(CartoDbLib.map)
+      //   .done(function(layer) {
+      //     CartoDbLib.sublayer = layer.getSubLayer(0);
+      //     CartoDbLib.sublayer.setInteraction(true);
+      //     CartoDbLib.sublayer.on('featureOver', function(e, latlng, pos, data, subLayerIndex) {
+      //       $('#mapCanvas div').css('cursor','pointer');
+      //       CartoDbLib.info.update(data);
+      //     })
+      //     CartoDbLib.sublayer.on('featureOut', function(e, latlng, pos, data, subLayerIndex) {
+      //       $('#mapCanvas div').css('cursor','inherit');
+      //       CartoDbLib.info.clear();
+      //     })
+      //     CartoDbLib.sublayer.on('featureClick', function(e, latlng, pos, data) {
+      //         CartoDbLib.modalPop(data);
+      //     })
+      //     CartoDbLib.sublayer.on('error', function(err) {
+      //       console.log('error: ' + err);
+      //     })
+      //   }).on('error', function(e) {
+      //     console.log('ERROR')
+      //     console.log(e)
+      //   });
+  },
+
+
   userSelectionSQL: function(array) {
   var results = '';
   $.each( array, function(index, obj) {
@@ -325,35 +406,35 @@ var layer2 = {
   cartocss: $('#carto-result-style2').html().trim()
 };
 
-chicagoGardens.createCartoLayer(layer1).addTo(chicagoGardens.map)
-    .done(function(layer) {
-      var mapName = "#" + chicagoGardens.mapDivName + " div"
-      layerZero = layer.getSubLayer(0);
-      layerZero.setInteraction(true);
+// chicagoGardens.createCartoLayer(layer1).addTo(chicagoGardens.map)
+//     .done(function(layer) {
+//       var mapName = "#" + chicagoGardens.mapDivName + " div"
+//       layerZero = layer.getSubLayer(0);
+//       layerZero.setInteraction(true);
 
-      layerZero.on('featureOver', function(e, latlng, pos, data, subLayerIndex) {
-          $(mapName).css('cursor','pointer');
-          ownership        = ''
-          food_producing   = ''
-          community_garden = ''
-          site_name        = "<h4>" + data.growing_site_name + "</h4>"
-          address          = "<p><i class='fa fa-map-marker' aria-hidden='true'></i> " + data.garden_address + "</p>"
+//       layerZero.on('featureOver', function(e, latlng, pos, data, subLayerIndex) {
+//           $(mapName).css('cursor','pointer');
+//           ownership        = ''
+//           food_producing   = ''
+//           community_garden = ''
+//           site_name        = "<h4>" + data.growing_site_name + "</h4>"
+//           address          = "<p><i class='fa fa-map-marker' aria-hidden='true'></i> " + data.garden_address + "</p>"
 
-          html = site_name + address + ownership + food_producing
+//           html = site_name + address + ownership + food_producing
 
-          chicagoGardens.updateInfoBox(html, "infoBox");
-      });
+//           chicagoGardens.updateInfoBox(html, "infoBox");
+//       });
 
-      layerZero.on('featureOut', function() {
-          $(mapName).css('cursor','inherit');
-          chicagoGardens.clearInfoBox("infoBox");
-      });
+//       layerZero.on('featureOut', function() {
+//           $(mapName).css('cursor','inherit');
+//           chicagoGardens.clearInfoBox("infoBox");
+//       });
 
-      layerZero.on('featureClick', function(e, latlng, pos, data, subLayerIndex){
-          modalPop(data);
-      });
+//       layerZero.on('featureClick', function(e, latlng, pos, data, subLayerIndex){
+//           modalPop(data);
+//       });
 
-    });
+//     });
     
     $(".close-btn").on('click', function() {
       modalPop(null);
