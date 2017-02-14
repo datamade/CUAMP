@@ -182,20 +182,23 @@ var chicagoGardens = {
   },
 
   doSearch: function() {
-    console.log(chicagoGardens.sublayerOne)
     this.clearSearch();
     chicagoGardens.whereClause = " WHERE the_geom is not null";
-    console.log(chicagoGardens.whereClause)
     var gardenMap = this;
     // // #search-address refers to a div id in map-example.html. You can rename this div.
     var address = $("#search-address").val();
     var radius = $("#search-radius").val();
     // var ward_number = $("#search-ward").val();
     var owner = $("#search-ownership").select2('data');
-    var ownerSQL = this.userSelectionSQL(owner)
+    var ownerSQL = this.ownerSelectionSQL(owner)
+
+
+    if (owner != '') {
+      chicagoGardens.whereClause += ' AND (' + ownerSQL + ')'
+    }
 
     if ($('#search-production').is(':checked')) {
-      chicagoGardens.whereClause += ' AND food_producing = true';
+      chicagoGardens.whereClause += ' AND food_producing = true'
     }
 
     if ($('#search-community').is(':checked')) {
@@ -209,13 +212,12 @@ var chicagoGardens = {
     }
 
     if (address != "") {
-      console.log('address')
       gardenMap._geocoder.geocode( { 'address' : address }, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
          gardenMap.currentPinpoint = [results[0].geometry.location.lat(), results[0].geometry.location.lng()];
           var geoSearch = "ST_DWithin(ST_SetSRID(ST_POINT(" + gardenMap.currentPinpoint[1] + ", " + gardenMap.currentPinpoint[0] + "), 4326)::geography, the_geom::geography, " + radius + ")";
           chicagoGardens.whereClause += " AND " + geoSearch
-          console.log(chicagoGardens.whereClause)
+
           // var sql = new cartodb.SQL({ user: chicagoGardens.cartoUserName });
           // sql.execute("SELECT * FROM " + chicagoGardens.cartoTableName + whereClause)
           //   .done(function(data) {
@@ -297,10 +299,13 @@ var chicagoGardens = {
     //   // gardenMap.setZoom(radius);
     //   // gardenMap.addIcon();
     //   // gardenMap.addCircle(radius);
+    
+    else {
+      chicagoGardens.renderMap();
+    }
   },
 
   renderMap: function() {
-    console.log(chicagoGardens.whereClause)
     var layerOpts = {
       user_name: chicagoGardens.cartoUserName,
       type: 'cartodb',
@@ -347,7 +352,6 @@ var chicagoGardens = {
       chicagoGardens.sublayerOne.on('featureClick', function(e, latlng, pos, data, subLayerIndex){
           modalPop(data);
       });
-          console.log(chicagoGardens.sublayerOne)
     });
 
 
@@ -377,14 +381,15 @@ var chicagoGardens = {
   },
 
 
-  userSelectionSQL: function(array) {
+  ownerSelectionSQL: function(array) {
   var results = '';
   $.each( array, function(index, obj) {
-    chicagoGardens.userSelection += " AND LOWER(" + chicagoGardens.addUnderscore(obj.text) + ") = 'true'"
-    results += (obj.text + ", ")
+    // chicagoGardens.userSelection += " AND LOWER(" + chicagoGardens.addUnderscore(obj.text) + ") = 'true'"
+    results += ("ownership = '" + obj.text + "' OR ")
   })
 
-  return results
+  results_final = results.substring(0, results.length -4);
+  return results_final
   },
 }
 
