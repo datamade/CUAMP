@@ -74,14 +74,14 @@ layout: default
 
 <div class="row">
   <div class="col-md-4">
-    <h4>Find Chicago public gardens near you:</h4>
+    <h4>Find Chicago Public Gardens Near You</h4><br>
+    <p><strong>By Address:</strong></p>
     <div class="form-group">
-      <input class='form-control' id='search-address' placeholder='Enter an address or an intersection' type='text'>
+      <input class='form-control' id='search-address' placeholder='Enter an address or intersection' type='text'>
     </div>
     <div class='form-group'>
-      Within
       <select id='search-radius' class='form-control'>
-        <option></option>
+        <option value="" selected disabled="">Within:</option>
         <option value='400'>2 blocks</option>
         <option value='805'>1/2 mile</option>
         <option value='1610'>1 mile</option>
@@ -89,22 +89,18 @@ layout: default
         <option value='8050'>5 miles</option>
       </select>
     </div>
-
-    <p><strong>Refine your search</strong><br>You can pick more than option for each filter.</p>
-
-    <div>
-      <div class="input-group select2-bootstrap-prepend m-top-sm">
-        <span class="input-group-addon"><i class="fa fa-university fa-fw" aria-hidden="true"></i></span>
-        <select class="data-array-ward form-control" id="search-ward" multiple="multiple"></select>
-      </div>
-
-      <div class="input-group select2-bootstrap-prepend m-top-sm">
-        <span class="input-group-addon"><i class="fa fa-usd fa-fw" aria-hidden="true"></i></span>
-        <select class="data-array-ownership form-control" id="search-ownership" multiple="multiple"></select>
-      </div>
+    <p><strong>By Ward:</strong></p>
+    <div class="input-group select2-bootstrap-prepend m-top-sm">
+      <span class="input-group-addon"><i class="fa fa-university fa-fw" aria-hidden="true"></i></span>
+      <select class="data-array-ward form-control" id="search-ward" multiple="multiple"></select>
     </div>
 
-    <p><br><strong>Select other preferences</strong></p>
+    <br><br><p><strong>Refine Your Search</strong><br>You can pick more than option for owner.</p>
+
+    <div class="input-group select2-bootstrap-prepend m-top-sm">
+      <span class="input-group-addon"><i class="fa fa-usd fa-fw" aria-hidden="true"></i></span>
+      <select class="data-array-ownership form-control" id="search-ownership" multiple="multiple"></select>
+    </div>
     <div>
       <div class="checkbox m-top-sm">
         <label class="leaf-box">
