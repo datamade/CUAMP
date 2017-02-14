@@ -218,29 +218,6 @@ var chicagoGardens = {
           var geoSearch = "ST_DWithin(ST_SetSRID(ST_POINT(" + gardenMap.currentPinpoint[1] + ", " + gardenMap.currentPinpoint[0] + "), 4326)::geography, the_geom::geography, " + radius + ")";
           chicagoGardens.whereClause += " AND " + geoSearch
 
-          // var sql = new cartodb.SQL({ user: chicagoGardens.cartoUserName });
-          // sql.execute("SELECT * FROM " + chicagoGardens.cartoTableName + whereClause)
-          //   .done(function(data) {
-          //   console.log("Ahahahaha");
-          // });
-
-          // var path = $.address.value();
-          // var parameters = {
-          //   "address": gardenMap.address,
-          //   "radius": gardenMap.radius,
-          //   "ward": gardenMap.wardSelections,
-          //   "owner": gardenMap.ownerSelections,
-          //   "community": gardenMap.communitySelections,
-          //   "production": gardenMap.productionSelections,
-          //   "path": path
-          // }
-
-          // gardenMap.prototype.runSQL();
-          // $.address.parameter('ward', gardenMap.wardSelections);
-          // $.address.parameter('owner', gardenMap.ownerSelections);
-          // $.address.parameter('community', gardenMap.communitySelections);
-          // $.address.parameter('production', gardenMap.productionSelections);
-
           chicagoGardens.setZoom(radius);
           chicagoGardens.addIcon();
           chicagoGardens.addCircle(radius);
@@ -278,28 +255,6 @@ var chicagoGardens = {
     //   })
     // }
 
-    // if {
-    //   // gardenMap.map.setView(gardenMap.mapCentroid, gardenMap.defaultZoom)
-    //   // var parameters = {
-    //   //   "address": gardenMap.address,
-    //   //   "radius": gardenMap.radius,
-    //   //   "ward": gardenMap.wardSelections,
-    //   //   "owner": gardenMap.ownerSelections,
-    //   //   "community": gardenMap.communitySelections,
-    //   //   "production": gardenMap.productionSelections
-    //   // }
-
-    //   gardenMap.prototype.runSQL();
-
-    //   // $.address.parameter('ward', gardenMap.wardSelections);
-    //   // $.address.parameter('owner', gardenMap.ownerSelections);
-    //   // $.address.parameter('community', gardenMap.communitySelections);
-    //   // $.address.parameter('production', gardenMap.productionSelections);
-
-    //   // gardenMap.setZoom(radius);
-    //   // gardenMap.addIcon();
-    //   // gardenMap.addCircle(radius);
-    
     else {
       chicagoGardens.renderMap();
     }
@@ -311,15 +266,11 @@ var chicagoGardens = {
       type: 'cartodb',
       cartodb_logo: false,
       sublayers: [
-          {
-            sql: "select * from all_garden_answers" + chicagoGardens.whereClause,
-            cartocss: $('#carto-result-style').html().trim(),
-            interactivity: 'food_producing, community_garden, ownership, garden_address, growing_site_name, the_geom',
-          },
-          // {
-          //   sql: "SELECT * FROM boundaries_for_wards_2015", 
-          //   cartocss: $('#carto-result-style2').html().trim()
-          // },
+        {
+          sql: "select * from all_garden_answers" + chicagoGardens.whereClause,
+          cartocss: $('#carto-result-style').html().trim(),
+          interactivity: 'food_producing, community_garden, ownership, garden_address, growing_site_name, the_geom',
+        },
       ]
     }
 
@@ -353,31 +304,6 @@ var chicagoGardens = {
           modalPop(data);
       });
     });
-
-
-      // CartoDbLib.dataLayer = cartodb.createLayer(CartoDbLib.map, layerOpts, { https: true })
-      //   .addTo(CartoDbLib.map)
-      //   .done(function(layer) {
-      //     CartoDbLib.sublayer = layer.getSubLayer(0);
-      //     CartoDbLib.sublayer.setInteraction(true);
-      //     CartoDbLib.sublayer.on('featureOver', function(e, latlng, pos, data, subLayerIndex) {
-      //       $('#mapCanvas div').css('cursor','pointer');
-      //       CartoDbLib.info.update(data);
-      //     })
-      //     CartoDbLib.sublayer.on('featureOut', function(e, latlng, pos, data, subLayerIndex) {
-      //       $('#mapCanvas div').css('cursor','inherit');
-      //       CartoDbLib.info.clear();
-      //     })
-      //     CartoDbLib.sublayer.on('featureClick', function(e, latlng, pos, data) {
-      //         CartoDbLib.modalPop(data);
-      //     })
-      //     CartoDbLib.sublayer.on('error', function(err) {
-      //       console.log('error: ' + err);
-      //     })
-      //   }).on('error', function(e) {
-      //     console.log('ERROR')
-      //     console.log(e)
-      //   });
   },
 
 
@@ -477,16 +403,14 @@ var layer2 = {
     return data_arr
   };
 
-//   function convertBoolean(text) {
-//     if (text.toLower() == "Yes")
-//       return "true"
-//     else {
-//       return "false"
-//     }
-//   }
 
-
-
+  function convertBoolean(text) {
+    if (text = true)
+      return "Yes"
+    else {
+      return "No"
+    }
+  }
 
   function modalPop(data) {
     var contact = "<p id='modal-address'><i class='fa fa-map-marker' aria-hidden='true'></i> <strong>Address:</strong> " + data.garden_address + '</p><br>' + '<p class="modal-directions"><a href="http://maps.google.com/?q=' + data.garden_address + '" target="_blank">Get Directions</a></p>'
@@ -494,7 +418,6 @@ var layer2 = {
     $('#modal-title, #address-header, #owner-header, #community-header, #production-header, #address-subsection, #owner-subsection, #community-subsection, #production-subsection').empty();
     $('#modal-title').html(data.growing_site_name);
     $('#modal-main').html(contact);
-
 
     var address_list = data.garden_address
     var owner_list = data.ownership
@@ -511,11 +434,12 @@ var layer2 = {
     }
     if (community_list != null) {
       $("#community-header").append('<i class="fa fa-users" aria-hidden="true"></i> Community Garden:');
-      $("#community-subsection").append("<p>" + community_list + "</p>");
+      $("#community-subsection").append("<p>" + convertBoolean(community_list) + "</p>");
+      console.log(community_list)
     }
     if (production_list != null) {
       $("#production-header").append('<i class="fa fa-cutlery" aria-hidden="true"></i> Food Producing:');
-      $("#production-subsection").append("<p>" + production_list + "</p>")
+      $("#production-subsection").append("<p>" + convertBoolean(production_list) + "</p>")
     }
   };
 
