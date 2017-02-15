@@ -191,7 +191,9 @@ iframe {
   margin-top: 2em;
 }
 
-.modal-body-bottom { border-top: 1px solid #F0F0F0; }
+.modal-body-bottom { 
+  border-top: 1px solid #F0F0F0; 
+}
 
 .modal-directions { 
   font-weight: 700; 
@@ -213,7 +215,7 @@ iframe {
 .modal-dialog {
     margin: 2px auto;
     z-index: 1100 !important;
-    margin-top: 10%
+    margin-top: 10%;
 }
 
 .modal-body-bottom .input-group {

@@ -1,3 +1,4 @@
+var chicagoGardens;
 $(function() {
 
  // Filter Options
@@ -6,7 +7,7 @@ var communityOptions = ["Yes", "No"];
 var foodProductionOptions = ["Yes", "No"];
 var wardOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50"];
 // Wrap library inside IFFE for safe variable scoping.
-var chicagoGardens = {
+chicagoGardens = {
   cartoTableName       : 'all_garden_answers',
   cartoUserName        : 'clearstreets',
   locationScope        : 'chicago',
@@ -27,6 +28,7 @@ var chicagoGardens = {
   wardBorder           : '',
   sublayerOne          : '',
   whereClause          : '',
+  wardLayer            : '',
 
   // Create geocoder object to access Google Maps API. Add underscore to insure variable safety.
    _geocoder      : new google.maps.Geocoder(),
@@ -97,40 +99,6 @@ var chicagoGardens = {
     return createdLayer;
   },
 
-  runSQL: function() {
-     // Devise SQL calls for geosearch and language search.
-    var address = $("#search-address").val();
-
-    if(CartoLib.currentPinpoint != null && address != '') {
-      CartoLib.geoSearch = "ST_DWithin(ST_SetSRID(ST_POINT(" + CartoLib.currentPinpoint[1] + ", " + CartoLib.currentPinpoint[0] + "), 4326)::geography, the_geom::geography, " + CartoLib.radius + ")";
-    }
-    else {
-      CartoLib.geoSearch = ''
-    }
-
-
-    CartoLib.userSelection = '';
-    // Gets selected elements in dropdown (represented as an array of objects).
-    var wardUserSelections = ($("#search-ward").select2('data'))
-    var ownerUserSelections = ($("#search-ownership").select2('data'))
-
-    if ($('#search-community').is(':checked')) {
-      var communityUserSelections = 'true';
-    }
-    else {
-      var communityUserSelections = 'false';
-    }
-    if ($('#search-production').is(':checked')) {
-      var productionUserSelections = 'true';
-    }
-    else {
-      var productionUserSelections = 'false';
-    }
-
-    var userSelection = [wardUserSelections, ownerUserSelections, communityUserSelections, productionUserSelections];
-
-  },
-
   setZoom: function(radius) {
     var zoom = '';
     if (radius >= 8050) zoom = 12; // 5 miles
@@ -175,6 +143,8 @@ var chicagoGardens = {
   clearSearch: function() {
     if (this.sublayerOne)
       this.sublayerOne.remove();
+    if (this.wardLayer)
+      this.map.removeLayer(this.wardLayer);
     if (this.centerMark)
       this.map.removeLayer(this.centerMark);
     if (this.radiusCircle)
@@ -188,7 +158,7 @@ var chicagoGardens = {
     // // #search-address refers to a div id in map-example.html. You can rename this div.
     var address = $("#search-address").val();
     var radius = $("#search-radius").val();
-    // var ward_number = $("#search-ward").val();
+    var ward_number = $("#search-ward").val();
     var owner = $("#search-ownership").select2('data');
     var ownerSQL = this.ownerSelectionSQL(owner)
 
@@ -229,31 +199,21 @@ var chicagoGardens = {
       });
     }
 
-    // if (ward_number != null) {
-    //   var sql_query = "SELECT ward_addr FROM table_2015_ward_offices WHERE ward=" + ward_number;
-    //   var sql = new cartodb.SQL({ user:'clearstreets' });
-    //   var searcher = gardenMap._geocoder
-    //   sql.execute(sql_query).done(function (data){
+    else if (ward_number != null) {
+      var sql_query = "SELECT * FROM boundaries_for_wards_2015 WHERE ward='" + ward_number +"'";
+      var sql = new cartodb.SQL({ user:'clearstreets', format: 'geojson' });
+      sql.execute(sql_query).done(function (data){
+        console.log(data)
 
-    //     content = data.rows[0].ward_addr
-    //     searcher.geocode( { 'address' : content }, function(results, status) {
-    //       if (status == google.maps.GeocoderStatus.OK) {
-    //         gardenMap.currentPinpoint = [results[0].geometry.location.lat(), results[0].geometry.location.lng()]
-    //         var geoFind = "ST_SetSRID(ST_POINT(" + gardenMap.currentPinpoint[1] + ", " + gardenMap.currentPinpoint[0] + "), 8050)";
-
-    //         radius = 8050;
-
-    //         gardenMap.addIcon();
-    //         gardenMap.setZoom(radius);
-
-    //       }
-
-    //       else {
-    //         alert("We could not find your ward")
-    //       };
-    //     })
-    //   })
-    // }
+        var shape = data.features[0];
+        chicagoGardens.wardLayer = L.geoJson(shape);
+        chicagoGardens.wardLayer.addTo(chicagoGardens.map);
+        chicagoGardens.wardLayer.setStyle({fillColor:'#8A2B85', weight: 3, fillOpacity: 0.5, color: '#000'});
+        chicagoGardens.map.fitBounds(chicagoGardens.wardLayer.getBounds(), {maxZoom: 14});   
+        chicagoGardens.whereClause += " AND ST_Intersects(the_geom, (SELECT the_geom FROM boundaries_for_wards_2015 WHERE ward = '"+ ward_number +"'))"
+        chicagoGardens.renderMap();
+      })
+    }
 
     else {
       chicagoGardens.renderMap();
@@ -382,7 +342,7 @@ var layer2 = {
   function modalPop(data) {
     var contact = "<p id='modal-address'><i class='fa fa-map-marker' aria-hidden='true'></i> <strong>Address:</strong> " + data.garden_address + '</p><br>' + '<p class="modal-directions"><a href="http://maps.google.com/?q=' + data.garden_address + '" target="_blank">Get Directions</a></p>'
     $('#modal-pop').appendTo('body').modal();
-    $('#modal-title, #address-header, #owner-header, #community-header, #production-header, #address-subsection, #owner-subsection, #community-subsection, #production-subsection').empty();
+    $('#modal-title, #address-header, #owner-header, #community-header, #production-header, #address-subsection, #owner-subsection, #community-subsection, #production-subsection, #locked-header, #locked-subsection, #commtype-header, #commtype-subsection, #types-header, #types-subsection, #water-header, #water-subsection, #compost-header, #compost-subsection, #structures-header, #structures-subsection, #seasonex-header, #seasonex-subsection, #animal-header, #animal-subsection, #dormant-header, #dormant-subsection, #support-header, #support-subsection, #website-header, #website-subsection, #facebook-header, #facebook-subsection, #fence-header, #fence-subsection, #description-header, #description-subsection, #commarea-header, #commarea-subsection, #contact-header, #contact-subsection').empty();
     $('#modal-title').html(data.growing_site_name);
     $('#modal-main').html(contact);
 
@@ -390,6 +350,23 @@ var layer2 = {
     var owner_list = data.ownership
     var community_list = data.community_garden
     var production_list = data.food_producing
+    var locked = data.is_growing_site_locked
+    var comm_garden_type = data.if_it_s_a_community_garden_is_it_collective_or_allotment
+    var types = data.choose_growing_site_types
+    var water_system = data.water
+    var compost = data.compost_system
+    var structures = data.structures_and_features
+    var season_extension = data.season_extension_techniques
+    var animals = data.animals
+    var dormant = data.is_growing_site_dormant
+    var other_support = data.other_support_organization
+    var website = data.growing_site_website
+    var facebook = data.facebook
+    var fence = data.is_growing_site_fenced
+    var description = data.description
+    var community_area = data.communities
+    var contact = data.public_contact_info
+
     // Find all instances of "yes."
     if (address_list != null) {
         $("#address-header").append('<i class="fa fa-user" aria-hidden="true"></i> Address:');
@@ -402,11 +379,11 @@ var layer2 = {
     if (community_list != null) {
       $("#community-header").append('<i class="fa fa-users" aria-hidden="true"></i> Community Garden:');
       $("#community-subsection").append("<p>" + convertBoolean(community_list) + "</p>");
-      console.log(community_list)
     }
     if (production_list != null) {
       $("#production-header").append('<i class="fa fa-cutlery" aria-hidden="true"></i> Food Producing:');
       $("#production-subsection").append("<p>" + convertBoolean(production_list) + "</p>")
+
     }
   };
 
