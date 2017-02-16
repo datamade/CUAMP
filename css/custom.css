@@ -172,6 +172,11 @@ iframe {
   border-top-right-radius: 5px;
 }
 
+.modal-body {
+    max-height: calc(100vh - 210px);
+    overflow-y: auto;
+}
+
 #modal-main > p {
   font-family: 'Roboto', sans-serif;
   margin-bottom: 2px;
@@ -215,7 +220,7 @@ iframe {
 .modal-dialog {
     margin: 2px auto;
     z-index: 1100 !important;
-    margin-top: 10%;
+    margin-top: 5%;
 }
 
 .modal-body-bottom .input-group {

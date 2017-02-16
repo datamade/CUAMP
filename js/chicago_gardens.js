@@ -8,7 +8,7 @@ var foodProductionOptions = ["Yes", "No"];
 var wardOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50"];
 // Wrap library inside IFFE for safe variable scoping.
 chicagoGardens = {
-  cartoTableName       : 'all_garden_answers',
+  cartoTableName       : 'allpublicgardendata',
   cartoUserName        : 'clearstreets',
   locationScope        : 'chicago',
   mapDivName           : 'mapCanvas',
@@ -29,6 +29,7 @@ chicagoGardens = {
   sublayerOne          : '',
   whereClause          : '',
   wardLayer            : '',
+  cartoFields          : 'the_geom, the_geom_webmercator, growing_site_name, is_growing_site_locked, evidence_of_support_organizations, if_it_s_a_community_garden_is_it_collective_or_allotment, choose_growing_site_types, water, compost_system, structures_and_features, season_extension_techniques, animals, address, food_producing, community_garden, is_growing_site_dormant, latitude, longitude, ownership, other_support_organization, growing_site_website, facebook, is_growing_site_fenced, description, ward, communities, public_contact_info, growing_site_image, municipalities',
 
   // Create geocoder object to access Google Maps API. Add underscore to insure variable safety.
    _geocoder      : new google.maps.Geocoder(),
@@ -227,9 +228,9 @@ chicagoGardens = {
       cartodb_logo: false,
       sublayers: [
         {
-          sql: "select * from all_garden_answers" + chicagoGardens.whereClause,
+          sql: "select * from allpublicgardendata" + chicagoGardens.whereClause,
           cartocss: $('#carto-result-style').html().trim(),
-          interactivity: 'food_producing, community_garden, ownership, garden_address, growing_site_name, the_geom',
+          interactivity: this.cartoFields,
         },
       ]
     }
@@ -248,7 +249,7 @@ chicagoGardens = {
           food_producing   = ''
           community_garden = ''
           site_name        = "<h4>" + data.growing_site_name + "</h4>"
-          address          = "<p><i class='fa fa-map-marker' aria-hidden='true'></i> " + data.garden_address + "</p>"
+          address          = "<p><i class='fa fa-map-marker' aria-hidden='true'></i> " + data.address + "</p>"
 
           html = site_name + address + ownership + food_producing
 
@@ -284,10 +285,12 @@ chicagoGardens.initialize();
 chicagoGardens.addInfoBox('bottomright', 'infoBox');
 
 var layer1 = {
-  sql: "select * from all_garden_answers",
+  sql: "SELECT * from allpublicgardendata",
   cartocss: $('#carto-result-style').html().trim(),
-  interactivity: 'food_producing, community_garden, ownership, garden_address, growing_site_name, the_geom',
+  interactivity: this.cartoFields,
 }
+
+console.log(layer1)
 
 var layer2 = {
   sql: "SELECT * FROM boundaries_for_wards_2015", 
@@ -305,7 +308,6 @@ var layer2 = {
     $("#btnReset").on("click", function() {
       chicagoGardens.clearSearch();
     });
-
 
   $('#search-ward, #search-ownership').select2();
 
@@ -340,13 +342,13 @@ var layer2 = {
   }
 
   function modalPop(data) {
-    var contact = "<p id='modal-address'><i class='fa fa-map-marker' aria-hidden='true'></i> <strong>Address:</strong> " + data.garden_address + '</p><br>' + '<p class="modal-directions"><a href="http://maps.google.com/?q=' + data.garden_address + '" target="_blank">Get Directions</a></p>'
+    var contact = "<p id='modal-address'><i class='fa fa-map-marker' aria-hidden='true'></i> <strong>Address:</strong> " + data.address + '</p><br>' + '<p class="modal-directions"><a href="http://maps.google.com/?q=' + data.address + '" target="_blank">Get Directions</a></p>'
     $('#modal-pop').appendTo('body').modal();
-    $('#modal-title, #address-header, #owner-header, #community-header, #production-header, #address-subsection, #owner-subsection, #community-subsection, #production-subsection, #locked-header, #locked-subsection, #commtype-header, #commtype-subsection, #types-header, #types-subsection, #water-header, #water-subsection, #compost-header, #compost-subsection, #structures-header, #structures-subsection, #seasonex-header, #seasonex-subsection, #animal-header, #animal-subsection, #dormant-header, #dormant-subsection, #support-header, #support-subsection, #website-header, #website-subsection, #facebook-header, #facebook-subsection, #fence-header, #fence-subsection, #description-header, #description-subsection, #commarea-header, #commarea-subsection, #contact-header, #contact-subsection').empty();
+    $('#modal-title, #address-header, #owner-header, #community-header, #production-header, #address-subsection, #owner-subsection, #community-subsection, #production-subsection, #locked-header, #locked-subsection, #commtype-header, #commtype-subsection, #types-header, #types-subsection, #water-header, #water-subsection, #compost-header, #compost-subsection, #structures-header, #structures-subsection, #seasonex-header, #seasonex-subsection, #animal-header, #animal-subsection, #dormant-header, #dormant-subsection, #support-header, #support-subsection, #website-header, #website-subsection, #facebook-header, #facebook-subsection, #fence-header, #fence-subsection, #description-header, #description-subsection, #ward-header, #ward-subsection, #commarea-header, #commarea-subsection, #contact-header, #contact-subsection, #with_contact').empty();
     $('#modal-title').html(data.growing_site_name);
     $('#modal-main').html(contact);
 
-    var address_list = data.garden_address
+    var address_list = data.address
     var owner_list = data.ownership
     var community_list = data.community_garden
     var production_list = data.food_producing
@@ -364,15 +366,16 @@ var layer2 = {
     var facebook = data.facebook
     var fence = data.is_growing_site_fenced
     var description = data.description
+    var ward_num = data.ward
     var community_area = data.communities
-    var contact = data.public_contact_info
+    var contact_info = data.public_contact_info
 
     // Find all instances of "yes."
     if (address_list != null) {
         $("#address-header").append('<i class="fa fa-user" aria-hidden="true"></i> Address:');
         $("#address-subsection").append("<p>" + address_list + "</p>");
     } 
-    if (owner_list != null) {
+    if (owner_list != "") {
         $("#owner-header").append('<i class="fa fa-usd" aria-hidden="true"></i> Ownership:');
         $("#owner-subsection").append("<p>" + owner_list + "</p>");
     }
@@ -383,8 +386,78 @@ var layer2 = {
     if (production_list != null) {
       $("#production-header").append('<i class="fa fa-cutlery" aria-hidden="true"></i> Food Producing:');
       $("#production-subsection").append("<p>" + convertBoolean(production_list) + "</p>")
-
     }
+    if (locked != null) {
+      $("#locked-header").append('<i class="fa fa-lock" aria-hidden="true"></i> Is the Growing Site Locked?');
+      $("#locked-subsection").append("<p>" + convertBoolean(locked) + "</p>")
+    }
+    if (comm_garden_type != "") {
+      $("#commtype-header").append('<i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Community Garden Type:');
+      $("#commtype-subsection").append("<p>" + comm_garden_type + "</p>")
+    }
+    if (types != "") {
+      $("#types-header").append('<i class="fa fa-leaf" aria-hidden="true"></i> Garden Type:');
+      $("#types-subsection").append("<p>" + types + "</p>")
+    }
+    if (water_system != "") {
+      $("#water-header").append('<i class="fa fa-tint" aria-hidden="true"></i> Water System:');
+      $("#water-subsection").append("<p>" + water_system + "</p>")
+    }
+    if (compost != null) {
+      $("#compost-header").append('<i class="fa fa-recycle" aria-hidden="true"></i> Is Compost Available?');
+      $("#compost-subsection").append("<p>" + convertBoolean(compost) + "</p>")
+    }
+    if (structures != "") {
+      $("#structures-header").append('<i class="fa fa-building-o" aria-hidden="true"></i> Other Structures and Features:');
+      $("#structures-subsection").append("<p>" + structures + "</p>")
+    }
+    if (season_extension != "") {
+      $("#seasonex-header").append('<i class="fa fa-arrow-right" aria-hidden="true"></i> Season Extension Techniques:');
+      $("#seasonex-subsection").append("<p>" + season_extension+ "</p>")
+    }
+    if (animals != "") {
+      $("#animal-header").append('<i class="fa fa-paw" aria-hidden="true"></i> Animals:');
+      $("#animal-subsection").append("<p>" + animals + "</p>")
+    }
+    if (other_support != "") {
+      $("#support-header").append('<i class="fa fa-signing" aria-hidden="true"></i> Other Support Organizations:');
+      $("#support-subsection").append("<p>" + other_support + "</p>")
+    }
+    if (website != "") {
+      $("#website-header").append('<i class="fa fa-bookmark" aria-hidden="true"></i> Website:');
+      $("#website-subsection").append("<p><a href='" + website + "'>" + website + "</a></p>")
+    }
+    if (facebook != "") {
+      $("#facebook-header").append('<i class="fa fa-facebook-square" aria-hidden="true"></i> <a href="' + facebook + '">Facebook Page</a>');
+    }
+    if (fence != null) {
+      $("#fence-header").append('<i class="fa fa-bars" aria-hidden="true"></i> Is the Garden Fenced?');
+      $("#fence-subsection").append("<p>" + convertBoolean(fence) + "</p>")
+    }
+    if (description != "") {
+      $("#description-header").append('<i class="fa fa-ellipsis-h" aria-hidden="true"></i> Detailed Description:');
+      $("#description-subsection").append("<p>" + description + "</p>")
+    }
+    if (dormant != null) {
+      $("#dormant-header").append('<i class="fa fa-pause" aria-hidden="true"></i> Is the Site Dormant?');
+      $("#dormant-subsection").append("<p>" + convertBoolean(dormant) + "</p>")
+    }
+    if (ward_num != null) {
+      $("#ward-header").append('<i class="fa fa-university" aria-hidden="true"></i> Ward:');
+      $("#ward-subsection").append("<p>" + ward_num + "</p>")
+    }
+    if (community_area != "") {
+      $("#commarea-header").append('<i class="fa fa-map-marker" aria-hidden="true"></i> Neighborhood:');
+      $("#commarea-subsection").append("<p>" + community_area + "</p>")
+    }
+    if (contact_info != "") {
+      $("#contact-header").append('<i class="fa fa-phone aria-hidden="true"></i> Contact Info:');
+      $("#contact-subsection").append("<p>" + contact_info + "</p>")
+    }
+    if ((contact_info != "") | (website != "") | (facebook != ""))  {
+      $("#with_contact").append('<br><u>Contact</u>');
+    }  
+  
   };
 
 });
