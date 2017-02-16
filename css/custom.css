@@ -221,6 +221,7 @@ iframe {
     margin: 2px auto;
     z-index: 1100 !important;
     margin-top: 5%;
+    text-align: center;
 }
 
 .modal-body-bottom .input-group {

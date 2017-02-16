@@ -150,6 +150,7 @@ chicagoGardens = {
       this.map.removeLayer(this.centerMark);
     if (this.radiusCircle)
       this.map.removeLayer(this.radiusCircle);
+
   },
 
   doSearch: function() {
@@ -204,15 +205,13 @@ chicagoGardens = {
       var sql_query = "SELECT * FROM boundaries_for_wards_2015 WHERE ward='" + ward_number +"'";
       var sql = new cartodb.SQL({ user:'clearstreets', format: 'geojson' });
       sql.execute(sql_query).done(function (data){
-        console.log(data)
-
         var shape = data.features[0];
         chicagoGardens.wardLayer = L.geoJson(shape);
-        chicagoGardens.wardLayer.addTo(chicagoGardens.map);
-        chicagoGardens.wardLayer.setStyle({fillColor:'#8A2B85', weight: 3, fillOpacity: 0.5, color: '#000'});
+        chicagoGardens.wardLayer.addTo(chicagoGardens.map).setZIndex(-10);
+        chicagoGardens.wardLayer.setStyle({fillColor:'#8A2B85', weight: 3, fillOpacity: 0.35, color: '#000'});
         chicagoGardens.map.fitBounds(chicagoGardens.wardLayer.getBounds(), {maxZoom: 14});   
         chicagoGardens.whereClause += " AND ST_Intersects(the_geom, (SELECT the_geom FROM boundaries_for_wards_2015 WHERE ward = '"+ ward_number +"'))"
-        chicagoGardens.renderMap();
+        chicagoGardens.renderMap().setZIndex(1000);
       })
     }
 
@@ -261,7 +260,7 @@ chicagoGardens = {
           chicagoGardens.clearInfoBox("infoBox");
       });
 
-      chicagoGardens.sublayerOne.on('featureClick', function(e, latlng, pos, data, subLayerIndex){
+      chicagoGardens.sublayerOne.on('featureClick', function(e, latlng, pos, data, subLayerIndex) {
           modalPop(data);
       });
     });
@@ -290,13 +289,6 @@ var layer1 = {
   interactivity: this.cartoFields,
 }
 
-console.log(layer1)
-
-var layer2 = {
-  sql: "SELECT * FROM boundaries_for_wards_2015", 
-  cartocss: $('#carto-result-style2').html().trim()
-};
-    
     $(".close-btn").on('click', function() {
       modalPop(null);
     });
@@ -420,7 +412,7 @@ var layer2 = {
       $("#animal-subsection").append("<p>" + animals + "</p>")
     }
     if (other_support != "") {
-      $("#support-header").append('<i class="fa fa-signing" aria-hidden="true"></i> Other Support Organizations:');
+      $("#support-header").append('<i class="fa fa-signing" aria-hidden="true"></i> Support Organizations:');
       $("#support-subsection").append("<p>" + other_support + "</p>")
     }
     if (website != "") {
@@ -435,7 +427,7 @@ var layer2 = {
       $("#fence-subsection").append("<p>" + convertBoolean(fence) + "</p>")
     }
     if (description != "") {
-      $("#description-header").append('<i class="fa fa-ellipsis-h" aria-hidden="true"></i> Detailed Description:');
+      $("#description-header").append('<i class="fa fa-ellipsis-h" aria-hidden="true"></i> Description:');
       $("#description-subsection").append("<p>" + description + "</p>")
     }
     if (dormant != null) {
@@ -455,7 +447,7 @@ var layer2 = {
       $("#contact-subsection").append("<p>" + contact_info + "</p>")
     }
     if ((contact_info != "") | (website != "") | (facebook != ""))  {
-      $("#with_contact").append('<br><u>Contact</u>');
+      $("#with_contact").append('<br><strong><u>Contact</u></strong>');
     }  
   
   };
