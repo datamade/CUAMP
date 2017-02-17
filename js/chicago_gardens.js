@@ -6,6 +6,7 @@ var ownerOptions = ["Private", "NeighborSpace", "City of Chicago", "Chicago Park
 var communityOptions = ["Yes", "No"];
 var foodProductionOptions = ["Yes", "No"];
 var wardOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50"];
+var commareaOptions = ["ALBANY PARK", "ARCHER HEIGHTS", "ARMOUR SQUARE", "ASHBURN", "AUBURN GRESHAM", "AUSTIN", "AVALON PARK", "AVONDALE", "BELMONT CRAGIN", "BEVERLY", "BRIDGEPORT", "BRIGHTON PARK", "BURNSIDE", "CALUMET HEIGHTS", "CHATHAM", "CHICAGO LAWN", "CLEARING", "DOUGLAS", "DUNNING", "EAST GARFIELD PARK", "EAST SIDE", "EDGEWATER", "EDISON PARK", "ENGLEWOOD", "FULLER PARK", "GAGE PARK", "GARFIELD RIDGE", "GRAND BOULEVARD", "GREATER GRAND CROSSING", "HEGEWISCH", "HERMOSA", "HUMBOLDT PARK", "HYDE PARK", "IRVING PARK", "KENWOOD", "LAKE VIEW", "LINCOLN SQUARE", "LOGAN SQUARE", "LOOP", "LOWER WEST SIDE", "MCKINLEY PARK", "MONTCLARE", "MORGAN PARK", "MOUNT GREENWOOD", "NEAR WEST SIDE", "NEW CITY", "NORTH CENTER", "NORTH LAWNDALE", "NORTH PARK", "OAKLAND", "PORTAGE PARK", "PULLMAN", "RIVERDALE", "ROGERS PARK", "ROSELAND", "SOUTH DEERING", "SOUTH LAWNDALE", "WASHINGTON HEIGHTS", "WASHINGTON PARK", "WEST ELSDON", "WEST ENGLEWOOD", "WEST GARFIELD PARK", "WEST LAWN", "WEST PULLMAN", "WEST RIDGE", "WEST TOWN", "WOODLAWN"]
 // Wrap library inside IFFE for safe variable scoping.
 chicagoGardens = {
   cartoTableName       : 'allpublicgardendata',
@@ -29,6 +30,7 @@ chicagoGardens = {
   sublayerOne          : '',
   whereClause          : '',
   wardLayer            : '',
+  communityLayer       : '',
   cartoFields          : 'the_geom, the_geom_webmercator, growing_site_name, is_growing_site_locked, evidence_of_support_organizations, if_it_s_a_community_garden_is_it_collective_or_allotment, choose_growing_site_types, water, compost_system, structures_and_features, season_extension_techniques, animals, address, food_producing, community_garden, is_growing_site_dormant, latitude, longitude, ownership, other_support_organization, growing_site_website, facebook, is_growing_site_fenced, description, ward, communities, public_contact_info, growing_site_image, municipalities',
 
   // Create geocoder object to access Google Maps API. Add underscore to insure variable safety.
@@ -146,6 +148,8 @@ chicagoGardens = {
       this.sublayerOne.remove();
     if (this.wardLayer)
       this.map.removeLayer(this.wardLayer);
+    if (this.communityLayer)
+      this.map.removeLayer(this.communityLayer)
     if (this.centerMark)
       this.map.removeLayer(this.centerMark);
     if (this.radiusCircle)
@@ -162,7 +166,9 @@ chicagoGardens = {
     var radius = $("#search-radius").val();
     var ward_number = $("#search-ward").val();
     var owner = $("#search-ownership").select2('data');
+    var neighborhood = $("#search-neighborhood").select2('data');
     var ownerSQL = this.ownerSelectionSQL(owner)
+    var neighborhoodSQL = this.neighborhoodSelectionSQL(neighborhood)
 
 
     if (owner != '') {
@@ -211,7 +217,21 @@ chicagoGardens = {
         chicagoGardens.wardLayer.setStyle({fillColor:'#8A2B85', weight: 3, fillOpacity: 0.35, color: '#000'});
         chicagoGardens.map.fitBounds(chicagoGardens.wardLayer.getBounds(), {maxZoom: 14});   
         chicagoGardens.whereClause += " AND ST_Intersects(the_geom, (SELECT the_geom FROM boundaries_for_wards_2015 WHERE ward = '"+ ward_number +"'))"
-        chicagoGardens.renderMap().setZIndex(1000);
+        chicagoGardens.renderMap();
+      })
+    }
+
+    else if (neighborhood != '') {
+      var sql_query = "SELECT * FROM boundaries_community_areas_current WHERE community = " + neighborhoodSQL;
+      var sql = new cartodb.SQL({ user:'clearstreets', format: 'geojson' });
+      sql.execute(sql_query).done(function (data){
+        var shape = data.features[0];
+        chicagoGardens.communityLayer = L.geoJson(shape);
+        chicagoGardens.communityLayer.addTo(chicagoGardens.map).setZIndex(-10);
+        chicagoGardens.communityLayer.setStyle({fillColor:'#8A2B85', weight: 3, fillOpacity: 0.35, color: '#000'});
+        chicagoGardens.map.fitBounds(chicagoGardens.communityLayer.getBounds(), {maxZoom: 14});   
+        chicagoGardens.whereClause += " AND ST_Intersects(the_geom, (SELECT the_geom FROM boundaries_community_areas_current WHERE community = " + neighborhoodSQL + "))"
+        chicagoGardens.renderMap();
       })
     }
 
@@ -277,6 +297,17 @@ chicagoGardens = {
   results_final = results.substring(0, results.length -4);
   return results_final
   },
+
+  neighborhoodSelectionSQL: function(array) {
+  var results = '';
+  $.each( array, function(index, obj) {
+    // chicagoGardens.userSelection += " AND LOWER(" + chicagoGardens.addUnderscore(obj.text) + ") = 'true'"
+    results += ("'" + obj.text + "'")
+  })
+
+  return results
+  },
+
 }
 
   // Create a map!
@@ -301,10 +332,11 @@ var layer1 = {
       chicagoGardens.clearSearch();
     });
 
-  $('#search-ward, #search-ownership').select2();
+  $('#search-ownership, #search-ward, #search-neighborhood').select2();
 
   var ward_data = makeSelectData(wardOptions);
   var ownership_data = makeSelectData(ownerOptions);
+  var commarea_data = makeSelectData(commareaOptions)
 
   $(".data-array-ward").select2({
     placeholder: "Ward",
@@ -314,6 +346,11 @@ var layer1 = {
   $(".data-array-ownership").select2({
     placeholder: "Owner",
     data: ownership_data
+  });
+
+  $(".data-array-neighborhood").select2({
+    placeholder: "Neighborhood",
+    data: commarea_data
   });
 
   function makeSelectData(array) {

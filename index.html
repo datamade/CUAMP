@@ -204,7 +204,12 @@ layout: default
         <option value='8050'>5 miles</option>
       </select>
     </div>
-    <p><strong>By Ward:</strong></p>
+    <p><strong>By Neighborhood:</strong></p>
+    <div class="input-group select2-bootstrap-prepend m-top-sm">
+      <span class="input-group-addon"><i class="fa fa-street-view fa-fw" aria-hidden="true"></i></span>
+      <select class="data-array-neighborhood form-control" id="search-neighborhood" multiple="multiple"></select>
+    </div>
+    <br><p><strong>By Ward:</strong></p>
     <div class="input-group select2-bootstrap-prepend m-top-sm">
       <span class="input-group-addon"><i class="fa fa-university fa-fw" aria-hidden="true"></i></span>
       <select class="data-array-ward form-control" id="search-ward" multiple="multiple"></select>
