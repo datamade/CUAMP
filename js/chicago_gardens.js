@@ -41,14 +41,36 @@ chicagoGardens = {
   initialize: function(){
     // Initiate leaflet map
     var div = this.mapDivName;
-    // var geocoder = new google.maps.Geocoder();
     var satellite = new L.Google('SATELLITE');
     var roadmap = new L.Google('ROADMAP');
+    // console.log(roadmap)
+
+    // var commLayer = {
+    //   user_name: chicagoGardens.cartoUserName,
+    //   type: 'cartodb',
+    //   format: 'geojson',
+    //   cartodb_logo: false,
+    //   sublayers: [
+    //     {
+    //       sql: "select * from boundaries_community_areas_current",
+    //       cartocss: $('#carto-overlay-style').html().trim(),
+    //     },
+    //   ]
+    // }
+
+    // console.log(commLayer)
+    // var commOverlay = new L.Polygon(commLayer)
+    // console.log(commOverlay)
 
     var baseLayers = {
       "Satellite" : satellite,
       "Roadmap" : roadmap
     };
+
+    // var overlays = {
+    //   "Neighborhoods" : commOverlay,
+    //   // "Wards" : wardOverlay
+    // };
 
     this.map = new L.Map('mapCanvas', {
       center: this.mapCentroid,
@@ -253,7 +275,6 @@ chicagoGardens = {
         },
       ]
     }
-
     var createdLayer = cartodb.createLayer(chicagoGardens.map, layerOpts, { https: true });
 
     createdLayer.addTo(chicagoGardens.map)
@@ -373,7 +394,7 @@ var layer1 = {
   function modalPop(data) {
     var contact = "<p id='modal-address'><i class='fa fa-map-marker' aria-hidden='true'></i> <strong>Address:</strong> " + data.address + '</p><br>' + '<p class="modal-directions"><a href="http://maps.google.com/?q=' + data.address + '" target="_blank">Get Directions</a></p>'
     $('#modal-pop').appendTo('body').modal();
-    $('#modal-title, #address-header, #owner-header, #community-header, #production-header, #address-subsection, #owner-subsection, #community-subsection, #production-subsection, #locked-header, #locked-subsection, #commtype-header, #commtype-subsection, #types-header, #types-subsection, #water-header, #water-subsection, #compost-header, #compost-subsection, #structures-header, #structures-subsection, #seasonex-header, #seasonex-subsection, #animal-header, #animal-subsection, #dormant-header, #dormant-subsection, #support-header, #support-subsection, #website-header, #website-subsection, #facebook-header, #facebook-subsection, #fence-header, #fence-subsection, #description-header, #description-subsection, #ward-header, #ward-subsection, #commarea-header, #commarea-subsection, #contact-header, #contact-subsection, #with_contact').empty();
+    $('#modal-title, #address-header, #owner-header, #community-header, #production-header, #address-subsection, #owner-subsection, #community-subsection, #production-subsection, #locked-header, #locked-subsection, #commtype-header, #commtype-subsection, #types-header, #types-subsection, #water-header, #water-subsection, #compost-header, #compost-subsection, #structures-header, #structures-subsection, #seasonex-header, #seasonex-subsection, #animal-header, #animal-subsection, #dormant-header, #dormant-subsection, #support-header, #support-subsection, #website-header, #website-subsection, #facebook-header, #facebook-subsection, #fence-header, #fence-subsection, #description-header, #description-subsection, #ward-header, #ward-subsection, #commarea-header, #commarea-subsection, #contact-header, #contact-subsection, #with_contact, #with_location, #with_about, #with_features').empty();
     $('#modal-title').html(data.growing_site_name);
     $('#modal-main').html(contact);
 
@@ -485,6 +506,15 @@ var layer1 = {
     }
     if ((contact_info != "") | (website != "") | (facebook != ""))  {
       $("#with_contact").append('<br><strong><u>Contact</u></strong>');
+    }  
+    if ((community_area != "") | (ward_num != "")) {
+      $("#with_location").append('<br><strong><u>Location</u></strong>');
+    }  
+    if ((production_list != null) | (community_list != null) | (comm_garden_type != "") | (fence != null) | (locked != null) | (water_system != "") | (compost != null) | (season_extension != "") | (structures != "") | (animals != "")) {
+      $("#with_features").append('<br><strong><u>Features</u></strong>');
+    }  
+    if ((owner_list != "") | (other_support != "") | (types != "") | (description != "") | (dormant != null))  {
+      $("#with_about").append('<br><strong><u>About</u></strong>');
     }  
   
   };
