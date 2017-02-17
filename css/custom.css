@@ -258,3 +258,10 @@ iframe {
 #leafbox {
   color: var(--green-color);
 }
+
+.dl-horizontal dt 
+{
+    white-space: normal;
+    width: 220px; 
+    margin-right: 10px;
+}

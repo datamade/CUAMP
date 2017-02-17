@@ -384,10 +384,13 @@ var layer1 = {
 
 
   function convertBoolean(text) {
-    if (text = true)
-      return "Yes"
+    if (text == true) {
+      return "<i class="+"'fa fa-check'"+" aria-hidden="+"'true'"+"></i>"
+    }
+    else if (text == false) {
+      return "<i class="+"'fa fa-times'"+" aria-hidden="+"'true'"+"></i>"
+    }
     else {
-      return "No"
     }
   }
 
@@ -438,7 +441,7 @@ var layer1 = {
       $("#production-subsection").append("<p>" + convertBoolean(production_list) + "</p>")
     }
     if (locked != null) {
-      $("#locked-header").append('<i class="fa fa-lock" aria-hidden="true"></i> Is the Growing Site Locked?');
+      $("#locked-header").append('<i class="fa fa-lock" aria-hidden="true"></i> Locked Site:');
       $("#locked-subsection").append("<p>" + convertBoolean(locked) + "</p>")
     }
     if (comm_garden_type != "") {
@@ -454,15 +457,15 @@ var layer1 = {
       $("#water-subsection").append("<p>" + water_system + "</p>")
     }
     if (compost != null) {
-      $("#compost-header").append('<i class="fa fa-recycle" aria-hidden="true"></i> Is Compost Available?');
+      $("#compost-header").append('<i class="fa fa-recycle" aria-hidden="true"></i> Compost Available:');
       $("#compost-subsection").append("<p>" + convertBoolean(compost) + "</p>")
     }
     if (structures != "") {
-      $("#structures-header").append('<i class="fa fa-building-o" aria-hidden="true"></i> Other Structures and Features:');
+      $("#structures-header").append('<i class="fa fa-building-o" aria-hidden="true"></i> Structures and Features:');
       $("#structures-subsection").append("<p>" + structures + "</p>")
     }
     if (season_extension != "") {
-      $("#seasonex-header").append('<i class="fa fa-arrow-right" aria-hidden="true"></i> Season Extension Techniques:');
+      $("#seasonex-header").append('<i class="fa fa-arrow-right" aria-hidden="true"></i> Season Extension Techniques:<br>');
       $("#seasonex-subsection").append("<p>" + season_extension+ "</p>")
     }
     if (animals != "") {
@@ -481,15 +484,15 @@ var layer1 = {
       $("#facebook-header").append('<i class="fa fa-facebook-square" aria-hidden="true"></i> <a href="' + facebook + '">Facebook Page</a>');
     }
     if (fence != null) {
-      $("#fence-header").append('<i class="fa fa-bars" aria-hidden="true"></i> Is the Garden Fenced?');
+      $("#fence-header").append('<i class="fa fa-bars" aria-hidden="true"></i> Fenced In:');
       $("#fence-subsection").append("<p>" + convertBoolean(fence) + "</p>")
     }
     if (description != "") {
-      $("#description-header").append('<i class="fa fa-ellipsis-h" aria-hidden="true"></i> Description:');
+      $("#description-header").append('<br><i class="fa fa-ellipsis-h" aria-hidden="true"></i> Description:');
       $("#description-subsection").append("<p>" + description + "</p>")
     }
     if (dormant != null) {
-      $("#dormant-header").append('<i class="fa fa-pause" aria-hidden="true"></i> Is the Site Dormant?');
+      $("#dormant-header").append('<i class="fa fa-pause" aria-hidden="true"></i> Dormant Site:');
       $("#dormant-subsection").append("<p>" + convertBoolean(dormant) + "</p>")
     }
     if (ward_num != null) {
@@ -505,16 +508,16 @@ var layer1 = {
       $("#contact-subsection").append("<p>" + contact_info + "</p>")
     }
     if ((contact_info != "") | (website != "") | (facebook != ""))  {
-      $("#with_contact").append('<br><strong><u>Contact</u></strong>');
+      $("#with_contact").append('<br><strong>Contact</strong><br>');
     }  
     if ((community_area != "") | (ward_num != "")) {
-      $("#with_location").append('<br><strong><u>Location</u></strong>');
+      $("#with_location").append('<br><strong>Location</strong><br>');
     }  
     if ((production_list != null) | (community_list != null) | (comm_garden_type != "") | (fence != null) | (locked != null) | (water_system != "") | (compost != null) | (season_extension != "") | (structures != "") | (animals != "")) {
-      $("#with_features").append('<br><strong><u>Features</u></strong>');
+      $("#with_features").append('<br><strong>Features</strong><br>');
     }  
     if ((owner_list != "") | (other_support != "") | (types != "") | (description != "") | (dormant != null))  {
-      $("#with_about").append('<br><strong><u>About</u></strong>');
+      $("#with_about").append('<br><strong>About</strong>');
     }  
   
   };
