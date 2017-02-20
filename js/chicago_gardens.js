@@ -186,12 +186,13 @@ chicagoGardens = {
     // // #search-address refers to a div id in map-example.html. You can rename this div.
     var address = $("#search-address").val();
     var radius = $("#search-radius").val();
-    var ward_number = $("#search-ward").val();
+    var ward_number = $("#search-ward").select2('data');
     var owner = $("#search-ownership").select2('data');
     var neighborhood = $("#search-neighborhood").select2('data');
     var ownerSQL = this.ownerSelectionSQL(owner)
     var neighborhoodSQL = this.neighborhoodSelectionSQL(neighborhood)
-
+    var wardSQL = this.wardSelectionSQL(ward_number)
+    console.log(wardSQL)
 
     if (owner != '') {
       chicagoGardens.whereClause += ' AND (' + ownerSQL + ')'
@@ -229,8 +230,8 @@ chicagoGardens = {
       });
     }
 
-    else if (ward_number != null) {
-      var sql_query = "SELECT * FROM boundaries_for_wards_2015 WHERE ward='" + ward_number +"'";
+    else if (ward_number != '') {
+      var sql_query = "SELECT * FROM boundaries_for_wards_2015 WHERE ward=" + wardSQL;
       var sql = new cartodb.SQL({ user:'clearstreets', format: 'geojson' });
       sql.execute(sql_query).done(function (data){
         var shape = data.features[0];
@@ -238,7 +239,7 @@ chicagoGardens = {
         chicagoGardens.wardLayer.addTo(chicagoGardens.map).setZIndex(-10);
         chicagoGardens.wardLayer.setStyle({fillColor:'#8A2B85', weight: 3, fillOpacity: 0.35, color: '#000'});
         chicagoGardens.map.fitBounds(chicagoGardens.wardLayer.getBounds(), {maxZoom: 14});   
-        chicagoGardens.whereClause += " AND ST_Intersects(the_geom, (SELECT the_geom FROM boundaries_for_wards_2015 WHERE ward = '"+ ward_number +"'))"
+        chicagoGardens.whereClause += " AND ST_Intersects(the_geom, (SELECT the_geom FROM boundaries_for_wards_2015 WHERE ward = "+ wardSQL +"))"
         chicagoGardens.renderMap();
       })
     }
@@ -327,6 +328,17 @@ chicagoGardens = {
   })
 
   return results
+  },
+
+  wardSelectionSQL: function(array) {
+  var results = '';
+  $.each( array, function(index, obj) {
+    // chicagoGardens.userSelection += " AND LOWER(" + chicagoGardens.addUnderscore(obj.text) + ") = 'true'"
+    results += ("'" + obj.text + "' OR ")
+  })
+
+  results_final2 = results.substring(0, results.length -4);
+  return results_final2
   },
 
 }
