@@ -43,7 +43,6 @@ chicagoGardens = {
     var div = this.mapDivName;
     var satellite = new L.Google('SATELLITE');
     var roadmap = new L.Google('ROADMAP');
-    // console.log(roadmap)
 
     // var commLayer = {
     //   user_name: chicagoGardens.cartoUserName,
@@ -58,9 +57,7 @@ chicagoGardens = {
     //   ]
     // }
 
-    // console.log(commLayer)
     // var commOverlay = new L.Polygon(commLayer)
-    // console.log(commOverlay)
 
     var baseLayers = {
       "Satellite" : satellite,
@@ -190,9 +187,8 @@ chicagoGardens = {
     var owner = $("#search-ownership").select2('data');
     var neighborhood = $("#search-neighborhood").select2('data');
     var ownerSQL = this.ownerSelectionSQL(owner)
-    var neighborhoodSQL = this.neighborhoodSelectionSQL(neighborhood)
-    var wardSQL = this.wardSelectionSQL(ward_number)
-    console.log(wardSQL)
+    var neighborhoodSQL = this.multipleSelectionSQL(neighborhood)
+    var wardSQL = this.multipleSelectionSQL(ward_number)
 
     if (owner != '') {
       chicagoGardens.whereClause += ' AND (' + ownerSQL + ')'
@@ -320,21 +316,21 @@ chicagoGardens = {
   return results_final
   },
 
-  neighborhoodSelectionSQL: function(array) {
+  // neighborhoodSelectionSQL: function(array) {
+  // var results = '';
+  // $.each( array, function(index, obj) {
+  //   // chicagoGardens.userSelection += " AND LOWER(" + chicagoGardens.addUnderscore(obj.text) + ") = 'true'"
+  //   results += ("'" + obj.text + "'")
+  // })
+
+  // return results
+  // },
+
+  multipleSelectionSQL: function(array) {
   var results = '';
   $.each( array, function(index, obj) {
     // chicagoGardens.userSelection += " AND LOWER(" + chicagoGardens.addUnderscore(obj.text) + ") = 'true'"
-    results += ("'" + obj.text + "'")
-  })
-
-  return results
-  },
-
-  wardSelectionSQL: function(array) {
-  var results = '';
-  $.each( array, function(index, obj) {
-    // chicagoGardens.userSelection += " AND LOWER(" + chicagoGardens.addUnderscore(obj.text) + ") = 'true'"
-    results += ("'" + obj.text + "' OR ")
+    results += ("'" + obj.text + "' IN ")
   })
 
   results_final2 = results.substring(0, results.length -4);
