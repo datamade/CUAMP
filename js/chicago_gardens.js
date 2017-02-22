@@ -29,6 +29,7 @@ chicagoGardens = {
   wardBorder           : '',
   sublayerOne          : '',
   whereClause          : '',
+  joinClause           : '',
   wardLayer            : '',
   communityLayer       : '',
   cartoFields          : 'the_geom, the_geom_webmercator, growing_site_name, is_growing_site_locked, evidence_of_support_organizations, if_it_s_a_community_garden_is_it_collective_or_allotment, choose_growing_site_types, water, compost_system, structures_and_features, season_extension_techniques, animals, address, food_producing, community_garden, is_growing_site_dormant, latitude, longitude, ownership, other_support_organization, growing_site_website, facebook, is_growing_site_fenced, description, ward, communities, public_contact_info, growing_site_image, municipalities',
@@ -178,7 +179,7 @@ chicagoGardens = {
 
   doSearch: function() {
     this.clearSearch();
-    chicagoGardens.whereClause = " WHERE the_geom is not null";
+    chicagoGardens.whereClause = " WHERE gardens.the_geom is not null";
     var gardenMap = this;
     // // #search-address refers to a div id in map-example.html. You can rename this div.
     var address = $("#search-address").val();
@@ -193,6 +194,7 @@ chicagoGardens = {
     if (owner != '') {
       chicagoGardens.whereClause += ' AND (' + ownerSQL + ')'
     }
+
 
     if ($('#search-production').is(':checked')) {
       chicagoGardens.whereClause += ' AND food_producing = true'
@@ -226,47 +228,57 @@ chicagoGardens = {
       });
     }
 
+
+    // SELECT gardens.* FROM allpublicgardendata as gardens join boundaries_for_wards_2015 as wards on ST_Intersects(gardens.the_geom, wards.the_geom) where wards.ward in ('13', '6')
+
     else if (ward_number != '') {
-      var sql_query = "SELECT * FROM boundaries_for_wards_2015 WHERE ward=" + wardSQL;
-      var sql = new cartodb.SQL({ user:'clearstreets', format: 'geojson' });
-      sql.execute(sql_query).done(function (data){
-        var shape = data.features[0];
-        chicagoGardens.wardLayer = L.geoJson(shape);
-        chicagoGardens.wardLayer.addTo(chicagoGardens.map).setZIndex(-10);
-        chicagoGardens.wardLayer.setStyle({fillColor:'#8A2B85', weight: 3, fillOpacity: 0.35, color: '#000'});
-        chicagoGardens.map.fitBounds(chicagoGardens.wardLayer.getBounds(), {maxZoom: 14});   
-        chicagoGardens.whereClause += " AND ST_Intersects(the_geom, (SELECT the_geom FROM boundaries_for_wards_2015 WHERE ward = "+ wardSQL +"))"
-        chicagoGardens.renderMap();
-      })
+      chicagoGardens.joinClause = " join boundaries_for_wards_2015 as wards on ST_Intersects(gardens.the_geom, wards.the_geom)"
+      chicagoGardens.whereClause += " AND wards.ward IN (" + wardSQL + ")"
+
+      // var sql_query = "SELECT * FROM boundaries_for_wards_2015 WHERE ward IN (" + wardSQL +")"
+      // var sql = new cartodb.SQL({ user:'clearstreets', format: 'geojson' });
+      // sql.execute(sql_query).done(function (data){
+      //   var shape = data.features;
+      //   chicagoGardens.wardLayer = L.geoJson(shape);
+      //   chicagoGardens.wardLayer.addTo(chicagoGardens.map).setZIndex(-10);
+      //   chicagoGardens.wardLayer.setStyle({fillColor:'#8A2B85', weight: 3, fillOpacity: 0.35, color: '#000'});
+      //   chicagoGardens.map.fitBounds(chicagoGardens.wardLayer.getBounds(), {maxZoom: 14});   
+        
+      //   console.log(chicagoGardens.whereClause)
+
+      // })
     }
 
     else if (neighborhood != '') {
-      var sql_query = "SELECT * FROM boundaries_community_areas_current WHERE community = " + neighborhoodSQL;
-      var sql = new cartodb.SQL({ user:'clearstreets', format: 'geojson' });
-      sql.execute(sql_query).done(function (data){
-        var shape = data.features[0];
-        chicagoGardens.communityLayer = L.geoJson(shape);
-        chicagoGardens.communityLayer.addTo(chicagoGardens.map).setZIndex(-10);
-        chicagoGardens.communityLayer.setStyle({fillColor:'#8A2B85', weight: 3, fillOpacity: 0.35, color: '#000'});
-        chicagoGardens.map.fitBounds(chicagoGardens.communityLayer.getBounds(), {maxZoom: 14});   
-        chicagoGardens.whereClause += " AND ST_Intersects(the_geom, (SELECT the_geom FROM boundaries_community_areas_current WHERE community = " + neighborhoodSQL + "))"
-        chicagoGardens.renderMap();
-      })
+      chicagoGardens.joinClause = " join boundaries_community_areas_current as community_areas on ST_Intersects(gardens.the_geom, community_areas.the_geom)"
+      chicagoGardens.whereClause += " AND community_areas.community IN (" + neighborhoodSQL + ")"
     }
+    //   var sql_query = "SELECT * FROM boundaries_community_areas_current WHERE community = " + neighborhoodSQL;
+    //   var sql = new cartodb.SQL({ user:'clearstreets', format: 'geojson' });
+    //   sql.execute(sql_query).done(function (data){
+    //     var shape = data.features[0];
+    //     chicagoGardens.communityLayer = L.geoJson(shape);
+    //     chicagoGardens.communityLayer.addTo(chicagoGardens.map).setZIndex(-10);
+    //     chicagoGardens.communityLayer.setStyle({fillColor:'#8A2B85', weight: 3, fillOpacity: 0.35, color: '#000'});
+    //     chicagoGardens.map.fitBounds(chicagoGardens.communityLayer.getBounds(), {maxZoom: 14});   
+    //     chicagoGardens.whereClause += " AND ST_Intersects(the_geom, (SELECT the_geom FROM boundaries_community_areas_current WHERE community = " + neighborhoodSQL + "))"
+    //     chicagoGardens.renderMap();
+    //   })
+    // }
 
-    else {
-      chicagoGardens.renderMap();
-    }
+    chicagoGardens.renderMap();
   },
 
   renderMap: function() {
+    var sql = "select gardens.* from allpublicgardendata as gardens" + chicagoGardens.joinClause + " " + chicagoGardens.whereClause
+    console.log(sql)
     var layerOpts = {
       user_name: chicagoGardens.cartoUserName,
       type: 'cartodb',
       cartodb_logo: false,
       sublayers: [
         {
-          sql: "select * from allpublicgardendata" + chicagoGardens.whereClause,
+          sql: sql,
           cartocss: $('#carto-result-style').html().trim(),
           interactivity: this.cartoFields,
         },
@@ -329,11 +341,10 @@ chicagoGardens = {
   multipleSelectionSQL: function(array) {
   var results = '';
   $.each( array, function(index, obj) {
-    // chicagoGardens.userSelection += " AND LOWER(" + chicagoGardens.addUnderscore(obj.text) + ") = 'true'"
-    results += ("'" + obj.text + "' IN ")
+    results += ("'" + obj.text + "', ")
   })
 
-  results_final2 = results.substring(0, results.length -4);
+  results_final2 = results.substring(0, results.length -2);
   return results_final2
   },
 
