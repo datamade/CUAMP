@@ -228,50 +228,21 @@ chicagoGardens = {
       });
     }
 
-
-    // SELECT gardens.* FROM allpublicgardendata as gardens join boundaries_for_wards_2015 as wards on ST_Intersects(gardens.the_geom, wards.the_geom) where wards.ward in ('13', '6')
-
-    else if (ward_number != '') {
-      chicagoGardens.joinClause = " join boundaries_for_wards_2015 as wards on ST_Intersects(gardens.the_geom, wards.the_geom)"
-      chicagoGardens.whereClause += " AND wards.ward IN (" + wardSQL + ")"
-
-      // var sql_query = "SELECT * FROM boundaries_for_wards_2015 WHERE ward IN (" + wardSQL +")"
-      // var sql = new cartodb.SQL({ user:'clearstreets', format: 'geojson' });
-      // sql.execute(sql_query).done(function (data){
-      //   var shape = data.features;
-      //   chicagoGardens.wardLayer = L.geoJson(shape);
-      //   chicagoGardens.wardLayer.addTo(chicagoGardens.map).setZIndex(-10);
-      //   chicagoGardens.wardLayer.setStyle({fillColor:'#8A2B85', weight: 3, fillOpacity: 0.35, color: '#000'});
-      //   chicagoGardens.map.fitBounds(chicagoGardens.wardLayer.getBounds(), {maxZoom: 14});   
-        
-      //   console.log(chicagoGardens.whereClause)
-
-      // })
-    }
-
     else if (neighborhood != '') {
       chicagoGardens.joinClause = " join boundaries_community_areas_current as community_areas on ST_Intersects(gardens.the_geom, community_areas.the_geom)"
       chicagoGardens.whereClause += " AND community_areas.community IN (" + neighborhoodSQL + ")"
     }
-    //   var sql_query = "SELECT * FROM boundaries_community_areas_current WHERE community = " + neighborhoodSQL;
-    //   var sql = new cartodb.SQL({ user:'clearstreets', format: 'geojson' });
-    //   sql.execute(sql_query).done(function (data){
-    //     var shape = data.features[0];
-    //     chicagoGardens.communityLayer = L.geoJson(shape);
-    //     chicagoGardens.communityLayer.addTo(chicagoGardens.map).setZIndex(-10);
-    //     chicagoGardens.communityLayer.setStyle({fillColor:'#8A2B85', weight: 3, fillOpacity: 0.35, color: '#000'});
-    //     chicagoGardens.map.fitBounds(chicagoGardens.communityLayer.getBounds(), {maxZoom: 14});   
-    //     chicagoGardens.whereClause += " AND ST_Intersects(the_geom, (SELECT the_geom FROM boundaries_community_areas_current WHERE community = " + neighborhoodSQL + "))"
-    //     chicagoGardens.renderMap();
-    //   })
-    // }
+
+    else if (ward_number != '') {
+      chicagoGardens.joinClause = " join boundaries_for_wards_2015 as wards on ST_Intersects(gardens.the_geom, wards.the_geom)"
+      chicagoGardens.whereClause += " AND wards.ward IN (" + wardSQL + ")"
+    }
 
     chicagoGardens.renderMap();
   },
 
   renderMap: function() {
     var sql = "select gardens.* from allpublicgardendata as gardens" + chicagoGardens.joinClause + " " + chicagoGardens.whereClause
-    console.log(sql)
     var layerOpts = {
       user_name: chicagoGardens.cartoUserName,
       type: 'cartodb',
