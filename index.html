@@ -18,9 +18,10 @@ layout: default
 
 <style id="carto-overlay-style">
   #carto-overlay {
-    polygon-line-color: '#000';
-    line-width: 1.7;
-    line-opacity: 1;
+    polygon-fill: #8A2B85;
+    polygon-opacity: 0.35;
+    line-color: #000;
+    line-width: 1;
   }
 </style>
 
@@ -37,119 +38,77 @@ layout: default
           <div class="row">
             <div class="col-md-12 get-sm">
               <div id="modal-main"></div>
-              </div>
+              <dl>
+                <dt><div id="description-header"></div></dt>
+                <dd><div id="description-subsection"></div></dd>
+              </dl>
             </div>
+          </div>
           <div class="col-md-4 hidden-xs hidden-s" id="modal-image"></div>
-        </div>
-
-          <div class="row">
-            <div class="col-md-12 get-sm">
-              <h3 id="with_location"></h3>
-            </div>
-          </div>
-        <div class="row">
-          <div class="col-md-12 get-sm">
-            <h4 id="commarea-header"></h4>
-            <div id="commarea-subsection"></div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12 get-sm">
-            <h4 id="ward-header"></h4>
-            <div id="ward-subsection"></div>
-          </div>
         </div>
 
       <div class="row modal-bottom">
         <div class="col-md-12">
-          <div class="row">
             <div class="col-md-12 get-sm">
-              <h3 id="with_about"></h3>
-            </div>
-          </div>          
-            <div class="col-md-12 get-sm">
-              <h4 id="owner-header"></h4>
-              <div id="owner-subsection"></div>
-            </div>          
-            <div class="col-md-12 get-sm">
-              <h4 id="support-header"></h4>
-              <div id="support-subsection"></div>
-            </div>          
-            <div class="col-md-12 get-sm">
-              <h4 id="types-header"></h4>
-              <div id="types-subsection"></div>
-            </div>          
-            <div class="col-md-12 get-sm">
-              <h4 id="description-header"></h4>
-              <div id="description-subsection"></div>
-            </div>       
-            <div class="col-md-12 get-sm">
-              <h4 id="dormant-header"></h4>
-              <div id="dormant-subsection"></div>
-            </div>
+              <br>
+              <dl class="dl-horizontal">
+                <dt><div id="commarea-header"></div></dt>
+                <dd><div id="commarea-subsection"></div></dd>
 
-          <div class="row">
-            <div class="col-md-12 get-sm">
-              <h3 id="with_features"></h3>
-            </div>
-          </div>
-            <div class="col-md-12 get-sm">
-              <h4 id="production-header"></h4>
-              <div id="production-subsection"></div>
-            </div>
-            <div class="col-md-12">
-              <h4 id="community-header"></h4>
-              <div id="community-subsection"></div>
-            </div>
-            <div class="col-md-12 get-sm">
-              <h4 id="commtype-header"></h4>
-              <div id="commtype-subsection"></div>
-            </div>
-            <div class="col-md-12 get-sm">
-              <h4 id="fence-header"></h4>
-              <div id="fence-subsection"></div>
-            </div>
-            <div class="col-md-12 get-sm">
-              <h4 id="locked-header"></h4>
-              <div id="locked-subsection"></div>
-            </div>
-            <div class="col-md-12 get-sm">
-              <h4 id="water-header"></h4>
-              <div id="water-subsection"></div>
-            </div>
-            <div class="col-md-12 get-sm">
-              <h4 id="compost-header"></h4>
-              <div id="compost-subsection"></div>
-            </div>
-            <div class="col-md-12 get-sm">
-              <h4 id="seasonex-header"></h4>
-              <div id="seasonex-subsection"></div>
-            </div>
-            <div class="col-md-12 get-sm">
-              <h4 id="structures-header"></h4>
-              <div id="structures-subsection"></div>
-            </div>
-            <div class="col-md-12 get-sm">
-              <h4 id="animal-header"></h4>
-              <div id="animal-subsection"></div>
-            </div>
+                <dt><div id="ward-header"></div></dt>
+                <dd><div id="ward-subsection"></div></dd>
 
-          <div class="row">
-            <div class="col-md-12 get-sm">
-              <h3 id="with_contact"></h3>
-            </div>
-          </div>
-            <div class="col-md-12 get-sm">
-              <h4 id="contact-header"></h4>
-              <div id="contact-subsection"></div>
-            </div>
-            <div class="col-md-12 get-sm">
-              <h4 id="website-header"></h4>
-              <div id="website-subsection"></div>
-            </div>
-            <div class="col-md-12 get-sm">
-              <h4 id="facebook-header"></h4>
-              <div id="facebook-subsection"></div>
+                <dt><div id="owner-header"></div></dt>
+                <dd><div id="owner-subsection"></div></dd>
+<!---->
+                <dt><div id="support-header"></div></dt>
+                <dd><div id="support-subsection"></div></dd>
+
+                <dt><div id="types-header"></div></dt>
+                <dd><div id="types-subsection"></div></dd>
+
+                <dt><div id="dormant-header"></div></dt>
+                <dd><div id="dormant-subsection"></div></dd>
+
+                <dt><div id="production-header"></div></dt>
+                <dd><div id="production-subsection"></div></dd>
+
+                <dt><div id="community-header"></div></dt>
+                <dd><div id="community-subsection"></div></dd>
+<!---->
+                <dt><div id="commtype-header"></div></dt>
+                <dd><div id="commtype-subsection"></div></dd>
+
+                <dt><div id="fence-header"></div></dt>
+                <dd><div id="fence-subsection"></div></dd>
+
+                <dt><div id="locked-header"></div></dt>
+                <dd><div id="locked-subsection"></div></dd>
+
+                <dt><div id="water-header"></div></dt>
+                <dd><div id="water-subsection"></div></dd>
+
+                <dt><div id="compost-header"></div></dt>
+                <dd><div id="compost-subsection"></div></dd>
+<!---->
+                <dt><div id="seasonex-header"></div></dt>
+                <dd><div id="seasonex-subsection"></div></dd>
+<!---->
+                <dt><div id="structures-header"></div></dt>
+                <dd><div id="structures-subsection"></div></dd>
+
+                <dt><div id="animal-header"></div></dt>
+                <dd><div id="animal-subsection"></div></dd>
+
+                <dt><div id="contact-header"></div></dt>
+                <dd><div id="contact-subsection"></div></dd>
+
+                <dt><div id="website-header"></div></dt>
+                <dd><div id="website-subsection"></div></dd>
+
+                <dt><div id="facebook-header"></div></dt>
+                <dd><div id="facebook-subsection"></div></dd>
+              </dl>
             </div>
 
         </div>
@@ -177,7 +136,7 @@ layout: default
         <option value='8050'>5 miles</option>
       </select>
     </div>
-    <p><strong>By Neighborhood:</strong></p>
+    <p><strong>By Community Area:</strong></p>
     <div class="input-group select2-bootstrap-prepend m-top-sm">
       <span class="input-group-addon"><i class="fa fa-street-view fa-fw" aria-hidden="true"></i></span>
       <select class="data-array-neighborhood form-control" id="search-neighborhood" multiple="multiple"></select>

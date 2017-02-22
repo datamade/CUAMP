@@ -37,7 +37,7 @@ a {
 
 iframe {
   width: 100%;
-  height: 1950px;
+  height: 3625px;
 }
 
 :root {
@@ -257,4 +257,11 @@ iframe {
 
 #leafbox {
   color: var(--green-color);
+}
+
+.dl-horizontal dt 
+{
+    white-space: normal;
+    width: 220px; 
+    margin-right: 10px;
 }

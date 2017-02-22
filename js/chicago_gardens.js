@@ -28,8 +28,15 @@ chicagoGardens = {
   radiusCircle         : '',
   wardBorder           : '',
   sublayerOne          : '',
+  sublayerWards        : '',
+  sublayerCommunities  : '',
   whereClause          : '',
+  joinClause           : '',
   wardLayer            : '',
+  ward_number          : '',
+  neighborhood         : '',
+  wardSQL              : '',
+  communityareaSQL     : '',
   communityLayer       : '',
   cartoFields          : 'the_geom, the_geom_webmercator, growing_site_name, is_growing_site_locked, evidence_of_support_organizations, if_it_s_a_community_garden_is_it_collective_or_allotment, choose_growing_site_types, water, compost_system, structures_and_features, season_extension_techniques, animals, address, food_producing, community_garden, is_growing_site_dormant, latitude, longitude, ownership, other_support_organization, growing_site_website, facebook, is_growing_site_fenced, description, ward, communities, public_contact_info, growing_site_image, municipalities',
 
@@ -43,34 +50,10 @@ chicagoGardens = {
     var div = this.mapDivName;
     var satellite = new L.Google('SATELLITE');
     var roadmap = new L.Google('ROADMAP');
-    // console.log(roadmap)
-
-    // var commLayer = {
-    //   user_name: chicagoGardens.cartoUserName,
-    //   type: 'cartodb',
-    //   format: 'geojson',
-    //   cartodb_logo: false,
-    //   sublayers: [
-    //     {
-    //       sql: "select * from boundaries_community_areas_current",
-    //       cartocss: $('#carto-overlay-style').html().trim(),
-    //     },
-    //   ]
-    // }
-
-    // console.log(commLayer)
-    // var commOverlay = new L.Polygon(commLayer)
-    // console.log(commOverlay)
-
     var baseLayers = {
       "Satellite" : satellite,
       "Roadmap" : roadmap
     };
-
-    // var overlays = {
-    //   "Neighborhoods" : commOverlay,
-    //   // "Wards" : wardOverlay
-    // };
 
     this.map = new L.Map('mapCanvas', {
       center: this.mapCentroid,
@@ -181,21 +164,22 @@ chicagoGardens = {
 
   doSearch: function() {
     this.clearSearch();
-    chicagoGardens.whereClause = " WHERE the_geom is not null";
+    chicagoGardens.whereClause = " WHERE gardens.the_geom is not null";
     var gardenMap = this;
     // // #search-address refers to a div id in map-example.html. You can rename this div.
     var address = $("#search-address").val();
     var radius = $("#search-radius").val();
-    var ward_number = $("#search-ward").val();
+    chicagoGardens.ward_number = $("#search-ward").select2('data');
     var owner = $("#search-ownership").select2('data');
-    var neighborhood = $("#search-neighborhood").select2('data');
+    chicagoGardens.neighborhood = $("#search-neighborhood").select2('data');
     var ownerSQL = this.ownerSelectionSQL(owner)
-    var neighborhoodSQL = this.neighborhoodSelectionSQL(neighborhood)
-
+    chicagoGardens.communityareaSQL = "community_areas.community IN (" + this.multipleSelectionSQL(chicagoGardens.neighborhood) + ")"
+    chicagoGardens.wardSQL = "wards.ward IN (" + this.multipleSelectionSQL(chicagoGardens.ward_number) + ")"
 
     if (owner != '') {
       chicagoGardens.whereClause += ' AND (' + ownerSQL + ')'
     }
+
 
     if ($('#search-production').is(':checked')) {
       chicagoGardens.whereClause += ' AND food_producing = true'
@@ -229,50 +213,50 @@ chicagoGardens = {
       });
     }
 
-    else if (ward_number != null) {
-      var sql_query = "SELECT * FROM boundaries_for_wards_2015 WHERE ward='" + ward_number +"'";
-      var sql = new cartodb.SQL({ user:'clearstreets', format: 'geojson' });
-      sql.execute(sql_query).done(function (data){
-        var shape = data.features[0];
-        chicagoGardens.wardLayer = L.geoJson(shape);
-        chicagoGardens.wardLayer.addTo(chicagoGardens.map).setZIndex(-10);
-        chicagoGardens.wardLayer.setStyle({fillColor:'#8A2B85', weight: 3, fillOpacity: 0.35, color: '#000'});
-        chicagoGardens.map.fitBounds(chicagoGardens.wardLayer.getBounds(), {maxZoom: 14});   
-        chicagoGardens.whereClause += " AND ST_Intersects(the_geom, (SELECT the_geom FROM boundaries_for_wards_2015 WHERE ward = '"+ ward_number +"'))"
-        chicagoGardens.renderMap();
-      })
+    else if (chicagoGardens.neighborhood != '') {
+      chicagoGardens.joinClause = " join boundaries_community_areas_current as community_areas on ST_Intersects(gardens.the_geom, community_areas.the_geom)"
+      chicagoGardens.whereClause += " AND " + chicagoGardens.communityareaSQL
     }
 
-    else if (neighborhood != '') {
-      var sql_query = "SELECT * FROM boundaries_community_areas_current WHERE community = " + neighborhoodSQL;
-      var sql = new cartodb.SQL({ user:'clearstreets', format: 'geojson' });
-      sql.execute(sql_query).done(function (data){
-        var shape = data.features[0];
-        chicagoGardens.communityLayer = L.geoJson(shape);
-        chicagoGardens.communityLayer.addTo(chicagoGardens.map).setZIndex(-10);
-        chicagoGardens.communityLayer.setStyle({fillColor:'#8A2B85', weight: 3, fillOpacity: 0.35, color: '#000'});
-        chicagoGardens.map.fitBounds(chicagoGardens.communityLayer.getBounds(), {maxZoom: 14});   
-        chicagoGardens.whereClause += " AND ST_Intersects(the_geom, (SELECT the_geom FROM boundaries_community_areas_current WHERE community = " + neighborhoodSQL + "))"
-        chicagoGardens.renderMap();
-      })
+    else if (chicagoGardens.ward_number != '') {
+      chicagoGardens.joinClause = " join boundaries_for_wards_2015 as wards on ST_Intersects(gardens.the_geom, wards.the_geom)"
+      chicagoGardens.whereClause += " AND " + chicagoGardens.wardSQL
     }
 
-    else {
-      chicagoGardens.renderMap();
-    }
+    chicagoGardens.renderMap();
   },
 
   renderMap: function() {
+    var gardenSQL = "select gardens.* from allpublicgardendata as gardens" + chicagoGardens.joinClause + " " + chicagoGardens.whereClause
+    var wardLayerSQL = "SELECT wards.* from boundaries_for_wards_2015 as wards WHERE wards.ward = '51'"
+      if (chicagoGardens.ward_number != "") {
+        wardLayerSQL += "OR " + chicagoGardens.wardSQL;
+      }
+    var communityLayerSQL = "SELECT community_areas.* from boundaries_community_areas_current as community_areas WHERE community_areas.community = 'WICKER PARK'"
+      if (chicagoGardens.neighborhood != '') {
+        communityLayerSQL += "OR " + chicagoGardens.communityareaSQL;
+      }
+
     var layerOpts = {
       user_name: chicagoGardens.cartoUserName,
       type: 'cartodb',
       cartodb_logo: false,
       sublayers: [
         {
-          sql: "select * from allpublicgardendata" + chicagoGardens.whereClause,
+          sql: wardLayerSQL,
+          cartocss: $('#carto-overlay-style').html().trim(),
+        },
+
+        {
+          sql: communityLayerSQL,
+          cartocss: $('#carto-overlay-style').html().trim(),
+        },
+
+        {
+          sql: gardenSQL,
           cartocss: $('#carto-result-style').html().trim(),
           interactivity: this.cartoFields,
-        },
+        }
       ]
     }
     var createdLayer = cartodb.createLayer(chicagoGardens.map, layerOpts, { https: true });
@@ -280,8 +264,10 @@ chicagoGardens = {
     createdLayer.addTo(chicagoGardens.map)
     .done(function(layer) {
       var mapName = "#" + chicagoGardens.mapDivName + " div"
-      chicagoGardens.sublayerOne = layer.getSubLayer(0);
+      chicagoGardens.sublayerOne = layer.getSubLayer(2);
       chicagoGardens.sublayerOne.setInteraction(true);
+      chicagoGardens.sublayerWards = layer.getSubLayer(0);
+      chicagoGardens.sublayerCommunities = layer.getSubLayer(1);
 
       chicagoGardens.sublayerOne.on('featureOver', function(e, latlng, pos, data, subLayerIndex) {
           $(mapName).css('cursor','pointer');
@@ -319,14 +305,14 @@ chicagoGardens = {
   return results_final
   },
 
-  neighborhoodSelectionSQL: function(array) {
+  multipleSelectionSQL: function(array) {
   var results = '';
   $.each( array, function(index, obj) {
-    // chicagoGardens.userSelection += " AND LOWER(" + chicagoGardens.addUnderscore(obj.text) + ") = 'true'"
-    results += ("'" + obj.text + "'")
+    results += ("'" + obj.text + "', ")
   })
 
-  return results
+  results_final2 = results.substring(0, results.length -2);
+  return results_final2
   },
 
 }
@@ -370,7 +356,7 @@ var layer1 = {
   });
 
   $(".data-array-neighborhood").select2({
-    placeholder: "Neighborhood",
+    placeholder: "Community Area",
     data: commarea_data
   });
 
@@ -384,10 +370,13 @@ var layer1 = {
 
 
   function convertBoolean(text) {
-    if (text = true)
-      return "Yes"
+    if (text == true) {
+      return "<i class="+"'fa fa-check'"+" aria-hidden="+"'true'"+"></i>"
+    }
+    else if (text == false) {
+      return "<i class="+"'fa fa-times'"+" aria-hidden="+"'true'"+"></i>"
+    }
     else {
-      return "No"
     }
   }
 
@@ -438,7 +427,7 @@ var layer1 = {
       $("#production-subsection").append("<p>" + convertBoolean(production_list) + "</p>")
     }
     if (locked != null) {
-      $("#locked-header").append('<i class="fa fa-lock" aria-hidden="true"></i> Is the Growing Site Locked?');
+      $("#locked-header").append('<i class="fa fa-lock" aria-hidden="true"></i> Locked Site:');
       $("#locked-subsection").append("<p>" + convertBoolean(locked) + "</p>")
     }
     if (comm_garden_type != "") {
@@ -454,15 +443,15 @@ var layer1 = {
       $("#water-subsection").append("<p>" + water_system + "</p>")
     }
     if (compost != null) {
-      $("#compost-header").append('<i class="fa fa-recycle" aria-hidden="true"></i> Is Compost Available?');
+      $("#compost-header").append('<i class="fa fa-recycle" aria-hidden="true"></i> Compost Available:');
       $("#compost-subsection").append("<p>" + convertBoolean(compost) + "</p>")
     }
     if (structures != "") {
-      $("#structures-header").append('<i class="fa fa-building-o" aria-hidden="true"></i> Other Structures and Features:');
+      $("#structures-header").append('<i class="fa fa-building-o" aria-hidden="true"></i> Structures and Features:');
       $("#structures-subsection").append("<p>" + structures + "</p>")
     }
     if (season_extension != "") {
-      $("#seasonex-header").append('<i class="fa fa-arrow-right" aria-hidden="true"></i> Season Extension Techniques:');
+      $("#seasonex-header").append('<i class="fa fa-arrow-right" aria-hidden="true"></i> Season Extension Techniques:<br>');
       $("#seasonex-subsection").append("<p>" + season_extension+ "</p>")
     }
     if (animals != "") {
@@ -481,15 +470,15 @@ var layer1 = {
       $("#facebook-header").append('<i class="fa fa-facebook-square" aria-hidden="true"></i> <a href="' + facebook + '">Facebook Page</a>');
     }
     if (fence != null) {
-      $("#fence-header").append('<i class="fa fa-bars" aria-hidden="true"></i> Is the Garden Fenced?');
+      $("#fence-header").append('<i class="fa fa-bars" aria-hidden="true"></i> Fenced In:');
       $("#fence-subsection").append("<p>" + convertBoolean(fence) + "</p>")
     }
     if (description != "") {
-      $("#description-header").append('<i class="fa fa-ellipsis-h" aria-hidden="true"></i> Description:');
+      $("#description-header").append('<br><i class="fa fa-ellipsis-h" aria-hidden="true"></i> Description:');
       $("#description-subsection").append("<p>" + description + "</p>")
     }
     if (dormant != null) {
-      $("#dormant-header").append('<i class="fa fa-pause" aria-hidden="true"></i> Is the Site Dormant?');
+      $("#dormant-header").append('<i class="fa fa-pause" aria-hidden="true"></i> Dormant Site:');
       $("#dormant-subsection").append("<p>" + convertBoolean(dormant) + "</p>")
     }
     if (ward_num != null) {
@@ -497,7 +486,7 @@ var layer1 = {
       $("#ward-subsection").append("<p>" + ward_num + "</p>")
     }
     if (community_area != "") {
-      $("#commarea-header").append('<i class="fa fa-map-marker" aria-hidden="true"></i> Neighborhood:');
+      $("#commarea-header").append('<i class="fa fa-map-marker" aria-hidden="true"></i> Community Area:');
       $("#commarea-subsection").append("<p>" + community_area + "</p>")
     }
     if (contact_info != "") {
@@ -505,16 +494,16 @@ var layer1 = {
       $("#contact-subsection").append("<p>" + contact_info + "</p>")
     }
     if ((contact_info != "") | (website != "") | (facebook != ""))  {
-      $("#with_contact").append('<br><strong><u>Contact</u></strong>');
+      $("#with_contact").append('<br><strong>Contact</strong><br>');
     }  
     if ((community_area != "") | (ward_num != "")) {
-      $("#with_location").append('<br><strong><u>Location</u></strong>');
+      $("#with_location").append('<br><strong>Location</strong><br>');
     }  
     if ((production_list != null) | (community_list != null) | (comm_garden_type != "") | (fence != null) | (locked != null) | (water_system != "") | (compost != null) | (season_extension != "") | (structures != "") | (animals != "")) {
-      $("#with_features").append('<br><strong><u>Features</u></strong>');
+      $("#with_features").append('<br><strong>Features</strong><br>');
     }  
     if ((owner_list != "") | (other_support != "") | (types != "") | (description != "") | (dormant != null))  {
-      $("#with_about").append('<br><strong><u>About</u></strong>');
+      $("#with_about").append('<br><strong>About</strong>');
     }  
   
   };
