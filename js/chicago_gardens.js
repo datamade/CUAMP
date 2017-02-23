@@ -128,7 +128,7 @@ chicagoGardens = {
   addIcon: function() {
     this.centerMark = new L.Marker(this.currentPinpoint, {
       icon: (new L.Icon({
-        iconUrl: 'images/push_pin.png',
+        iconUrl: 'images/map_marker.png',
         iconSize: [30, 30],
         iconAnchor: [10, 32]
         })
