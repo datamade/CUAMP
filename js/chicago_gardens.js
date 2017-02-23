@@ -307,7 +307,7 @@ chicagoGardens = {
       var sql2 = new cartodb.SQL({ user: chicagoGardens.cartoUserName  });
       sql2.getBounds(chicagoGardens.gardenSQL)
         .done(function(bounds) {
-           chicagoGardens.map.fitBounds(bounds, {maxZoom: 13})
+           chicagoGardens.map.fitBounds(bounds, {padding: [20,20], maxZoom: 14})
         });
     }
   },
