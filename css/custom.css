@@ -53,12 +53,12 @@ iframe {
   font-size: 16px;
 }
 
-.btn-primary {
+.btn-primary,.btn-primary.active.focus,.btn-primary.active:focus,.btn-primary.active:hover,.btn-primary:active.focus,.btn-primary:active:focus,.btn-primary:active:hover,.open>.dropdown-toggle.btn-primary.focus,.open>.dropdown-toggle.btn-primary:focus,.open>.dropdown-toggle.btn-primary:hover {
   background-color: var(--purple-color);
   border-color: var(--purple-color);
 }
 
-.btn-primary:hover {
+.btn-primary:hover,.btn-primary.focus,.btn-primary:focus,.btn-primary.active,.btn-primary:active,.open>.dropdown-toggle.btn-primary  {
   background-color: #A0499C;
   border-color: #A0499C;
 }

@@ -180,13 +180,12 @@ chicagoGardens = {
       chicagoGardens.whereClause += ' AND (' + ownerSQL + ')'
     }
 
-
     if ($('#search-production').is(':checked')) {
-      chicagoGardens.whereClause += ' AND food_producing = true'
+      chicagoGardens.whereClause += ' AND gardens.food_producing = true'
     }
 
     if ($('#search-community').is(':checked')) {
-      chicagoGardens.whereClause += ' AND community_garden = true'
+      chicagoGardens.whereClause += ' AND gardens.community_garden = true'
     }
 
     var location = gardenMap.locationScope;
@@ -216,14 +215,14 @@ chicagoGardens = {
     else if (chicagoGardens.neighborhood != '') {
       chicagoGardens.joinClause = " join boundaries_community_areas_current as community_areas on ST_Intersects(gardens.the_geom, community_areas.the_geom)"
       chicagoGardens.whereClause += " AND " + chicagoGardens.communityareaSQL
-
-      chicagoGardens.renderMap();
     }
 
     else if (chicagoGardens.ward_number != '') {
       chicagoGardens.joinClause = " join boundaries_for_wards_2015 as wards on ST_Intersects(gardens.the_geom, wards.the_geom)"
       chicagoGardens.whereClause += " AND " + chicagoGardens.wardSQL
+    }
 
+    if (chicagoGardens.filterAddress == "") {
       chicagoGardens.renderMap();
     }
 
@@ -231,6 +230,8 @@ chicagoGardens = {
 
   renderMap: function() {
     chicagoGardens.gardenSQL = "select gardens.* from allpublicgardendata as gardens" + chicagoGardens.joinClause + " " + chicagoGardens.whereClause
+
+    console.log(chicagoGardens.gardenSQL)
       // if (chicagoGardens.filterAddress != "") {
       //   gardenSQL += chicagoGardens.addressSQL;
       // }
@@ -316,7 +317,7 @@ chicagoGardens = {
   var results = '';
   $.each( array, function(index, obj) {
     // chicagoGardens.userSelection += " AND LOWER(" + chicagoGardens.addUnderscore(obj.text) + ") = 'true'"
-    results += ("ownership = '" + obj.text + "' OR ")
+    results += ("gardens.ownership = '" + obj.text + "' OR ")
   })
 
   results_final = results.substring(0, results.length -4);
