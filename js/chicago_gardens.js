@@ -38,6 +38,7 @@ chicagoGardens = {
   wardSQL              : '',
   communityareaSQL     : '',
   gardenSQL            : '',
+  resultsNumber        : '',
   cartoFields          : 'the_geom, the_geom_webmercator, growing_site_name, is_growing_site_locked, evidence_of_support_organizations, if_it_s_a_community_garden_is_it_collective_or_allotment, choose_growing_site_types, water, compost_system, structures_and_features, season_extension_techniques, animals, address, food_producing, community_garden, is_growing_site_dormant, latitude, longitude, ownership, other_support_organization, growing_site_website, facebook, is_growing_site_fenced, description, ward, communities, public_contact_info, growing_site_image, municipalities',
 
   // Create geocoder object to access Google Maps API. Add underscore to insure variable safety.
@@ -225,16 +226,11 @@ chicagoGardens = {
     if (chicagoGardens.filterAddress == "") {
       chicagoGardens.renderMap();
     }
-
   },
 
   renderMap: function() {
     chicagoGardens.gardenSQL = "select gardens.* from allpublicgardendata as gardens" + chicagoGardens.joinClause + " " + chicagoGardens.whereClause
 
-    console.log(chicagoGardens.gardenSQL)
-      // if (chicagoGardens.filterAddress != "") {
-      //   gardenSQL += chicagoGardens.addressSQL;
-      // }
     communityLayerSQL = "SELECT community_areas.* from boundaries_community_areas_current as community_areas WHERE community_areas.community = 'WICKER PARK'"
       if (chicagoGardens.neighborhood != '' && chicagoGardens.filterAddress == "") {
         communityLayerSQL += "OR " + chicagoGardens.communityareaSQL;
@@ -243,6 +239,14 @@ chicagoGardens = {
       if (chicagoGardens.ward_number != "" && chicagoGardens.neighborhood == "" && chicagoGardens.filterAddress == "") {
           wardLayerSQL += "OR " + chicagoGardens.wardSQL;
       }
+
+    var sql = new cartodb.SQL({  user: chicagoGardens.cartoUserName  });
+    sql.execute(chicagoGardens.gardenSQL).done(function (data) {
+      entries = data.rows
+      chicagoGardens.resultsNumber = entries.length
+      chicagoGardens.clearInfoBox("resultsBox");
+      chicagoGardens.updateInfoBox("Sites Found: <strong>" + chicagoGardens.resultsNumber + "</strong>", "resultsBox");
+    })
 
     layerOpts = {
       user_name: chicagoGardens.cartoUserName,
@@ -300,23 +304,20 @@ chicagoGardens = {
       });
     });
 
-    if (chicagoGardens.ward_number != "" || chicagoGardens.neighborhood != "") {
-      var sql = new cartodb.SQL({ user: chicagoGardens.cartoUserName  });
-      sql.getBounds(chicagoGardens.gardenSQL)
+    if ((chicagoGardens.ward_number != "" || chicagoGardens.neighborhood != "") && chicagoGardens.filterAddress == "") {
+      var sql2 = new cartodb.SQL({ user: chicagoGardens.cartoUserName  });
+      sql2.getBounds(chicagoGardens.gardenSQL)
         .done(function(bounds) {
            chicagoGardens.map.fitBounds(bounds, {maxZoom: 13})
+           console.log(bounds)
         });
     }
-
-
-    // chicagoGardens.map.fitBounds(createdLayer.getBounds(), {maxZoom: 14});   
   },
 
 
   ownerSelectionSQL: function(array) {
   var results = '';
   $.each( array, function(index, obj) {
-    // chicagoGardens.userSelection += " AND LOWER(" + chicagoGardens.addUnderscore(obj.text) + ") = 'true'"
     results += ("gardens.ownership = '" + obj.text + "' OR ")
   })
 
@@ -339,6 +340,7 @@ chicagoGardens = {
   // Create a map!
 chicagoGardens.initialize();
 chicagoGardens.addInfoBox('bottomright', 'infoBox');
+chicagoGardens.addInfoBox('topright', 'resultsBox', "Sites Found: <strong>" + chicagoGardens.resultsNumber + "</strong>");
 
 var layer1 = {
   sql: "SELECT * from allpublicgardendata",
