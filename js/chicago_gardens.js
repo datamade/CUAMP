@@ -149,6 +149,10 @@ chicagoGardens = {
   },
 
   clearSearch: function() {
+    if (this.sublayerCommunities)
+      this.sublayerCommunities.remove();
+    if (this.sublayerWards)
+      this.sublayerWards.remove();
     if (this.sublayerOne)
       this.sublayerOne.remove();
     if (this.centerMark)
@@ -230,16 +234,16 @@ chicagoGardens = {
       // if (chicagoGardens.filterAddress != "") {
       //   gardenSQL += chicagoGardens.addressSQL;
       // }
-    var communityLayerSQL = "SELECT community_areas.* from boundaries_community_areas_current as community_areas WHERE community_areas.community = 'WICKER PARK'"
+    communityLayerSQL = "SELECT community_areas.* from boundaries_community_areas_current as community_areas WHERE community_areas.community = 'WICKER PARK'"
       if (chicagoGardens.neighborhood != '' && chicagoGardens.filterAddress == "") {
         communityLayerSQL += "OR " + chicagoGardens.communityareaSQL;
       }
-    var wardLayerSQL = "SELECT wards.* from boundaries_for_wards_2015 as wards WHERE wards.ward = '51'"
+    wardLayerSQL = "SELECT wards.* from boundaries_for_wards_2015 as wards WHERE wards.ward = '51'"
       if (chicagoGardens.ward_number != "" && chicagoGardens.neighborhood == "" && chicagoGardens.filterAddress == "") {
           wardLayerSQL += "OR " + chicagoGardens.wardSQL;
       }
 
-    var layerOpts = {
+    layerOpts = {
       user_name: chicagoGardens.cartoUserName,
       type: 'cartodb',
       cartodb_logo: false,
@@ -294,12 +298,14 @@ chicagoGardens = {
           modalPop(data);
       });
     });
-    
-    var sql = new cartodb.SQL({ user: chicagoGardens.cartoUserName  });
-    sql.getBounds(chicagoGardens.gardenSQL)
-      .done(function(bounds) {
-         chicagoGardens.map.fitBounds(bounds, {maxZoom: 14})
-      });
+
+    if (chicagoGardens.ward_number != "" || chicagoGardens.neighborhood != "") {
+      var sql = new cartodb.SQL({ user: chicagoGardens.cartoUserName  });
+      sql.getBounds(chicagoGardens.gardenSQL)
+        .done(function(bounds) {
+           chicagoGardens.map.fitBounds(bounds, {maxZoom: 13})
+        });
+    }
 
 
     // chicagoGardens.map.fitBounds(createdLayer.getBounds(), {maxZoom: 14});   
