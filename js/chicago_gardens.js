@@ -279,7 +279,6 @@ chicagoGardens = {
       chicagoGardens.sublayerOne.setInteraction(true);
       chicagoGardens.sublayerWards = layer.getSubLayer(0);
       chicagoGardens.sublayerCommunities = layer.getSubLayer(1);
-      console.log(chicagoGardens.sublayerOne)
 
       chicagoGardens.sublayerOne.on('featureOver', function(e, latlng, pos, data, subLayerIndex) {
           $(mapName).css('cursor','pointer');
@@ -309,7 +308,6 @@ chicagoGardens = {
       sql2.getBounds(chicagoGardens.gardenSQL)
         .done(function(bounds) {
            chicagoGardens.map.fitBounds(bounds, {maxZoom: 13})
-           console.log(bounds)
         });
     }
   },
