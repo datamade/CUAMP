@@ -150,6 +150,8 @@ chicagoGardens = {
   },
 
   clearSearch: function() {
+    if (this.whereClause)
+      this.whereClause = "";
     if (this.sublayerCommunities)
       this.sublayerCommunities.remove();
     if (this.sublayerWards)
@@ -199,7 +201,7 @@ chicagoGardens = {
       gardenMap._geocoder.geocode( { 'address' : chicagoGardens.filterAddress }, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
          gardenMap.currentPinpoint = [results[0].geometry.location.lat(), results[0].geometry.location.lng()];
-          var geoSearch = "ST_DWithin(ST_SetSRID(ST_POINT(" + gardenMap.currentPinpoint[1] + ", " + gardenMap.currentPinpoint[0] + "), 4326)::geography, the_geom::geography, " + radius + ")";
+          var geoSearch = "ST_DWithin(ST_SetSRID(ST_POINT(" + gardenMap.currentPinpoint[1] + ", " + gardenMap.currentPinpoint[0] + "), 4326)::geography, gardens.the_geom::geography, " + radius + ")";
           chicagoGardens.whereClause += " AND " + geoSearch
 
           chicagoGardens.setZoom(radius);
@@ -309,6 +311,9 @@ chicagoGardens = {
         .done(function(bounds) {
            chicagoGardens.map.fitBounds(bounds, {padding: [20,20], maxZoom: 14})
         });
+    }
+    if (chicagoGardens.ward_number == "" && chicagoGardens.neighborhood == "" && chicagoGardens.filterAddress == "") {
+      this.map.setView(chicagoGardens.mapCentroid, 11)
     }
   },
 
