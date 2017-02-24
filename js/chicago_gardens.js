@@ -313,7 +313,7 @@ chicagoGardens = {
         });
     }
     if (chicagoGardens.ward_number == "" && chicagoGardens.neighborhood == "" && chicagoGardens.filterAddress == "") {
-      this.map.setView(chicagoGardens.mapCentroid, 11)
+      this.map.setView(chicagoGardens.mapCentroid, 11);
     }
   },
 
