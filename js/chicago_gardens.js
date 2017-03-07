@@ -6,6 +6,7 @@ var ownerOptions = ["Private", "NeighborSpace", "City of Chicago", "Chicago Park
 var communityOptions = ["Yes", "No"];
 var foodProductionOptions = ["Yes", "No"];
 var wardOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50"];
+var districtOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17"];
 var commareaOptions = ["ALBANY PARK", "ARCHER HEIGHTS", "ARMOUR SQUARE", "ASHBURN", "AUBURN GRESHAM", "AUSTIN", "AVALON PARK", "AVONDALE", "BELMONT CRAGIN", "BEVERLY", "BRIDGEPORT", "BRIGHTON PARK", "BURNSIDE", "CALUMET HEIGHTS", "CHATHAM", "CHICAGO LAWN", "CLEARING", "DOUGLAS", "DUNNING", "EAST GARFIELD PARK", "EAST SIDE", "EDGEWATER", "EDISON PARK", "ENGLEWOOD", "FULLER PARK", "GAGE PARK", "GARFIELD RIDGE", "GRAND BOULEVARD", "GREATER GRAND CROSSING", "HEGEWISCH", "HERMOSA", "HUMBOLDT PARK", "HYDE PARK", "IRVING PARK", "KENWOOD", "LAKE VIEW", "LINCOLN SQUARE", "LOGAN SQUARE", "LOOP", "LOWER WEST SIDE", "MCKINLEY PARK", "MONTCLARE", "MORGAN PARK", "MOUNT GREENWOOD", "NEAR WEST SIDE", "NEW CITY", "NORTH CENTER", "NORTH LAWNDALE", "NORTH PARK", "OAKLAND", "PORTAGE PARK", "PULLMAN", "RIVERDALE", "ROGERS PARK", "ROSELAND", "SOUTH DEERING", "SOUTH LAWNDALE", "WASHINGTON HEIGHTS", "WASHINGTON PARK", "WEST ELSDON", "WEST ENGLEWOOD", "WEST GARFIELD PARK", "WEST LAWN", "WEST PULLMAN", "WEST RIDGE", "WEST TOWN", "WOODLAWN"]
 // Wrap library inside IFFE for safe variable scoping.
 chicagoGardens = {
@@ -31,11 +32,14 @@ chicagoGardens = {
   sublayerOne          : '',
   sublayerWards        : '',
   sublayerCommunities  : '',
+  sublayerDistricts    : '',
   whereClause          : '',
   joinClause           : '',
   ward_number          : '',
+  district_number      : '',
   neighborhood         : '',
   wardSQL              : '',
+  districtSQL          : '',
   communityareaSQL     : '',
   gardenSQL            : '',
   resultsNumber        : '',
@@ -156,6 +160,8 @@ chicagoGardens = {
       this.sublayerCommunities.remove();
     if (this.sublayerWards)
       this.sublayerWards.remove();
+    if (this.sublayerDistricts)
+      this.sublayerDistricts.remove();
     if (this.sublayerOne)
       this.sublayerOne.remove();
     if (this.centerMark)
@@ -173,11 +179,13 @@ chicagoGardens = {
     chicagoGardens.filterAddress = $("#search-address").val();
     var radius = $("#search-radius").val();
     chicagoGardens.ward_number = $("#search-ward").select2('data');
+    chicagoGardens.district_number = $("#search-district").select2('data');
     var owner = $("#search-ownership").select2('data');
     chicagoGardens.neighborhood = $("#search-neighborhood").select2('data');
     var ownerSQL = this.ownerSelectionSQL(owner)
     chicagoGardens.communityareaSQL = "community_areas.community IN (" + this.multipleSelectionSQL(chicagoGardens.neighborhood) + ")"
     chicagoGardens.wardSQL = "wards.ward IN (" + this.multipleSelectionSQL(chicagoGardens.ward_number) + ")"
+    chicagoGardens.districtSQL = "districts.district_n IN (" + this.multipleSelectionSQL(chicagoGardens.district_number) + ")"
 
     if (owner != '') {
       chicagoGardens.whereClause += ' AND (' + ownerSQL + ')'
@@ -225,13 +233,18 @@ chicagoGardens = {
       chicagoGardens.whereClause += " AND " + chicagoGardens.wardSQL
     }
 
+    else if (chicagoGardens.district_number != '') {
+      chicagoGardens.joinClause = " join ccgisdata_commissioner_districts_current as districts on ST_Intersects(gardens.the_geom, districts.the_geom)"
+      chicagoGardens.whereClause += " AND " + chicagoGardens.districtSQL
+    }
+
     if (chicagoGardens.filterAddress == "") {
       chicagoGardens.renderMap();
     }
   },
 
   renderMap: function() {
-    chicagoGardens.gardenSQL = "select gardens.* from allpublicgardendata as gardens" + chicagoGardens.joinClause + " " + chicagoGardens.whereClause
+    chicagoGardens.gardenSQL = "select gardens.* from allpublicgardendata as gardens" + chicagoGardens.joinClause + " " + chicagoGardens.whereClause;
 
     communityLayerSQL = "SELECT community_areas.* from boundaries_community_areas_current as community_areas WHERE community_areas.community = 'WICKER PARK'"
       if (chicagoGardens.neighborhood != '' && chicagoGardens.filterAddress == "") {
@@ -240,6 +253,10 @@ chicagoGardens = {
     wardLayerSQL = "SELECT wards.* from boundaries_for_wards_2015 as wards WHERE wards.ward = '51'"
       if (chicagoGardens.ward_number != "" && chicagoGardens.neighborhood == "" && chicagoGardens.filterAddress == "") {
           wardLayerSQL += "OR " + chicagoGardens.wardSQL;
+      }
+    districtLayerSQL = "SELECT districts.* from ccgisdata_commissioner_districts_current as districts WHERE districts.district_n = '18'"
+      if (chicagoGardens.district_number != "" && chicagoGardens.neighborhood == "" && chicagoGardens.filterAddress == "" && chicagoGardens.ward_number == "") {
+          districtLayerSQL += "OR " + chicagoGardens.districtSQL;
       }
 
     var sql = new cartodb.SQL({  user: chicagoGardens.cartoUserName  });
@@ -266,6 +283,11 @@ chicagoGardens = {
         },
 
         {
+          sql: districtLayerSQL,
+          cartocss: $('#carto-overlay-style').html().trim(),
+        },
+
+        {
           sql: chicagoGardens.gardenSQL,
           cartocss: $('#carto-result-style').html().trim(),
           interactivity: this.cartoFields,
@@ -277,10 +299,11 @@ chicagoGardens = {
     createdLayer.addTo(chicagoGardens.map)
     .done(function(layer) {
       var mapName = "#" + chicagoGardens.mapDivName + " div"
-      chicagoGardens.sublayerOne = layer.getSubLayer(2);
+      chicagoGardens.sublayerOne = layer.getSubLayer(3);
       chicagoGardens.sublayerOne.setInteraction(true);
       chicagoGardens.sublayerWards = layer.getSubLayer(0);
       chicagoGardens.sublayerCommunities = layer.getSubLayer(1);
+      chicagoGardens.sublayerDistricts = layer.getSubLayer(2);
 
       chicagoGardens.sublayerOne.on('featureOver', function(e, latlng, pos, data, subLayerIndex) {
           $(mapName).css('cursor','pointer');
@@ -305,7 +328,7 @@ chicagoGardens = {
       });
     });
 
-    if ((chicagoGardens.ward_number != "" || chicagoGardens.neighborhood != "") && chicagoGardens.filterAddress == "") {
+    if ((chicagoGardens.ward_number != "" || chicagoGardens.neighborhood != "" || chicagoGardens.district_number != "") && chicagoGardens.filterAddress == "") {
       var sql2 = new cartodb.SQL({ user: chicagoGardens.cartoUserName  });
       sql2.getBounds(chicagoGardens.gardenSQL)
         .done(function(bounds) {
@@ -315,6 +338,7 @@ chicagoGardens = {
     if (chicagoGardens.ward_number == "" && chicagoGardens.neighborhood == "" && chicagoGardens.filterAddress == "") {
       this.map.setView(chicagoGardens.mapCentroid, 11);
     }
+
   },
 
 
@@ -365,14 +389,23 @@ var layer1 = {
 
   $('#search-ownership, #search-ward, #search-neighborhood').select2();
 
+  console.log(layer1)
+
   var ward_data = makeSelectData(wardOptions);
   var ownership_data = makeSelectData(ownerOptions);
-  var commarea_data = makeSelectData(commareaOptions)
+  var commarea_data = makeSelectData(commareaOptions);
+  var district_data = makeSelectData(districtOptions);
 
   $(".data-array-ward").select2({
     placeholder: "Ward",
     data: ward_data
   });
+
+  $(".data-array-district").select2({
+    placeholder: "District",
+    data: district_data
+  });
+
 
   $(".data-array-ownership").select2({
     placeholder: "Owner",
