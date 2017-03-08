@@ -3,7 +3,7 @@ $(function() {
 
  // Filter Options
 var ownerOptions = ["Private", "NeighborSpace", "City of Chicago", "Chicago Park District", "Chicago Public Schools", "Chicago Public Library"];
-var communityOptions = ["Yes", "No"];
+var typeOptions = ["(Assisted) Housing", "Food Donation", "Pantry Garden", "Urban Farm", "Community Farm", "Community Garden", "Demo / Training / Program", "Ornamental / Beautification", "Habitat / Conservation / Prairie", "Single-tender Garden", "School Garden", "Urban Agriculture Organization", "Congregation Garden", "Restaurant / Catering Garden", "Orchard", "Pantry Garden", "Streetscape / Parkway", "Rooftop"];
 var foodProductionOptions = ["Yes", "No"];
 var wardOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50"];
 var districtOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17"];
@@ -37,6 +37,7 @@ chicagoGardens = {
   joinClause           : '',
   ward_number          : '',
   district_number      : '',
+  garden_type          : '',
   neighborhood         : '',
   wardSQL              : '',
   districtSQL          : '',
@@ -181,8 +182,10 @@ chicagoGardens = {
     chicagoGardens.ward_number = $("#search-ward").select2('data');
     chicagoGardens.district_number = $("#search-district").select2('data');
     var owner = $("#search-ownership").select2('data');
+    var garden_type = $("#search-type").select2('data');
     chicagoGardens.neighborhood = $("#search-neighborhood").select2('data');
     var ownerSQL = this.ownerSelectionSQL(owner)
+    var typeSQL = this.typeSelectionSQL(garden_type)
     chicagoGardens.communityareaSQL = "community_areas.community IN (" + this.multipleSelectionSQL(chicagoGardens.neighborhood) + ")"
     chicagoGardens.wardSQL = "wards.ward IN (" + this.multipleSelectionSQL(chicagoGardens.ward_number) + ")"
     chicagoGardens.districtSQL = "districts.district_n IN (" + this.multipleSelectionSQL(chicagoGardens.district_number) + ")"
@@ -191,12 +194,12 @@ chicagoGardens = {
       chicagoGardens.whereClause += ' AND (' + ownerSQL + ')'
     }
 
-    if ($('#search-production').is(':checked')) {
-      chicagoGardens.whereClause += ' AND gardens.food_producing = true'
+    if (garden_type != '') {
+      chicagoGardens.whereClause += ' AND (' + typeSQL + ')'
     }
 
-    if ($('#search-community').is(':checked')) {
-      chicagoGardens.whereClause += ' AND gardens.community_garden = true'
+    if ($('#search-production').is(':checked')) {
+      chicagoGardens.whereClause += ' AND gardens.food_producing = true'
     }
 
     var location = gardenMap.locationScope;
@@ -341,11 +344,20 @@ chicagoGardens = {
 
   },
 
-
   ownerSelectionSQL: function(array) {
   var results = '';
   $.each( array, function(index, obj) {
     results += ("gardens.ownership = '" + obj.text + "' OR ")
+  })
+
+  results_final = results.substring(0, results.length -4);
+  return results_final
+  },
+
+  typeSelectionSQL: function(array) {
+  var results = '';
+  $.each( array, function(index, obj) {
+    results += ("gardens.choose_growing_site_types LIKE '%" + obj.text + "%' OR ")
   })
 
   results_final = results.substring(0, results.length -4);
@@ -389,10 +401,9 @@ var layer1 = {
 
   $('#search-ownership, #search-ward, #search-neighborhood').select2();
 
-  console.log(layer1)
-
   var ward_data = makeSelectData(wardOptions);
   var ownership_data = makeSelectData(ownerOptions);
+  var garden_type_data = makeSelectData(typeOptions);
   var commarea_data = makeSelectData(commareaOptions);
   var district_data = makeSelectData(districtOptions);
 
@@ -406,6 +417,10 @@ var layer1 = {
     data: district_data
   });
 
+  $(".data-array-type").select2({
+    placeholder: "Garden Type",
+    data: garden_type_data
+  });
 
   $(".data-array-ownership").select2({
     placeholder: "Owner",
