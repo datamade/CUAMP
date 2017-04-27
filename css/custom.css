@@ -95,43 +95,46 @@ iframe {
   color: #fff;
 }
 
+/* Navbar */
 .navbar {
   font-family: 'Istok Web', sans-serif;
   color: var(--text-color);
   background-color: var(--purple-color);
   border-color: var(--purple-color);
-  line-height: 1em;
 }
 
-.navbar-inverse {
-  background-color: var(--purple-color);
-  border-color: var(--purple-color);
+.nav > li { color: #fff; }
+
+.navbar .navbar-brand,
+.navbar .navbar-nav li a {
+    line-height: 100px;
+    height: 100px;
+    padding-top: 0;
+    color: #fff;
 }
 
-.navbar-inverse .navbar-brand {
-  color: var(--text-color);
-  margin: 0.25em;
-  font-size: 1.8em;
-  line-height: 0.9em;
+.navbar .navbar-brand {
+  font-size: 1.6em;
+    height: 50px;
+    padding: 15px 15px;
+    line-height: 20px;
 }
 
-.navbar-inverse .navbar-nav > li > a {
-  color: var(--text-color);
-  font-size: 1.25em;
-  margin-top: 1em;
-}
-
-.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:focus, .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:visited {
+.navbar .navbar-nav li a:hover {
   color: var(--text-color);
   background-color: #A0499C;
   border: 0px;
 }
 
+.navbar .navbar-brand a:hover {
+  text-decoration: none;
+}
+
 .container {
   font-family: 'Roboto', sans-serif;
   color: black;
-  font-size: 15px;
-  padding:25px;
+  font-size: 16px;
+  /*padding:25px;*/
 }
 
 .footer {
@@ -298,4 +301,28 @@ iframe {
     white-space: normal;
     width: 220px;
     margin-right: 10px;
+}
+
+@media screen and (max-width: 768px) {
+  .navbar-toggle .icon-bar {
+    background-color: #fff;
+  }
+
+  .navbar .navbar-nav li a {
+      padding-bottom: 12px;
+      padding-top: 12px;
+      height: 50px;
+      line-height: 20px;
+      color: #fff;
+  }
+
+  .navbar .navbar-brand {
+      line-height: 0;
+      height: 0;
+      padding-top: 0;
+      font-size: 16px;
+      height: 50px;
+      padding: 15px 15px;
+      line-height: 20px;
+  }
 }
