@@ -71,6 +71,7 @@ chicagoGardens = {
 
     L.control.layers(baseLayers).addTo(this.map);
     this.renderMap();
+    this.renderList();
   },
 
   addInfoBox: function(mapPosition, divName, text) {
@@ -219,6 +220,7 @@ chicagoGardens = {
           chicagoGardens.addIcon();
           chicagoGardens.addCircle(radius);
           chicagoGardens.renderMap();
+          chicagoGardens.renderList();
         }
         else {
           alert("We could not find your address: " + status);
@@ -243,6 +245,7 @@ chicagoGardens = {
 
     if (chicagoGardens.filterAddress == "") {
       chicagoGardens.renderMap();
+      hicagoGardens.renderList();
     }
   },
 
@@ -342,6 +345,80 @@ chicagoGardens = {
       this.map.setView(chicagoGardens.mapCentroid, 11);
     }
 
+  },
+
+  renderList: function() {
+    var sql = new cartodb.SQL({ user: chicagoGardens.cartoUserName });
+    var results = $('#results-list');
+    var elements = {
+      growing_site_name: '',
+      community: '',
+      address: '',
+      website: '',
+    };
+
+    if ((chicagoGardens.whereClause == ' WHERE the_geom is not null AND ') || (chicagoGardens.whereClause == ' WHERE the_geom is not null ')) {
+      CartoDbLib.whereClause = '';
+    }
+
+    results.empty();
+
+    sql.execute("SELECT " + chicagoGardens.cartoFields + " FROM " + chicagoGardens.cartoTableName + chicagoGardens.whereClause)
+      .done(function(listData) {
+        var obj_array = listData.rows;
+        console.log(obj_array)
+
+        if (listData.rows.length == 0) {
+          results.append("<p class='no-results'>No results. Please broaden your search.</p>");
+        }
+        else {
+          for (idx in obj_array) {
+            var growingSiteName = obj_array[idx].growing_site_name;
+            var address = obj_array[idx].address;
+            var community = obj_array[idx].communities;
+
+            var icon = ''
+            var site = ''
+
+              if (growingSiteName != "") {
+                elements["growing_site_name"] = growingSiteName;
+              }
+              if (community != "") {
+                elements["community"] = community;
+              }
+              if (address != "") {
+                elements["address"] = address;
+              }
+
+              var output = Mustache.render("<tr><td class='hidden-xs'>" + icon + "</td>" +
+                "<td><span class='facility-name'>{{growing_site_name}}</span><br>" +
+                // Address and phone hidden; show for mobile.
+                "<span class='hidden-sm hidden-md hidden-lg'><i class='fa fa-map-marker'></i>&nbsp&nbsp{{address}}</td>" +
+
+                "<td class='hidden-xs' style='width: 300px'><i class='fa fa-map-marker' aria-hidden='true'></i>&nbsp&nbsp<span class='facility-address'>{{address}}</span><br>" +
+                "{{community}}<br>" +
+                "<span class='modal-directions'><a href='http://maps.google.com/?q={{address}}' target='_blank'>GET DIRECTIONS</a></span><br>" +
+                 "<span class='facility-site'>" + site + "</span>" + "</td></tr>", elements);
+
+              results.append(output);
+        //       $('.fa-star-o').tooltip();
+        //       $('.fa-star').tooltip();
+
+          }
+        }
+    }).done(function(listData) {
+        // $(".facility-name").on("click", function() {
+        //   var thisName = $(this).text();
+        //   var objArray = listData.rows;
+        //   $.each(objArray, function( index, obj ) {
+        //     if (obj.organization_name == thisName ) {
+        //       CartoDbLib.modalPop(obj)
+        //     }
+        //   });
+        // });
+    }).error(function(errors) {
+      console.log("errors:" + errors);
+    });
   },
 
   ownerSelectionSQL: function(array) {
@@ -485,7 +562,7 @@ var layer1 = {
     if (address_list != null) {
         $("#address-header").append('<i class="fa fa-user" aria-hidden="true"></i> Address:');
         $("#address-subsection").append("<p>" + address_list + "</p>");
-    } 
+    }
     if (owner_list != "") {
         $("#owner-header").append('<i class="fa fa-usd" aria-hidden="true"></i> Ownership:');
         $("#owner-subsection").append("<p>" + owner_list + "</p>");
@@ -567,17 +644,30 @@ var layer1 = {
     }
     if ((contact_info != "") | (website != "") | (facebook != ""))  {
       $("#with_contact").append('<br><strong>Contact</strong><br>');
-    }  
+    }
     if ((community_area != "") | (ward_num != "")) {
       $("#with_location").append('<br><strong>Location</strong><br>');
-    }  
+    }
     if ((production_list != null) | (community_list != null) | (comm_garden_type != "") | (fence != null) | (locked != null) | (water_system != "") | (compost != null) | (season_extension != "") | (structures != "") | (animals != "")) {
       $("#with_features").append('<br><strong>Features</strong><br>');
-    }  
+    }
     if ((owner_list != "") | (other_support != "") | (types != "") | (description != "") | (dormant != null))  {
       $("#with_about").append('<br><strong>About</strong>');
-    }  
-  
+    }
+
   };
+
+  $('#btnViewMode').click(function(){
+    if ($('#mapCanvas').is(":visible")){
+      $('#btnViewMode').html("<i class='fa fa-map-marker'></i>");
+      $('#listCanvas').show();
+      $('#mapCanvas').hide();
+    }
+    else {
+      $('#btnViewMode').html("<i class='fa fa-list'></i>");
+      $('#listCanvas').hide();
+      $('#mapCanvas').show();
+    }
+  });
 
 });
