@@ -38,11 +38,17 @@ div#mapCanvas {
 }
 
 /* General Styling */
+:root {
+  --text-color: #f7fff4;
+  --green-color: #3B961C;
+  --purple-color: #8A2B85;
+}
+
 body {
   background-color: #e7e7e7;
 }
 
-a { 
+a {
   color: inherit !important;
 }
 
@@ -51,10 +57,8 @@ iframe {
   height: 3625px;
 }
 
-:root {
-  --text-color: #f7fff4;
-  --green-color: #3B961C;
-  --purple-color: #8A2B85;
+.navbar, .footer {
+  border-radius: 0;
 }
 
 .btn {
@@ -80,53 +84,78 @@ iframe {
   border-color: #828282;
 }
 
+.btn-change {
+  background-color: var(--green-color);
+  color: #fff;
+}
+
+.btn-change:hover,.btn-change.focus,.btn-change:focus,.btn-change.active,.btn-change:active,.open>.dropdown-toggle.btn-change  {
+  background-color: #49BE23;
+  border-color: #49BE23;
+  color: #fff;
+}
+
+/* Navbar */
 .navbar {
   font-family: 'Istok Web', sans-serif;
   color: var(--text-color);
   background-color: var(--purple-color);
   border-color: var(--purple-color);
-  line-height: 1em;
 }
 
-.navbar-inverse {
-  background-color: var(--purple-color);
-  border-color: var(--purple-color);
+.nav > li { color: #fff; }
+
+.navbar .navbar-brand,
+.navbar .navbar-nav li a {
+    line-height: 100px;
+    height: 100px;
+    padding-top: 0;
+    color: #fff;
 }
 
-.navbar-inverse .navbar-brand {
-  color: var(--text-color);
-  margin: 0.25em; 
-  font-size: 1.8em;
-  line-height: 0.9em;
+.navbar .navbar-brand {
+  font-size: 1.6em;
+    height: 50px;
+    padding: 15px 15px;
+    line-height: 20px;
 }
 
-.navbar-inverse .navbar-nav > li > a {
-  color: var(--text-color);
-  font-size: 1.25em;
-  margin-top: 1em;
-}
-
-.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:focus, .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:visited {
+.navbar .navbar-nav li a:hover {
   color: var(--text-color);
   background-color: #A0499C;
   border: 0px;
 }
 
+.navbar .navbar-brand a:hover {
+  text-decoration: none;
+}
+
 .container {
   font-family: 'Roboto', sans-serif;
   color: black;
-  font-size: 15px;
-  padding:25px;
+  font-size: 16px;
+  /*padding:25px;*/
 }
 
-.panel-footer {
+.footer {
   background-color: var(--purple-color);
   border-color: var(--purple-color);
-  text-align: center;
-  margin-top: 1em;
+}
+
+.footer h3 {
+  border-bottom: 1px solid #A0499C;
+  margin-top: 0;
+}
+
+.footer .col-border {
+  /*border-right: 1px solid #A0499C;*/
+  height: 150px;
+}
+
+.footer .container {
+  color: #fff;
   font-family: 'Istok Web', sans-serif;
-  font-size: 0.9em;
-  color: var(--text-color);
+  padding: 12px;
 }
 
 .form-control {
@@ -145,7 +174,6 @@ iframe {
   height: 36px;
   font-size: 14px;
 }
-
 
 .select2-container {
    width: 94% !important;
@@ -167,11 +195,11 @@ iframe {
   padding: 5px 4px;
 }
 
-.m-top-sm { 
+.m-top-sm {
   margin-top: 15px;
 }
 
-.m-bottom-sm { 
+.m-bottom-sm {
   margin-bottom: 15px;
 }
 
@@ -207,12 +235,12 @@ iframe {
   margin-top: 2em;
 }
 
-.modal-body-bottom { 
-  border-top: 1px solid #F0F0F0; 
+.modal-body-bottom {
+  border-top: 1px solid #F0F0F0;
 }
 
-.modal-directions { 
-  font-weight: 700; 
+.modal-directions {
+  font-weight: 700;
   font-size: 17px;
   color: #A81F32 ;
 }
@@ -246,7 +274,6 @@ iframe {
   color: #7F7F7F;
 }
 
-
 .checkbox {
   margin-top: 1em;
   margin-bottom: 1.5em;
@@ -254,7 +281,7 @@ iframe {
 }
 
 .leaf-box input[type="checkbox"],
-.leaf-box .checked{ 
+.leaf-box .checked{
   display: none;
 }
 
@@ -270,9 +297,32 @@ iframe {
   color: var(--green-color);
 }
 
-.dl-horizontal dt 
-{
+.dl-horizontal dt {
     white-space: normal;
-    width: 220px; 
+    width: 220px;
     margin-right: 10px;
+}
+
+@media screen and (max-width: 768px) {
+  .navbar-toggle .icon-bar {
+    background-color: #fff;
+  }
+
+  .navbar .navbar-nav li a {
+      padding-bottom: 12px;
+      padding-top: 12px;
+      height: 50px;
+      line-height: 20px;
+      color: #fff;
+  }
+
+  .navbar .navbar-brand {
+      line-height: 0;
+      height: 0;
+      padding-top: 0;
+      font-size: 16px;
+      height: 50px;
+      padding: 15px 15px;
+      line-height: 20px;
+  }
 }

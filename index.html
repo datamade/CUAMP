@@ -175,12 +175,29 @@ layout: default
 
     <div>
       <button class='btn btn-primary' id="btnSearch"><i class='fa fa-search'></i> Search</button>
+
+      <button class='btn btn-change' id='btnViewMode' data-toggle='tooltip' data-placement="bottom" title='Change view'><i class='fa fa-list'></i></button>
+
       <a href="index.html" class='btn btn-reset' id="btnReset" data-toggle="tooltip" data-placement="bottom" title="Reset"><i class="fa fa-repeat" aria-hidden="true"></i></a>
     </div>
-
   </div>
 
   <div class="col-md-8">
     <div id="mapCanvas"></div>
+
+    <div id="listCanvas" style="display: none">
+      <h2 class='list-header hidden-xs'>Search results</h2>
+      <table class="table list-table table-striped">
+        <thead>
+          <tr>
+            <th>Garden</th>
+            <th class='hidden-xs'>Location</th>
+            <th class='hidden-xs'></th>
+          </tr>
+        </thead>
+        <tbody id='results-list'></tbody>
+      </table>
+    </div>
+
   </div>
 </div>

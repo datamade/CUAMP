@@ -35,7 +35,7 @@
 
 
 <body>
-  <nav class="navbar navbar-inverse">
+  <!-- <nav class="navbar navbar-inverse">
     <div class="container-fluid">
       <div class="navbar-header container-fluid">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -64,6 +64,38 @@
         </ul>
       </div>
     </div>
+
+  </nav> -->
+
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <div class="navbar-brand">
+          <a href="/">
+            <img src="/images/logo.png" width="80" height="80" class="d-inline-block align-top hidden-xs" alt="">
+            Chicago Urban Agriculture Mapping Project
+          </a>
+        </div>
+      </div>
+
+      <div id="navbar" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav pull-right" id="dropdown-results">
+          <li>
+            <a href="/about"><i class="fa fa-info-circle" aria-hidden="true"></i> What We Are</a>
+          </li>
+          <li>
+            <a href="/form"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a New Location</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
   </nav>
 
   <div class='container'>
@@ -72,35 +104,43 @@
 
 </body>
 
-<footer>
-  <div class="panel panel-footer container-fluid">
-    <div class='col-md-3'>  
-      <h3 style="line-height: 2em">Connect With Us:</h3>
+<footer class="footer">
+  <div class="container">
+
+    <div class='row'>
+      <div class='col-md-12'>
+        <h3 style="line-height: 2em;">Connect With Us</h3>
+      </div>
     </div>
-    <div class='col-md-3 hidden-xs'>
-      <h4><a href="http://neighbor-space.org/" target="_blank">NeighborSpace</a></h4>
-        <p>445 N Sacramento Blvd, Suite 204<br>Chicago, IL 60612<br>Phone: (773) 826-3240<br>Fax: (773) 442-0299<br><a href="mailto:info@neighbor-space.org">info@neighbor-space.org</a></p>
+
+    <div class='row'>
+      <div class='col-md-4 hidden-xs col-border'>
+        <h4><a href="http://neighbor-space.org/" target="_blank">NeighborSpace</a></h4>
+          <p>445 N Sacramento Blvd, Suite 204<br>Chicago, IL 60612<br>Phone: (773) 826-3240<br>Fax: (773) 442-0299<br><a href="mailto:info@neighbor-space.org">info@neighbor-space.org</a></p>
+      </div>
+      <div class='col-md-4 visible-xs'>
+        <h4><a href="http://neighbor-space.org/" target="_blank">NeighborSpace</a></h4>
+          <p>Phone: (773) 826-3240</p>
+          <br/>
+      </div>
+      <div class='col-md-4 hidden-xs col-border'>
+        <h4><a href="https://auachicago.org/" target="_blank">Advocates for Urban Agriculture</a></h4>
+          <p><a href="https://www.facebook.com/AUAChicago"><i class="fa fa-facebook-square" aria-hidden="true"></i> Facebook</a><br><a href="https://twitter.com/AUAChicago"><i class="fa fa-twitter-square" aria-hidden="true"></i> Twitter</a><br><a href="mailto:info@auachicago.org">info@auachicago.org</a></p>
+      </div>
+      <div class='col-md-4 visible-xs'>
+        <h4><a href="https://auachicago.org/" target="_blank">Advocates for Urban Agriculture</a></h4>
+          <p><a href="mailto:info@auachicago.org">info@auachicago.org</a></p>
+      </div>
+      <div class='col-md-4 hidden-xs'>
+        <h4><a href="http://steans.depaul.edu/" target="_blank">DePaul University — Steans Center</a></h4>
+          <p>2233 N. Kenmore Ave.<br>Chicago, IL 60614<br>Phone: (773) 325-7457<br>Fax: (773) 325-7459</p>
+      </div>
+      <div class='col-md-4 visible-xs'>
+        <h4><a href="http://steans.depaul.edu/" target="_blank">DePaul University — Steans Center</a></h4>
+          <p>Phone: (773) 325-7457</p>
+      </div>
     </div>
-    <div class='col-md-3 visible-xs'>
-      <h4><a href="http://neighbor-space.org/" target="_blank">NeighborSpace</a></h4>
-        <p>Phone: (773) 826-3240</p>
-    </div>
-    <div class='col-md-3 hidden-xs'>
-      <h4><a href="https://auachicago.org/" target="_blank">Advocates for Urban Agriculture</a></h4>
-        <p><a href="https://www.facebook.com/AUAChicago"><i class="fa fa-facebook-square" aria-hidden="true"></i> Facebook</a><br><a href="https://twitter.com/AUAChicago"><i class="fa fa-twitter-square" aria-hidden="true"></i> Twitter</a><br><a href="mailto:info@auachicago.org">info@auachicago.org</a></p>
-    </div>
-    <div class='col-md-3 visible-xs'>
-      <h4><a href="https://auachicago.org/" target="_blank">Advocates for Urban Agriculture</a></h4>
-        <p><a href="mailto:info@auachicago.org">info@auachicago.org</a></p>
-    </div>
-    <div class='col-md-3 hidden-xs'>
-      <h4><a href="http://steans.depaul.edu/" target="_blank">DePaul University — Steans Center</a></h4>
-        <p>2233 N. Kenmore Ave.<br>Chicago, IL 60614<br>Phone: (773) 325-7457<br>Fax: (773) 325-7459</p>
-    </div>
-    <div class='col-md-3 visible-xs'>
-      <h4><a href="http://steans.depaul.edu/" target="_blank">DePaul University — Steans Center</a></h4>
-        <p>Phone: (773) 325-7457</p>
-    </div>
+
   </div>
 </footer>
 
