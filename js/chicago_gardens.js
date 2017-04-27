@@ -354,7 +354,7 @@ chicagoGardens = {
       growing_site_name: '',
       community: '',
       address: '',
-      website: '',
+      ward: ''
     };
 
     if ((chicagoGardens.whereClause == ' WHERE the_geom is not null AND ') || (chicagoGardens.whereClause == ' WHERE the_geom is not null ')) {
@@ -366,7 +366,6 @@ chicagoGardens = {
     sql.execute("SELECT " + chicagoGardens.cartoFields + " FROM " + chicagoGardens.cartoTableName + chicagoGardens.whereClause)
       .done(function(listData) {
         var obj_array = listData.rows;
-        console.log(obj_array)
 
         if (listData.rows.length == 0) {
           results.append("<p class='no-results'>No results. Please broaden your search.</p>");
@@ -376,48 +375,57 @@ chicagoGardens = {
             var growingSiteName = obj_array[idx].growing_site_name;
             var address = obj_array[idx].address;
             var community = obj_array[idx].communities;
+            var ward = obj_array[idx].ward;
 
-            var icon = ''
-            var site = ''
+            if (growingSiteName != "") {
+              elements["growing_site_name"] = growingSiteName;
+            }
+            if (community != "") {
+              elements["community"] = chicagoGardens.capitalizeConversion(community);
+            }
+            if (address != "") {
+              elements["address"] = address;
+            }
+            if (ward != "") {
+              elements["ward"] = ward;
+            }
 
-              if (growingSiteName != "") {
-                elements["growing_site_name"] = growingSiteName;
-              }
-              if (community != "") {
-                elements["community"] = community;
-              }
-              if (address != "") {
-                elements["address"] = address;
-              }
+            var output = Mustache.render("<tr>" +
+            // Name column
+            "<td><span class='facility-name'>{{growing_site_name}}</span><br>" +
+            "<span class='hidden-sm hidden-md hidden-lg'><i class='fa fa-map-marker'></i>&nbsp&nbsp{{address}}</td>" +
 
-              var output = Mustache.render("<tr><td class='hidden-xs'>" + icon + "</td>" +
-                "<td><span class='facility-name'>{{growing_site_name}}</span><br>" +
-                // Address and phone hidden; show for mobile.
-                "<span class='hidden-sm hidden-md hidden-lg'><i class='fa fa-map-marker'></i>&nbsp&nbsp{{address}}</td>" +
+            // Location column
+            "<td class='hidden-xs'><i class='fa fa-map-marker' aria-hidden='true'></i>&nbsp&nbsp<span class='facility-address'>{{address}}</span><br>" +
+            "<i class='fa fa-home' aria-hidden='true'></i> {{community}} Neighborhood<br>" +
+            "<i class='fa fa-university' aria-hidden='true'></i> Ward {{ward}}</td>" +
 
-                "<td class='hidden-xs' style='width: 300px'><i class='fa fa-map-marker' aria-hidden='true'></i>&nbsp&nbsp<span class='facility-address'>{{address}}</span><br>" +
-                "{{community}}<br>" +
-                "<span class='modal-directions'><a href='http://maps.google.com/?q={{address}}' target='_blank'>GET DIRECTIONS</a></span><br>" +
-                 "<span class='facility-site'>" + site + "</span>" + "</td></tr>", elements);
+            // Directions column
+            "<td class='hidden-xs'><span class='modal-directions' style='white-space: nowrap;'><a href='http://maps.google.com/?q={{address}}' target='_blank'>Get directions</a></span></td>" +
+            "</tr>", elements);
 
-              results.append(output);
-        //       $('.fa-star-o').tooltip();
-        //       $('.fa-star').tooltip();
-
+            results.append(output);
           }
         }
     }).done(function(listData) {
-        // $(".facility-name").on("click", function() {
-        //   var thisName = $(this).text();
-        //   var objArray = listData.rows;
-        //   $.each(objArray, function( index, obj ) {
-        //     if (obj.organization_name == thisName ) {
-        //       CartoDbLib.modalPop(obj)
-        //     }
-        //   });
-        // });
+        $(".facility-name").on("click", function() {
+          var thisName = $(this).text();
+          var objArray = listData.rows;
+          $.each(objArray, function( index, obj ) {
+            if (obj.growing_site_name == thisName ) {
+              modalPop(obj)
+            }
+          });
+        });
     }).error(function(errors) {
       console.log("errors:" + errors);
+    });
+  },
+
+  capitalizeConversion: function(str) {
+    var lower = str.toLowerCase();
+    return lower.replace(/(^| )(\w)/g, function(x) {
+      return x.toUpperCase();
     });
   },
 
