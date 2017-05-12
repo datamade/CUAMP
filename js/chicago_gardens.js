@@ -245,12 +245,12 @@ chicagoGardens = {
 
     if (chicagoGardens.filterAddress == "") {
       chicagoGardens.renderMap();
-      hicagoGardens.renderList();
+      chicagoGardens.renderList();
     }
   },
 
   renderMap: function() {
-    chicagoGardens.gardenSQL = "select gardens.* from allpublicgardendata as gardens" + chicagoGardens.joinClause + " " + chicagoGardens.whereClause;
+    chicagoGardens.gardenSQL = "SELECT gardens.* from allpublicgardendata as gardens" + chicagoGardens.joinClause + " " + chicagoGardens.whereClause;
 
     communityLayerSQL = "SELECT community_areas.* from boundaries_community_areas_current as community_areas WHERE community_areas.community = 'WICKER PARK'"
       if (chicagoGardens.neighborhood != '' && chicagoGardens.filterAddress == "") {
@@ -357,13 +357,9 @@ chicagoGardens = {
       ward: ''
     };
 
-    if ((chicagoGardens.whereClause == ' WHERE the_geom is not null AND ') || (chicagoGardens.whereClause == ' WHERE the_geom is not null ')) {
-      CartoDbLib.whereClause = '';
-    }
-
     results.empty();
 
-    sql.execute("SELECT " + chicagoGardens.cartoFields + " FROM " + chicagoGardens.cartoTableName + chicagoGardens.whereClause)
+    sql.execute(chicagoGardens.gardenSQL)
       .done(function(listData) {
         var obj_array = listData.rows;
 
@@ -478,6 +474,9 @@ var layer1 = {
 
     $("#btnSearch").on("click", function() {
       chicagoGardens.doSearch();
+      $('#btnViewMode').html("<i class='fa fa-list'></i>");
+      $('#listCanvas').hide();
+      $('#mapCanvas').show();
     });
 
     $("#btnReset").on("click", function() {
