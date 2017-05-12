@@ -170,6 +170,14 @@ chicagoGardens = {
       this.map.removeLayer(this.centerMark);
     if (this.radiusCircle)
       this.map.removeLayer(this.radiusCircle);
+    if (this.filterAddress)
+      this.filterAddress = '';
+    if (this.neighborhood)
+      this.neighborhood = '';
+    if (this.ward_number)
+      this.ward_number = '';
+    if (this.district_number)
+      this.district_number = '';
 
   },
 
@@ -177,19 +185,50 @@ chicagoGardens = {
     this.clearSearch();
     chicagoGardens.whereClause = " WHERE gardens.the_geom is not null";
     var gardenMap = this;
-    // // #search-address refers to a div id in map-example.html. You can rename this div.
-    chicagoGardens.filterAddress = $("#search-address").val();
-    var radius = $("#search-radius").val();
-    chicagoGardens.ward_number = $("#search-ward").select2('data');
-    chicagoGardens.district_number = $("#search-district").select2('data');
+    var radius;
+
+    if ($('div#collapseOne').hasClass('in')) {
+      chicagoGardens.filterAddress = $("#search-address").val();
+      radius = $("#search-radius").val();
+      // Reset other filters
+      $("#search-neighborhood").val('').trigger('change');
+      $("#search-ward").val('').trigger('change');
+      $("#search-district").val('').trigger('change');
+    }
+
+    if ($('div#collapseTwo').hasClass('in')) {
+      chicagoGardens.neighborhood = $("#search-neighborhood").select2('data');
+      chicagoGardens.communityareaSQL = "community_areas.community IN (" + this.multipleSelectionSQL(chicagoGardens.neighborhood) + ")"
+      // Reset other filters
+      $("#search-address").val('').trigger('change');
+      $("#search-ward").val('').trigger('change');
+      $("#search-district").val('').trigger('change');
+    }
+
+    if ($('div#collapseThree').hasClass('in')) {
+      console.log("wardddsss")
+      chicagoGardens.ward_number = $("#search-ward").select2('data');
+      chicagoGardens.wardSQL = "wards.ward IN (" + this.multipleSelectionSQL(chicagoGardens.ward_number) + ")"
+      // Reset other filters
+      $("#search-address").val('').trigger('change');
+      $("#search-neighborhood").val('').trigger('change');
+      $("#search-district").val('').trigger('change');
+    }
+
+    if ($('div#collapseFour').hasClass('in')) {
+      console.log("districts!!!")
+      chicagoGardens.district_number = $("#search-district").select2('data');
+      chicagoGardens.districtSQL = "districts.district_n IN (" + this.multipleSelectionSQL(chicagoGardens.district_number) + ")"
+      // Reset other filters
+      $("#search-address").val('').trigger('change');
+      $("#search-neighborhood").val('').trigger('change');
+      $("#search-ward").val('').trigger('change');
+    }
+
     var owner = $("#search-ownership").select2('data');
     var garden_type = $("#search-type").select2('data');
-    chicagoGardens.neighborhood = $("#search-neighborhood").select2('data');
     var ownerSQL = this.ownerSelectionSQL(owner)
     var typeSQL = this.typeSelectionSQL(garden_type)
-    chicagoGardens.communityareaSQL = "community_areas.community IN (" + this.multipleSelectionSQL(chicagoGardens.neighborhood) + ")"
-    chicagoGardens.wardSQL = "wards.ward IN (" + this.multipleSelectionSQL(chicagoGardens.ward_number) + ")"
-    chicagoGardens.districtSQL = "districts.district_n IN (" + this.multipleSelectionSQL(chicagoGardens.district_number) + ")"
 
     if (owner != '') {
       chicagoGardens.whereClause += ' AND (' + ownerSQL + ')'
@@ -205,7 +244,7 @@ chicagoGardens = {
 
     var location = gardenMap.locationScope;
 
-    if (radius == null && address != "") {
+    if (radius == null && chicagoGardens.filterAddress != "") {
       radius = 8050;
     }
 
@@ -234,6 +273,7 @@ chicagoGardens = {
     }
 
     else if (chicagoGardens.ward_number != '') {
+      console.log("look here!")
       chicagoGardens.joinClause = " join boundaries_for_wards_2015 as wards on ST_Intersects(gardens.the_geom, wards.the_geom)"
       chicagoGardens.whereClause += " AND " + chicagoGardens.wardSQL
     }
@@ -335,13 +375,15 @@ chicagoGardens = {
     });
 
     if ((chicagoGardens.ward_number != "" || chicagoGardens.neighborhood != "" || chicagoGardens.district_number != "") && chicagoGardens.filterAddress == "") {
+      console.log("setting something")
       var sql2 = new cartodb.SQL({ user: chicagoGardens.cartoUserName  });
       sql2.getBounds(chicagoGardens.gardenSQL)
         .done(function(bounds) {
            chicagoGardens.map.fitBounds(bounds, {padding: [20,20], maxZoom: 14})
         });
     }
-    if (chicagoGardens.ward_number == "" && chicagoGardens.neighborhood == "" && chicagoGardens.filterAddress == "") {
+    if (chicagoGardens.ward_number == "" && chicagoGardens.neighborhood == "" && chicagoGardens.district_number == "" && chicagoGardens.filterAddress == "") {
+      console.log("yes yes something")
       this.map.setView(chicagoGardens.mapCentroid, 11);
     }
 

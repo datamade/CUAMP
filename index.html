@@ -122,37 +122,92 @@ layout: default
   <div class="col-md-4">
     <h4>Find Chicago Public Gardens Near You</h4><br>
 
-    <p><strong>By Address:</strong></p>
-    <div class="form-group">
-      <input class='form-control' id='search-address' placeholder='Enter an address or intersection' type='text'>
-    </div>
-    <div class='form-group'>
-      <select id='search-radius' class='form-control'>
-        <option value="" selected disabled="">Within:</option>
-        <option value='400'>2 blocks</option>
-        <option value='805'>1/2 mile</option>
-        <option value='1610' selected="selected">1 mile</option>
-        <option value='3220'>2 miles</option>
-        <option value='8050'>5 miles</option>
-      </select>
-    </div>
-    <p><strong>By Community Area:</strong></p>
-    <div class="input-group select2-bootstrap-prepend m-top-sm">
-      <span class="input-group-addon"><i class="fa fa-street-view fa-fw" aria-hidden="true"></i></span>
-      <select class="data-array-neighborhood form-control" id="search-neighborhood" multiple="multiple"></select>
-    </div>
-    <br><p><strong>By Ward:</strong></p>
-    <div class="input-group select2-bootstrap-prepend m-top-sm">
-      <span class="input-group-addon"><i class="fa fa-university fa-fw" aria-hidden="true"></i></span>
-      <select class="data-array-ward form-control" id="search-ward" multiple="multiple"></select>
-    </div>
-    <br><p><strong>By Cook County District:</strong></p>
-    <div class="input-group select2-bootstrap-prepend m-top-sm">
-      <span class="input-group-addon"><i class="fa fa-gavel fa-fw" aria-hidden="true"></i></span>
-      <select class="data-array-district form-control" id="search-district" multiple="multiple"></select>
+    <p><strong>Search by location.</strong> Choose one location option.</p>
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingOne">
+          <h4 class="panel-title">
+            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              Address <i class="fa fa-caret-down" aria-hidden="true"></i>
+            </a>
+          </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            <div class="form-group">
+              <input class='form-control' id='search-address' placeholder='Enter an address or intersection' type='text'>
+            </div>
+            <div class='form-group'>
+              <select id='search-radius' class='form-control'>
+                <option value="" selected disabled="">Within:</option>
+                <option value='400'>2 blocks</option>
+                <option value='805'>1/2 mile</option>
+                <option value='1610' selected="selected">1 mile</option>
+                <option value='3220'>2 miles</option>
+                <option value='8050'>5 miles</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingTwo">
+          <h4 class="panel-title">
+            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              Community Area <i class="fa fa-caret-down" aria-hidden="true"></i>
+            </a>
+          </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+          <div class="panel-body">
+            <div class="input-group select2-bootstrap-prepend">
+              <span class="input-group-addon"><i class="fa fa-street-view fa-fw" aria-hidden="true"></i></span>
+              <select class="data-array-neighborhood form-control" id="search-neighborhood" multiple="multiple"></select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingThree">
+          <h4 class="panel-title">
+            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+              Ward <i class="fa fa-caret-down" aria-hidden="true"></i>
+            </a>
+          </h4>
+        </div>
+        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+          <div class="panel-body">
+            <div class="input-group select2-bootstrap-prepend">
+              <span class="input-group-addon"><i class="fa fa-university fa-fw" aria-hidden="true"></i></span>
+              <select class="data-array-ward form-control" id="search-ward" multiple="multiple"></select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+       <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingFour">
+          <h4 class="panel-title">
+            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+              Cook County District <i class="fa fa-caret-down" aria-hidden="true"></i>
+            </a>
+          </h4>
+        </div>
+        <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+          <div class="panel-body">
+            <div class="input-group select2-bootstrap-prepend">
+              <span class="input-group-addon"><i class="fa fa-gavel fa-fw" aria-hidden="true"></i></span>
+              <select class="data-array-district form-control" id="search-district" multiple="multiple"></select>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
-    <br><br><p><strong>Refine Your Search</strong><br>You can pick more than option for owner.</p>
+    <br>
+
+    <p><strong>Refine Your Search.</strong> Click on each filter to view a list. You can pick more than one.</p>
 
     <div class="input-group select2-bootstrap-prepend m-top-sm">
       <span class="input-group-addon"><i class="fa fa-usd fa-fw" aria-hidden="true"></i></span>
