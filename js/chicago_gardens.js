@@ -206,7 +206,6 @@ chicagoGardens = {
     }
 
     if ($('div#collapseThree').hasClass('in')) {
-      console.log("wardddsss")
       chicagoGardens.ward_number = $("#search-ward").select2('data');
       chicagoGardens.wardSQL = "wards.ward IN (" + this.multipleSelectionSQL(chicagoGardens.ward_number) + ")"
       // Reset other filters
@@ -216,7 +215,6 @@ chicagoGardens = {
     }
 
     if ($('div#collapseFour').hasClass('in')) {
-      console.log("districts!!!")
       chicagoGardens.district_number = $("#search-district").select2('data');
       chicagoGardens.districtSQL = "districts.district_n IN (" + this.multipleSelectionSQL(chicagoGardens.district_number) + ")"
       // Reset other filters
@@ -273,7 +271,6 @@ chicagoGardens = {
     }
 
     else if (chicagoGardens.ward_number != '') {
-      console.log("look here!")
       chicagoGardens.joinClause = " join boundaries_for_wards_2015 as wards on ST_Intersects(gardens.the_geom, wards.the_geom)"
       chicagoGardens.whereClause += " AND " + chicagoGardens.wardSQL
     }
@@ -375,7 +372,6 @@ chicagoGardens = {
     });
 
     if ((chicagoGardens.ward_number != "" || chicagoGardens.neighborhood != "" || chicagoGardens.district_number != "") && chicagoGardens.filterAddress == "") {
-      console.log("setting something")
       var sql2 = new cartodb.SQL({ user: chicagoGardens.cartoUserName  });
       sql2.getBounds(chicagoGardens.gardenSQL)
         .done(function(bounds) {
@@ -383,7 +379,6 @@ chicagoGardens = {
         });
     }
     if (chicagoGardens.ward_number == "" && chicagoGardens.neighborhood == "" && chicagoGardens.district_number == "" && chicagoGardens.filterAddress == "") {
-      console.log("yes yes something")
       this.map.setView(chicagoGardens.mapCentroid, 11);
     }
 
