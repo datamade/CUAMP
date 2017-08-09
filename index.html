@@ -125,82 +125,83 @@ layout: default
     <p><strong>Search by location.</strong> Choose one location option.</p>
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 
-      <div role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-        <div class="panel panel-default">
+      <div class="panel panel-default m-top-xs">
+        <div role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
           <div class="panel-heading" role="tab" id="headingOne">
             <h4 class="panel-title">
                 Address <i class="fa fa-caret-down" aria-hidden="true"></i>
             </h4>
           </div>
-          <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-            <div class="panel-body">
-              <div class="form-group">
-                <input class='form-control' id='search-address' placeholder='Enter an address or intersection' type='text'>
-              </div>
-              <div class='form-group'>
-                <select id='search-radius' class='form-control'>
-                  <option value="" selected disabled="">Within:</option>
-                  <option value='400'>2 blocks</option>
-                  <option value='805'>1/2 mile</option>
-                  <option value='1610' selected="selected">1 mile</option>
-                  <option value='3220'>2 miles</option>
-                  <option value='8050'>5 miles</option>
-                </select>
-              </div>
+          </div>
+        <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            <div class="form-group">
+              <input class='form-control' id='search-address' placeholder='Enter an address or intersection' type='text'>
+            </div>
+            <div class='form-group'>
+              <select id='search-radius' class='form-control'>
+                <option value="" selected disabled="">Within:</option>
+                <option value='400'>2 blocks</option>
+                <option value='805'>1/2 mile</option>
+                <option value='1610' selected="selected">1 mile</option>
+                <option value='3220'>2 miles</option>
+                <option value='8050'>5 miles</option>
+              </select>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="collapsed m-top-xs" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-        <div class="panel panel-default">
+      <div class="panel panel-default m-top-xs">
+        <div class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
           <div class="panel-heading" role="tab" id="headingTwo">
             <h4 class="panel-title">
                 Community Area <i class="fa fa-caret-down" aria-hidden="true"></i>
             </h4>
           </div>
-          <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-            <div class="panel-body">
-              <div class="input-group select2-bootstrap-prepend">
-                <span class="input-group-addon"><i class="fa fa-street-view fa-fw" aria-hidden="true"></i></span>
-                <select class="data-array-neighborhood form-control" id="search-neighborhood" multiple="multiple"></select>
-              </div>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+          <div class="panel-body">
+            <div class="input-group select2-bootstrap-prepend">
+              <span class="input-group-addon"><i class="fa fa-street-view fa-fw" aria-hidden="true"></i></span>
+              <select class="data-array-neighborhood form-control" id="search-neighborhood" multiple="multiple"></select>
             </div>
           </div>
         </div>
       </div>
+      
 
-      <div class="collapsed m-top-xs" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-        <div class="panel panel-default">
+      <div class="panel panel-default m-top-xs">
+        <div class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
           <div class="panel-heading" role="tab" id="headingThree">
             <h4 class="panel-title">
               Ward <i class="fa fa-caret-down" aria-hidden="true"></i>
             </h4>
           </div>
-          <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-            <div class="panel-body">
-              <div class="input-group select2-bootstrap-prepend">
-                <span class="input-group-addon"><i class="fa fa-university fa-fw" aria-hidden="true"></i></span>
-                <select class="data-array-ward form-control" id="search-ward" multiple="multiple"></select>
-              </div>
+        </div>
+        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+          <div class="panel-body">
+            <div class="input-group select2-bootstrap-prepend">
+              <span class="input-group-addon"><i class="fa fa-university fa-fw" aria-hidden="true"></i></span>
+              <select class="data-array-ward form-control" id="search-ward" multiple="multiple"></select>
             </div>
           </div>
         </div>
       </div>
 
-       <div class="collapsed m-top-xs" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-         <div class="panel panel-default">
+      <div class="panel panel-default m-top-xs">
+        <div class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
           <div class="panel-heading" role="tab" id="headingFour">
             <h4 class="panel-title">
               Cook County District <i class="fa fa-caret-down" aria-hidden="true"></i>
             </h4>
           </div>
-          <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
-            <div class="panel-body">
-              <div class="input-group select2-bootstrap-prepend">
-                <span class="input-group-addon"><i class="fa fa-gavel fa-fw" aria-hidden="true"></i></span>
-                <select class="data-array-district form-control" id="search-district" multiple="multiple"></select>
-              </div>
+        </div>
+        <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+          <div class="panel-body">
+            <div class="input-group select2-bootstrap-prepend">
+              <span class="input-group-addon"><i class="fa fa-gavel fa-fw" aria-hidden="true"></i></span>
+              <select class="data-array-district form-control" id="search-district" multiple="multiple"></select>
             </div>
           </div>
         </div>
@@ -242,10 +243,33 @@ layout: default
                   <input type="checkbox" id="search-production">
                     <i class="fa fa-fw fa-circle-o unchecked"></i>
                     <i class="fa fa-fw fa-leaf checked" id="leafbox"></i>
-                  Click to filter for 'Food producing' gardens
+                    Food producing
                 </label>
               </div>
             </div>
+
+            <div>
+              <div class="checkbox m-top-sm m-bottom-sm">
+                <label class="leaf-box">
+                  <input type="checkbox" id="search-compost">
+                    <i class="fa fa-fw fa-circle-o unchecked"></i>
+                    <i class="fa fa-fw fa-leaf checked" id="leafbox"></i>
+                    Compost system
+                </label>
+              </div>
+            </div>
+
+            <div>
+              <div class="checkbox m-top-sm m-bottom-sm">
+                <label class="leaf-box">
+                  <input type="checkbox" id="search-locked">
+                    <i class="fa fa-fw fa-circle-o unchecked"></i>
+                    <i class="fa fa-fw fa-leaf checked" id="leafbox"></i>
+                    Locked growing site 
+                </label>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>    
