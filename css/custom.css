@@ -134,6 +134,15 @@ div#mapCanvas {
   text-decoration: none;
 }
 
+/* Other */
+.panel-heading {
+  background-color: #f8f8f8;
+}
+
+.panel-body {
+  border-top: 1px solid #eee;
+}
+
 .container {
   font-family: var(--font-sans-text);
   color: black;

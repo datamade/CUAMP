@@ -190,11 +190,15 @@ var chicagoGardens = {
     }
 
     if ($('#search-production').is(':checked')) {
-      chicagoGardens.whereClause += ' AND gardens.food_producing = true'
+      chicagoGardens.whereClause += ' AND gardens.food_producing = True'
     }
 
     if ($('#search-compost').is(':checked')) {
-      chicagoGardens.whereClause += ' AND gardens.food_producing = true'
+      chicagoGardens.whereClause += ' AND gardens.compost_system = True'
+    }
+
+    if ($('#search-locked').is(':checked')) {
+      chicagoGardens.whereClause += ' AND gardens.is_growing_site_locked = True'
     }
 
     var location = gardenMap.locationScope;
