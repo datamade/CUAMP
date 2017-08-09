@@ -193,6 +193,10 @@ var chicagoGardens = {
       chicagoGardens.whereClause += ' AND gardens.food_producing = true'
     }
 
+    if ($('#search-compost').is(':checked')) {
+      chicagoGardens.whereClause += ' AND gardens.food_producing = true'
+    }
+
     var location = gardenMap.locationScope;
 
     if (radius == null && chicagoGardens.filterAddress != "") {
