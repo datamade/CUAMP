@@ -34,6 +34,10 @@ $(function() {
     chicagoGardens.clearSearch();
   });
 
+  $('#btnCSVDownload').on('click', function() {
+    chicagoGardens.buildCSV();
+  });
+
   $('#search-ownership, #search-ward, #search-neighborhood').select2();
 
   var ward_data = makeSelectData(wardOptions);

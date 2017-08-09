@@ -416,6 +416,64 @@ var chicagoGardens = {
     });
   },
 
+  buildCSV: function() {
+    var sql = new cartodb.SQL({ user: chicagoGardens.cartoUserName });
+
+    sql.execute(chicagoGardens.gardenSQL)
+      .done(function(listData) {
+        var obj_array = listData.rows;
+
+        // Get header names, filter header, and build header
+        var header_names = Object.keys(obj_array[0]);
+
+        indices = []
+        // indices.push(header_names.indexOf("cartodb_id"));
+        indices.push(header_names.indexOf("the_geom"));
+        indices.push(header_names.indexOf("the_geom_webmercator"));
+        indices.push(header_names.indexOf("description"));
+        indices.push(header_names.indexOf("longitude"));
+        indices.push(header_names.indexOf("latitude"));
+
+        for (var i=indices.length-1; i >= 0; i--)
+          header_names.splice(indices[i],1);
+
+        var result = header_names.join(", ") + "\n";
+
+        // Add the rows
+        obj_array.forEach(function(obj) {
+            header_names.forEach(function(k, index) {
+                if (index) {
+                  result += ", "
+                }
+                
+                if ($.inArray(k, header_names) >= 0) {
+                  entry = obj[k];
+                  result += String(entry).replace(',', ' ');
+                }
+                
+            });
+            result += "\n";
+        });
+
+
+        var downloadLink = document.createElement("a");
+        var blob = new Blob(["\ufeff", result]);
+        var url = URL.createObjectURL(blob);
+        downloadLink.href = url;
+        downloadLink.download = "data.csv";
+
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+
+
+
+
+      }).error(function(errors) {
+      console.log("errors:" + errors);
+    });
+  },
+
   ownerSelectionSQL: function(array) {
     var results = '';
     $.each( array, function(index, obj) {
