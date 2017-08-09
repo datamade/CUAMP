@@ -7,11 +7,12 @@ var typeOptions = ["(Assisted) Housing", "Food Donation", "Pantry Garden", "Urba
 var foodProductionOptions = ["Yes", "No"];
 var wardOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50"];
 var districtOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17"];
-var commareaOptions = ["ALBANY PARK", "ARCHER HEIGHTS", "ARMOUR SQUARE", "ASHBURN", "AUBURN GRESHAM", "AUSTIN", "AVALON PARK", "AVONDALE", "BELMONT CRAGIN", "BEVERLY", "BRIDGEPORT", "BRIGHTON PARK", "BURNSIDE", "CALUMET HEIGHTS", "CHATHAM", "CHICAGO LAWN", "CLEARING", "DOUGLAS", "DUNNING", "EAST GARFIELD PARK", "EAST SIDE", "EDGEWATER", "EDISON PARK", "ENGLEWOOD", "FULLER PARK", "GAGE PARK", "GARFIELD RIDGE", "GRAND BOULEVARD", "GREATER GRAND CROSSING", "HEGEWISCH", "HERMOSA", "HUMBOLDT PARK", "HYDE PARK", "IRVING PARK", "KENWOOD", "LAKE VIEW", "LINCOLN SQUARE", "LOGAN SQUARE", "LOOP", "LOWER WEST SIDE", "MCKINLEY PARK", "MONTCLARE", "MORGAN PARK", "MOUNT GREENWOOD", "NEAR WEST SIDE", "NEW CITY", "NORTH CENTER", "NORTH LAWNDALE", "NORTH PARK", "OAKLAND", "PORTAGE PARK", "PULLMAN", "RIVERDALE", "ROGERS PARK", "ROSELAND", "SOUTH DEERING", "SOUTH LAWNDALE", "WASHINGTON HEIGHTS", "WASHINGTON PARK", "WEST ELSDON", "WEST ENGLEWOOD", "WEST GARFIELD PARK", "WEST LAWN", "WEST PULLMAN", "WEST RIDGE", "WEST TOWN", "WOODLAWN"]
+var commareaOptions = ["ALBANY PARK", "ARCHER HEIGHTS", "ARMOUR SQUARE", "ASHBURN", "AUBURN GRESHAM", "AUSTIN", "AVALON PARK", "AVONDALE", "BELMONT CRAGIN", "BEVERLY", "BRIDGEPORT", "BRIGHTON PARK", "BURNSIDE", "CALUMET HEIGHTS", "CHATHAM", "CHICAGO LAWN", "CLEARING", "DOUGLAS", "DUNNING", "EAST GARFIELD PARK", "EAST SIDE", "EDGEWATER", "EDISON PARK", "ENGLEWOOD", "FULLER PARK", "GAGE PARK", "GARFIELD RIDGE", "GRAND BOULEVARD", "GREATER GRAND CROSSING", "HEGEWISCH", "HERMOSA", "HUMBOLDT PARK", "HYDE PARK", "IRVING PARK", "KENWOOD", "LAKE VIEW", "LINCOLN SQUARE", "LOGAN SQUARE", "LOOP", "LOWER WEST SIDE", "MCKINLEY PARK", "MONTCLARE", "MORGAN PARK", "MOUNT GREENWOOD", "NEAR WEST SIDE", "NEW CITY", "NORTH CENTER", "NORTH LAWNDALE", "NORTH PARK", "OAKLAND", "PORTAGE PARK", "PULLMAN", "RIVERDALE", "ROGERS PARK", "ROSELAND", "SOUTH DEERING", "SOUTH LAWNDALE", "WASHINGTON HEIGHTS", "WASHINGTON PARK", "WEST ELSDON", "WEST ENGLEWOOD", "WEST GARFIELD PARK", "WEST LAWN", "WEST PULLMAN", "WEST RIDGE", "WEST TOWN", "WOODLAWN"];
+
 // Wrap library inside IFFE for safe variable scoping.
 chicagoGardens = {
-  cartoTableName       : 'allpublicgardendata',
-  cartoUserName        : 'clearstreets',
+  cartoTableName       : 'cuamp_allgardens_master',
+  cartoUserName        : 'cuamp',
   locationScope        : 'chicago',
   mapDivName           : 'mapCanvas',
   map                  : null,
@@ -266,7 +267,7 @@ chicagoGardens = {
     }
 
     else if (chicagoGardens.neighborhood != '') {
-      chicagoGardens.joinClause = " join boundaries_community_areas_current as community_areas on ST_Intersects(gardens.the_geom, community_areas.the_geom)"
+      chicagoGardens.joinClause = " join boundaries_community_areas_2017 as community_areas on ST_Intersects(gardens.the_geom, community_areas.the_geom)"
       chicagoGardens.whereClause += " AND " + chicagoGardens.communityareaSQL
     }
 
@@ -276,7 +277,7 @@ chicagoGardens = {
     }
 
     else if (chicagoGardens.district_number != '') {
-      chicagoGardens.joinClause = " join ccgisdata_commissioner_districts_current as districts on ST_Intersects(gardens.the_geom, districts.the_geom)"
+      chicagoGardens.joinClause = " join ccgisdata_commissioner_districts_2017 as districts on ST_Intersects(gardens.the_geom, districts.the_geom)"
       chicagoGardens.whereClause += " AND " + chicagoGardens.districtSQL
     }
 
@@ -287,9 +288,9 @@ chicagoGardens = {
   },
 
   renderMap: function() {
-    chicagoGardens.gardenSQL = "SELECT gardens.* from allpublicgardendata as gardens" + chicagoGardens.joinClause + " " + chicagoGardens.whereClause;
+    chicagoGardens.gardenSQL = "SELECT gardens.* from cuamp_allgardens_master as gardens" + chicagoGardens.joinClause + " " + chicagoGardens.whereClause;
 
-    communityLayerSQL = "SELECT community_areas.* from boundaries_community_areas_current as community_areas WHERE community_areas.community = 'WICKER PARK'"
+    communityLayerSQL = "SELECT community_areas.* from boundaries_community_areas_2017 as community_areas WHERE community_areas.community = 'WICKER PARK'"
       if (chicagoGardens.neighborhood != '' && chicagoGardens.filterAddress == "") {
         communityLayerSQL += "OR " + chicagoGardens.communityareaSQL;
       }
@@ -297,7 +298,7 @@ chicagoGardens = {
       if (chicagoGardens.ward_number != "" && chicagoGardens.neighborhood == "" && chicagoGardens.filterAddress == "") {
           wardLayerSQL += "OR " + chicagoGardens.wardSQL;
       }
-    districtLayerSQL = "SELECT districts.* from ccgisdata_commissioner_districts_current as districts WHERE districts.district_n = '18'"
+    districtLayerSQL = "SELECT districts.* from ccgisdata_commissioner_districts_2017 as districts WHERE districts.district_n = '18'"
       if (chicagoGardens.district_number != "" && chicagoGardens.neighborhood == "" && chicagoGardens.filterAddress == "" && chicagoGardens.ward_number == "") {
           districtLayerSQL += "OR " + chicagoGardens.districtSQL;
       }
@@ -500,7 +501,7 @@ chicagoGardens.addInfoBox('bottomright', 'infoBox');
 chicagoGardens.addInfoBox('topright', 'resultsBox', "Sites Found: <strong>" + chicagoGardens.resultsNumber + "</strong>");
 
 var layer1 = {
-  sql: "SELECT * from allpublicgardendata",
+  sql: "SELECT * from cuamp_allgardens_master",
   cartocss: $('#carto-result-style').html().trim(),
   interactivity: this.cartoFields,
 }
