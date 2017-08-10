@@ -6,6 +6,19 @@ var capitalizeConversion = function capitalizeConversion(str) {
   });
 };
 
+var downloadCSV = function downloadCSV(csv_data) {
+  // Reference: https://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side
+  downloadLink = document.createElement("a");
+  blob = new Blob(["\ufeff", csv_data]);
+  url = URL.createObjectURL(blob);
+  downloadLink.href = url;
+  downloadLink.download = "cuamp_gardens.csv";
+
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+};
+
 // Used in chicago_gardens_map.js
 var makeSelectData = function makeSelectData(array) {
   data_arr = []

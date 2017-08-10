@@ -421,56 +421,43 @@ var chicagoGardens = {
 
     sql.execute(chicagoGardens.gardenSQL)
       .done(function(listData) {
-        var obj_array = listData.rows;
+        obj_array = listData.rows;
 
-        // Get header names, filter header, and build header
-        var header_names = Object.keys(obj_array[0]);
-
+        // Get header names. Filter out unnecessary headers. 
+        header_names = Object.keys(obj_array[0]);
+        headers_to_delete = ["cartodb_id", "the_geom", "the_geom_webmercator", "description", "longitude", "latitude"]
         indices = []
-        // indices.push(header_names.indexOf("cartodb_id"));
-        indices.push(header_names.indexOf("the_geom"));
-        indices.push(header_names.indexOf("the_geom_webmercator"));
-        indices.push(header_names.indexOf("description"));
-        indices.push(header_names.indexOf("longitude"));
-        indices.push(header_names.indexOf("latitude"));
 
-        for (var i=indices.length-1; i >= 0; i--)
-          header_names.splice(indices[i],1);
+        $.each(headers_to_delete, function(index, value) {
+          indices.push(header_names.indexOf(value));
+        });
 
-        var result = header_names.join(", ") + "\n";
+        reverse_indices = indices.reverse();
+
+        $.each(reverse_indices, function(index, value){
+          header_names.splice(value, 1)
+        });
+
+        csv_data = header_names.join(", ") + "\n";
 
         // Add the rows
         obj_array.forEach(function(obj) {
             header_names.forEach(function(k, index) {
                 if (index) {
-                  result += ", "
+                  csv_data += ", "
                 }
-                
                 if ($.inArray(k, header_names) >= 0) {
                   entry = obj[k];
-                  result += String(entry).replace(',', ' ');
+                  csv_data += String(entry).replace(/,/g, ' ');
                 }
-                
             });
-            result += "\n";
+            csv_data += "\n";
         });
 
-
-        var downloadLink = document.createElement("a");
-        var blob = new Blob(["\ufeff", result]);
-        var url = URL.createObjectURL(blob);
-        downloadLink.href = url;
-        downloadLink.download = "data.csv";
-
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-
-
-
+        downloadCSV(csv_data);
 
       }).error(function(errors) {
-      console.log("errors:" + errors);
+        console.log("errors:" + errors);
     });
   },
 
