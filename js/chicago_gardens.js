@@ -35,10 +35,9 @@ var chicagoGardens = {
   gardenSQL: '',
   resultsNumber: '',
   cartoFields: 'the_geom, the_geom_webmercator, growing_site_name, is_growing_site_locked, evidence_of_support_organizations, if_it_s_a_community_garden_is_it_collective_or_allotment, choose_growing_site_types, water, compost_system, structures_and_features, season_extension_techniques, animals, address, food_producing, community_garden, is_growing_site_dormant, latitude, longitude, ownership, other_support_organization, growing_site_website, facebook, is_growing_site_fenced, description, ward, communities, public_contact_info, growing_site_image, municipalities',
+
   // Create geocoder object to access Google Maps API. Add underscore to insure variable safety.
-   _geocoder: new google.maps.Geocoder(),
-    // Turn on autocomplete to predict address when user begins to type.
-   _autocomplete: new google.maps.places.Autocomplete(document.getElementById('search-address')),
+  _geocoder: new google.maps.Geocoder(),
 
   initialize: function(){
     // Initiate leaflet map
@@ -413,6 +412,51 @@ var chicagoGardens = {
         });
     }).error(function(errors) {
       console.log("errors:" + errors);
+    });
+  },
+
+  buildCSV: function() {
+    var sql = new cartodb.SQL({ user: chicagoGardens.cartoUserName });
+
+    sql.execute(chicagoGardens.gardenSQL)
+      .done(function(listData) {
+        obj_array = listData.rows;
+
+        // Get header names. Filter out unnecessary headers. 
+        header_names = Object.keys(obj_array[0]);
+        headers_to_delete = ["cartodb_id", "the_geom", "the_geom_webmercator", "description", "longitude", "latitude"]
+        indices = []
+
+        $.each(headers_to_delete, function(index, value) {
+          indices.push(header_names.indexOf(value));
+        });
+
+        reverse_indices = indices.reverse();
+
+        $.each(reverse_indices, function(index, value){
+          header_names.splice(value, 1)
+        });
+
+        csv_data = header_names.join(", ") + "\n";
+
+        // Add the rows
+        obj_array.forEach(function(obj) {
+            header_names.forEach(function(k, index) {
+                if (index) {
+                  csv_data += ", "
+                }
+                if ($.inArray(k, header_names) >= 0) {
+                  entry = obj[k];
+                  csv_data += String(entry).replace(/,/g, ' ');
+                }
+            });
+            csv_data += "\n";
+        });
+
+        downloadCSV(csv_data);
+
+      }).error(function(errors) {
+        console.log("errors:" + errors);
     });
   },
 
