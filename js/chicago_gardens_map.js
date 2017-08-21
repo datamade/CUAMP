@@ -73,6 +73,20 @@ $(function() {
     placeholder: "Community Area",
     data: commarea_data
   });
+
+  $('#btnViewMode').click(function(){
+    if ($('#mapCanvas').is(":visible")){
+      $('#btnViewMode').html("<i class='fa fa-map-marker'></i>");
+      $('#listCanvas').show();
+      $('#mapCanvas').hide();
+    }
+    else {
+      $('#btnViewMode').html("<i class='fa fa-list'></i>");
+      $('#listCanvas').hide();
+      $('#mapCanvas').show();
+    }
+  });
+  
 })
 
 
