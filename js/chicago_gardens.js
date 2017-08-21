@@ -313,7 +313,7 @@ var chicagoGardens = {
           ownership        = ''
           food_producing   = ''
           community_garden = ''
-          site_name        = "<h4>" + data.growing_site_name + "</h4>"
+          site_name        = "<h5>" + data.growing_site_name + "</h5>"
           address          = "<p><i class='fa fa-map-marker' aria-hidden='true'></i> " + data.address + "</p>"
 
           html = site_name + address + ownership + food_producing
