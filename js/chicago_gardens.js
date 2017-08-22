@@ -132,7 +132,7 @@ var chicagoGardens = {
         fillColor:'#8A2B85',
         fillOpacity:'0.4',
         stroke: false,
-        clickable: false
+        clickable: false,
     });
 
     this.radiusCircle.addTo(this.map);
@@ -200,6 +200,10 @@ var chicagoGardens = {
       chicagoGardens.whereClause += ' AND gardens.is_growing_site_locked = True'
     }
 
+    if ($('#search-dormant').is(':checked')) {
+      chicagoGardens.whereClause += ' AND gardens.is_growing_site_dormant = True'
+    }
+
     var location = gardenMap.locationScope;
 
     if (radius == null && chicagoGardens.filterAddress != "") {
@@ -214,8 +218,8 @@ var chicagoGardens = {
           chicagoGardens.whereClause += " AND " + geoSearch
 
           chicagoGardens.setZoom(radius);
-          chicagoGardens.addIcon();
           chicagoGardens.addCircle(radius);
+          chicagoGardens.addIcon();
           chicagoGardens.renderMap();
           chicagoGardens.renderList();
         }
@@ -342,7 +346,7 @@ var chicagoGardens = {
       this.map.setView(chicagoGardens.mapCentroid, 11);
     }
 
-  },
+  },  
 
   renderList: function() {
     var sql = new cartodb.SQL({ user: chicagoGardens.cartoUserName });
