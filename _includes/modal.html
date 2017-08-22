@@ -1,47 +1,137 @@
-<!DOCTYPE html>
-<html lang='en'>    
+<div class="modal fade bd-example-modal-md" id="modal-pop" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle" aria-hidden="true"></i></span></button>
+        <h4 class="modal-title" id="modal-title"></h4>
+      </div>
 
-    <div class="modal fade" id="modal-pop" tabindex="-1" role="dialog">
-      <div class="modal-dialog modal-md">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle" aria-hidden="true"></i></span></button>
-            <h4 class="modal-title" id="modal-title"></h4>
-          </div>
+      <div class="modal-body">
+        <div class="container-fluid bd-example-row">
+          <div class="row">
+            <div class="col-md-12 get-sm">
+              <div id="modal-main"></div>
 
-          <div class="modal-body">
-            <div class="container-fluid bd-example-row">
-              <div class="row">
-                <div class="col-md-12 get-sm">
-                  <h4 id="address-header"></h4>
-                  <div id="address-subsection"></div>
-                </div>
-              </div>
+                <div id="description-header"></div>
+                <div id="description-subsection"></div>
 
-              <div class="row">
-                <div class="col-md-12 get-sm">
-                  <h4 id="owner-header"></h4>
-                  <div id="owner-subsection"></div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-md-12">
-                  <h4 id="community-header"></h4>
-                  <div id="community-subsection"></div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-md-12 get-sm">
-                  <h4 id="production-header"></h4>
-                  <div id="production-subsection"></div>
-                </div>
-              </div>
             </div>
           </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+          <div class="col-md-4 hidden-xs hidden-s" id="modal-image"></div>
+        </div>
 
-</html>
+
+        <div class="container-fluid">
+          <div class="row modal-bottom">
+
+                <div class="col-md-6 get-sm">
+                    <h4>Location and contact</h4>
+                    <div class="row"> 
+                        <div class="col-sm-6 ft-strong" id="commarea-header"></div>
+                        <div class="col-sm-6" id="commarea-subsection"></div>
+                    </div>
+
+                    <div class="row"> 
+                        <div class="col-sm-6 ft-strong" id="ward-header"></div>
+                        <div class="col-sm-6" id="ward-subsection"></div>
+                    </div>
+
+                    <div class="row"> 
+                        <div class="col-sm-6 ft-strong" id="owner-header"></div>
+                        <div class="col-sm-6" id="owner-subsection"></div>
+                    </div>
+
+                    <div class="row"> 
+                        <div class="col-sm-6 ft-strong" id="contact-header"></div>
+                        <div class="col-sm-6 bw" id="contact-subsection"></div>
+                    </div>
+
+                    <div class="row"> 
+                        <div class="col-sm-6 ft-strong" id="website-header"></div>
+                        <div class="col-sm-6 bw" id="website-subsection"></div>
+                    </div>
+
+                    <div class="row"> 
+                        <div class="col-sm-6 ft-strong" id="facebook-header"></div>
+                        <div class="col-sm-6 bw" id="facebook-subsection"></div>
+                    </div>
+                <br>
+                </div>
+                
+
+                <div class="col-md-6 get-sm">
+                  <dl class="dl-horizontal">
+                    <h4>Garden features</h4>
+                    <div class="row">
+                      <div class="col-sm-6 ft-strong" id="support-header"></div>
+                      <div class="col-sm-6" id="support-subsection"></div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-6 ft-strong" id="types-header"></div>
+                      <div class="col-sm-6" id="types-subsection"></div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-6 ft-strong" id="dormant-header"></div>
+                      <div class="col-sm-6" id="dormant-subsection"></div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-6 ft-strong" id="production-header"></div>
+                      <div class="col-sm-6" id="production-subsection"></div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-6 ft-strong" id="community-header"></div>
+                      <div class="col-sm-6" id="community-subsection"></div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-6 ft-strong" id="commtype-header"></div>
+                      <div class="col-sm-6" id="commtype-subsection"></div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-6 ft-strong" id="fence-header"></div>
+                      <div class="col-sm-6" id="fence-subsection"></div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-6 ft-strong" id="locked-header"></div>
+                      <div class="col-sm-6" id="locked-subsection"></div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-6 ft-strong" id="water-header"></div>
+                      <div class="col-sm-6" id="water-subsection"></div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-6 ft-strong" id="compost-header"></div>
+                      <div class="col-sm-6" id="compost-subsection"></div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-6 ft-strong" id="structures-header"></div>
+                      <div class="col-sm-6" id="structures-subsection"></div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-6 ft-strong" id="animal-header"></div>
+                      <div class="col-sm-6" id="animal-subsection"></div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-6 ft-strong" id="seasonex-header"></div>
+                      <div class="col-sm-6" id="seasonex-subsection"></div>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

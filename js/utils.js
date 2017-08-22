@@ -30,17 +30,17 @@ var makeSelectData = function makeSelectData(array) {
 
 var convertBoolean =  function convertBoolean(text) {
   if (text == true) {
-    return "<i class="+"'fa fa-check'"+" aria-hidden="+"'true'"+"></i>"
+    return "<i class="+"'fa fa-check'"+" aria-hidden="+"'true'"+"></i> Yes"
   }
   else if (text == false) {
-    return "<i class="+"'fa fa-times'"+" aria-hidden="+"'true'"+"></i>"
+    return "<i class="+"'fa fa-times'"+" aria-hidden="+"'true'"+"></i> No"
   }
   else {
   }
 };
 
 var modalPop = function modalPop(data) {
-  var contact = "<p id='modal-address'><i class='fa fa-map-marker' aria-hidden='true'></i> <strong>Address:</strong> " + data.address + '</p><br>' + '<p class="modal-directions"><a href="http://maps.google.com/?q=' + data.address + '" target="_blank">Get Directions</a></p>'
+  var contact = "<p id='modal-address'><i class='fa fa-map-marker' aria-hidden='true'></i> " + data.address + '</p>' + '<p class="modal-directions"><i class="fa fa-reply" aria-hidden="true"></i> <a href="http://maps.google.com/?q=' + data.address + '" target="_blank">Get Directions</a></p>'
   $('#modal-pop').appendTo('body').modal();
   $('#modal-title, #address-header, #owner-header, #community-header, #production-header, #address-subsection, #owner-subsection, #community-subsection, #production-subsection, #locked-header, #locked-subsection, #commtype-header, #commtype-subsection, #types-header, #types-subsection, #water-header, #water-subsection, #compost-header, #compost-subsection, #structures-header, #structures-subsection, #seasonex-header, #seasonex-subsection, #animal-header, #animal-subsection, #dormant-header, #dormant-subsection, #support-header, #support-subsection, #website-header, #website-subsection, #facebook-header, #facebook-subsection, #fence-header, #fence-subsection, #description-header, #description-subsection, #ward-header, #ward-subsection, #commarea-header, #commarea-subsection, #contact-header, #contact-subsection, #with_contact, #with_location, #with_about, #with_features').empty();
   $('#modal-title').html(data.growing_site_name);
@@ -111,7 +111,7 @@ var modalPop = function modalPop(data) {
   }
   if (season_extension != "") {
     $("#seasonex-header").append('<i class="fa fa-arrow-right" aria-hidden="true"></i> Season Extension Techniques:<br>');
-    $("#seasonex-subsection").append("<p>" + season_extension+ "</p>")
+    $("#seasonex-subsection").append("<p>" + season_extension + "</p>")
   }
   if (animals != "") {
     $("#animal-header").append('<i class="fa fa-paw" aria-hidden="true"></i> Animals:');
@@ -122,11 +122,10 @@ var modalPop = function modalPop(data) {
     $("#support-subsection").append("<p>" + other_support + "</p>")
   }
   if (website != "") {
-    $("#website-header").append('<i class="fa fa-bookmark" aria-hidden="true"></i> Website:');
-    $("#website-subsection").append("<p><a href='" + website + "'>" + website + "</a></p>")
+    $("#website-header").append('<p><i class="fa fa-bookmark" aria-hidden="true"></i> <a href=' + website + "target=_blank'>Website</a></p>")
   }
   if (facebook != "") {
-    $("#facebook-header").append('<i class="fa fa-facebook-square" aria-hidden="true"></i> <a href="' + facebook + '">Facebook Page</a>');
+    $("#facebook-header").append('<p><i class="fa fa-facebook-square" aria-hidden="true"></i> <a href="' + facebook + 'target=_blank">Facebook Page</a></p>');
   }
   if (fence != null) {
     $("#fence-header").append('<i class="fa fa-bars" aria-hidden="true"></i> Fenced In:');

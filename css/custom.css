@@ -50,6 +50,14 @@ iframe {
   margin-bottom: 15px;
 }
 
+.ft-strong {
+  font-weight: bold;
+}
+
+.bw {
+  word-break: break-word;
+}
+
 /* Navbar and Footer*/
 .navbar, .footer {
   border-radius: 0;
@@ -260,7 +268,7 @@ div#mapCanvas {
 
 .modal-bottom {
   border-top: 1px solid #CECECE;
-  margin-top: 2em;
+  margin-top: 0.5em;
 }
 
 .modal-body-bottom {
