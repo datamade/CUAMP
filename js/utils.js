@@ -107,7 +107,7 @@ var modalPop = function modalPop(data) {
   }
 
   // Contact and people
-  if ((contact_info != '') || (website != '') || (facebook != '') || (owner_list != '') || (community_list != null) || (other_support != ''))  {
+  if ((contact_info != '') || (website != '') || (facebook != '') || (owner_list != '') || (community_list != '') || (other_support != '')) {
       // Add header
       $("#withContact").append('<br><strong>Contact and people</strong><br>');
       // Add data
@@ -119,13 +119,13 @@ var modalPop = function modalPop(data) {
           $("#owner-header").append('<i class="fa fa-usd" aria-hidden="true"></i> Ownership:');
           $("#owner-subsection").append("<p>" + owner_list + "</p>");
       }
-      if (website != "") {
+      if (website != "") { 
         $("#website-header").append('<p><i class="fa fa-bookmark" aria-hidden="true"></i> <a href=' + website + "target=_blank'>Website</a></p>")
       }
       if (facebook != "") {
         $("#facebook-header").append('<p><i class="fa fa-facebook-square" aria-hidden="true"></i> <a href="' + facebook + 'target=_blank">Facebook Page</a></p>');
       }
-      if (community_list != null) {
+      if (community_list != "") {
         $("#community-header").append('<i class="fa fa-users" aria-hidden="true"></i> Community Garden:');
         $("#community-subsection").append("<p>" + convertBoolean(community_list) + "</p>");
       }
