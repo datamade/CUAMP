@@ -50,6 +50,14 @@ iframe {
   margin-bottom: 15px;
 }
 
+.ft-strong {
+  font-weight: bold;
+}
+
+.bw {
+  word-break: break-word;
+}
+
 /* Navbar and Footer*/
 .navbar, .footer {
   border-radius: 0;
@@ -244,11 +252,17 @@ div#mapCanvas {
     overflow-y: auto;
 }
 
-#modal-main > p {
-  font-family: var(--font-sans-text);
-  margin-bottom: 2px;
+#modal-address {
+  var(--font-sans-brand);
+  margin-bottom: 4px;
   word-wrap: break-word;
-  font-size: 20px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #A81F32;
+}
+
+#description-subsection {
+  margin-top: 8px;
 }
 
 .modal-p {
@@ -260,17 +274,11 @@ div#mapCanvas {
 
 .modal-bottom {
   border-top: 1px solid #CECECE;
-  margin-top: 2em;
+  margin-top: 0.5em;
 }
 
 .modal-body-bottom {
   border-top: 1px solid #F0F0F0;
-}
-
-.modal-directions {
-  font-weight: 700;
-  font-size: 17px;
-  color: #A81F32 ;
 }
 
 .modal-body-bottom .input-group {
@@ -312,6 +320,11 @@ div#mapCanvas {
     white-space: normal;
     width: 220px;
     margin-right: 10px;
+}
+
+#withLocation, #withContact, #withFeatures, #withInformation {
+  font-family: var(--font-sans-brand);
+  font-size: 20px;
 }
 
 /* Buttons */
