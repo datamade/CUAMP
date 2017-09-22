@@ -40,128 +40,152 @@ var convertBoolean =  function convertBoolean(text) {
 };
 
 var modalPop = function modalPop(data) {
-  var contact = "<p id='modal-address'><i class='fa fa-map-marker' aria-hidden='true'></i> " + data.address + '</p>' + '<p class="modal-directions"><i class="fa fa-reply" aria-hidden="true"></i> <a href="http://maps.google.com/?q=' + data.address + '" target="_blank">Get Directions</a></p>'
+  var contact = '<p id="modal-address"><a href="http://maps.google.com/?q=' + data.address + '" target="_blank"><i class="fa fa-map-marker" aria-hidden="true"></i> ' + data.address + '</a></span></p>'
   $('#modal-pop').appendTo('body').modal();
-  $('#modal-title, #address-header, #owner-header, #community-header, #production-header, #address-subsection, #owner-subsection, #community-subsection, #production-subsection, #locked-header, #locked-subsection, #commtype-header, #commtype-subsection, #types-header, #types-subsection, #water-header, #water-subsection, #compost-header, #compost-subsection, #structures-header, #structures-subsection, #seasonex-header, #seasonex-subsection, #animal-header, #animal-subsection, #dormant-header, #dormant-subsection, #support-header, #support-subsection, #website-header, #website-subsection, #facebook-header, #facebook-subsection, #fence-header, #fence-subsection, #description-header, #description-subsection, #ward-header, #ward-subsection, #commarea-header, #commarea-subsection, #contact-header, #contact-subsection, #with_contact, #with_location, #with_about, #with_features').empty();
+  $('#modal-title, #address-header, #owner-header, #community-header, #production-header, #address-subsection, #owner-subsection, #community-subsection, #production-subsection, #locked-header, #locked-subsection, #commtype-header, #commtype-subsection, #types-header, #types-subsection, #water-header, #water-subsection, #compost-header, #compost-subsection, #structures-header, #structures-subsection, #seasonex-header, #seasonex-subsection, #animal-header, #animal-subsection, #dormant-header, #dormant-subsection, #support-header, #support-subsection, #website-header, #website-subsection, #facebook-header, #facebook-subsection, #fence-header, #fence-subsection, #description-header, #description-subsection, #ward-header, #ward-subsection, #commarea-header, #commarea-subsection, #contact-header, #contact-subsection, #withContact, #withLocation, #withInformation, #withFeatures, #municipality-header, #municipality-subsection').empty();
   $('#modal-title').html(data.growing_site_name);
   $('#modal-main').html(contact);
 
+  // Header
   var address_list = data.address
+  var description = data.description
+  // Location
+  var ward_num = data.ward
+  var community_area = data.communities
+  var municipalities = data.municipalities
+  // Contact and people
   var owner_list = data.ownership
+  var contact_info = data.public_contact_info
+  var website = data.growing_site_website
+  var facebook = data.facebook
+  var other_support = data.other_support_organization
   var community_list = data.community_garden
-  var production_list = data.food_producing
-  var locked = data.is_growing_site_locked
-  var comm_garden_type = data.if_it_s_a_community_garden_is_it_collective_or_allotment
-  var types = data.choose_growing_site_types
+  // Features
   var water_system = data.water
   var compost = data.compost_system
   var structures = data.structures_and_features
-  var season_extension = data.season_extension_techniques
   var animals = data.animals
-  var dormant = data.is_growing_site_dormant
-  var other_support = data.other_support_organization
-  var website = data.growing_site_website
-  var facebook = data.facebook
   var fence = data.is_growing_site_fenced
-  var description = data.description
-  var ward_num = data.ward
-  var community_area = data.communities
-  var contact_info = data.public_contact_info
-
+  var production_list = data.food_producing
+  // Information
+  var comm_garden_type = data.if_it_s_a_community_garden_is_it_collective_or_allotment
+  var types = data.choose_growing_site_types
+  var locked = data.is_growing_site_locked
+  var season_extension = data.season_extension_techniques
+  var dormant = data.is_growing_site_dormant
+  
   // Find all instances of "yes."
-  if (address_list != null) {
-      $("#address-header").append('<i class="fa fa-user" aria-hidden="true"></i> Address:');
-      $("#address-subsection").append("<p>" + address_list + "</p>");
-  }
-  if (owner_list != "") {
-      $("#owner-header").append('<i class="fa fa-usd" aria-hidden="true"></i> Ownership:');
-      $("#owner-subsection").append("<p>" + owner_list + "</p>");
-  }
-  if (community_list != null) {
-    $("#community-header").append('<i class="fa fa-users" aria-hidden="true"></i> Community Garden:');
-    $("#community-subsection").append("<p>" + convertBoolean(community_list) + "</p>");
-  }
-  if (production_list != null) {
-    $("#production-header").append('<i class="fa fa-cutlery" aria-hidden="true"></i> Food Producing:');
-    $("#production-subsection").append("<p>" + convertBoolean(production_list) + "</p>")
-  }
-  if (locked != null) {
-    $("#locked-header").append('<i class="fa fa-lock" aria-hidden="true"></i> Locked Site:');
-    $("#locked-subsection").append("<p>" + convertBoolean(locked) + "</p>")
-  }
-  if (comm_garden_type != "") {
-    $("#commtype-header").append('<i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Community Garden Type:');
-    $("#commtype-subsection").append("<p>" + comm_garden_type + "</p>")
-  }
   if (types != "") {
     $("#types-header").append('<i class="fa fa-leaf" aria-hidden="true"></i> Garden Type:');
-    $("#types-subsection").append("<p>" + types + "</p>")
-  }
-  if (water_system != "") {
-    $("#water-header").append('<i class="fa fa-tint" aria-hidden="true"></i> Water System:');
-    $("#water-subsection").append("<p>" + water_system + "</p>")
-  }
-  if (compost != null) {
-    $("#compost-header").append('<i class="fa fa-recycle" aria-hidden="true"></i> Compost Available:');
-    $("#compost-subsection").append("<p>" + convertBoolean(compost) + "</p>")
-  }
-  if (structures != "") {
-    $("#structures-header").append('<i class="fa fa-building-o" aria-hidden="true"></i> Structures and Features:');
-    $("#structures-subsection").append("<p>" + structures + "</p>")
-  }
-  if (season_extension != "") {
-    $("#seasonex-header").append('<i class="fa fa-arrow-right" aria-hidden="true"></i> Season Extension Techniques:<br>');
-    $("#seasonex-subsection").append("<p>" + season_extension + "</p>")
-  }
-  if (animals != "") {
-    $("#animal-header").append('<i class="fa fa-paw" aria-hidden="true"></i> Animals:');
-    $("#animal-subsection").append("<p>" + animals + "</p>")
-  }
-  if (other_support != "") {
-    $("#support-header").append('<i class="fa fa-signing" aria-hidden="true"></i> Support Organizations:');
-    $("#support-subsection").append("<p>" + other_support + "</p>")
-  }
-  if (website != "") {
-    $("#website-header").append('<p><i class="fa fa-bookmark" aria-hidden="true"></i> <a href=' + website + "target=_blank'>Website</a></p>")
-  }
-  if (facebook != "") {
-    $("#facebook-header").append('<p><i class="fa fa-facebook-square" aria-hidden="true"></i> <a href="' + facebook + 'target=_blank">Facebook Page</a></p>');
-  }
-  if (fence != null) {
-    $("#fence-header").append('<i class="fa fa-bars" aria-hidden="true"></i> Fenced In:');
-    $("#fence-subsection").append("<p>" + convertBoolean(fence) + "</p>")
+    $("#types-subsection").append("<p><em>" + types + "</em></p>");
   }
   if (description != "") {
-    $("#description-header").append('<br><i class="fa fa-ellipsis-h" aria-hidden="true"></i> Description:');
-    $("#description-subsection").append("<p>" + description + "</p>")
-  }
-  if (dormant != null) {
-    $("#dormant-header").append('<i class="fa fa-pause" aria-hidden="true"></i> Dormant Site:');
-    $("#dormant-subsection").append("<p>" + convertBoolean(dormant) + "</p>")
-  }
-  if (ward_num != null) {
-    $("#ward-header").append('<i class="fa fa-university" aria-hidden="true"></i> Ward:');
-    $("#ward-subsection").append("<p>" + ward_num + "</p>")
-  }
-  if (community_area != "") {
-    $("#commarea-header").append('<i class="fa fa-map-marker" aria-hidden="true"></i> Community Area:');
-    $("#commarea-subsection").append("<p>" + community_area + "</p>")
-  }
-  if (contact_info != "") {
-    $("#contact-header").append('<i class="fa fa-phone aria-hidden="true"></i> Contact Info:');
-    $("#contact-subsection").append("<p>" + contact_info + "</p>")
-  }
-  if ((contact_info != "") | (website != "") | (facebook != ""))  {
-    $("#with_contact").append('<br><strong>Contact</strong><br>');
-  }
-  if ((community_area != "") | (ward_num != "")) {
-    $("#with_location").append('<br><strong>Location</strong><br>');
-  }
-  if ((production_list != null) | (community_list != null) | (comm_garden_type != "") | (fence != null) | (locked != null) | (water_system != "") | (compost != null) | (season_extension != "") | (structures != "") | (animals != "")) {
-    $("#with_features").append('<br><strong>Features</strong><br>');
-  }
-  if ((owner_list != "") | (other_support != "") | (types != "") | (description != "") | (dormant != null))  {
-    $("#with_about").append('<br><strong>About</strong>');
+    $("#description-subsection").append("<p>" + description + "</p>");
   }
 
+  // Location
+  if ((community_area != "") || (ward_num != "") || (community_area != "") || (municipalities != null)) {
+      // Add header
+      $("#withLocation").append('<br><strong>Location</strong><br>');
+      // Add data
+      if (address_list != null) {
+        $("#address-header").append('<i class="fa fa-user" aria-hidden="true"></i> Address:');
+        $("#address-subsection").append("<p>" + address_list + "</p>");
+      }
+      if (ward_num != null) {
+        $("#ward-header").append('<i class="fa fa-university" aria-hidden="true"></i> Ward:');
+        $("#ward-subsection").append("<p>" + ward_num + "</p>")
+      }
+      if (community_area != "") {
+        $("#commarea-header").append('<i class="fa fa-map-marker" aria-hidden="true"></i> Community Area:');
+        $("#commarea-subsection").append("<p>" + community_area + "</p>")
+      }
+      if (municipalities != null) {
+        $("#municipality-header").append('<i class="fa fa-building" aria-hidden="true"></i> Municipality:');
+        $("#municipality-subsection").append("<p>" + municipalities + "</p>")
+      }
+  }
+
+  // Contact and people
+  if ((contact_info != '') || (website != '') || (facebook != '') || (owner_list != '') || (community_list != null) || (other_support != ''))  {
+      // Add header
+      $("#withContact").append('<br><strong>Contact and people</strong><br>');
+      // Add data
+      if (contact_info != "") {
+        $("#contact-header").append('<i class="fa fa-phone aria-hidden="true"></i> Contact Info:');
+        $("#contact-subsection").append("<p>" + contact_info + "</p>")
+      }
+      if (owner_list != "") {
+          $("#owner-header").append('<i class="fa fa-usd" aria-hidden="true"></i> Ownership:');
+          $("#owner-subsection").append("<p>" + owner_list + "</p>");
+      }
+      if (website != "") {
+        $("#website-header").append('<p><i class="fa fa-bookmark" aria-hidden="true"></i> <a href=' + website + "target=_blank'>Website</a></p>")
+      }
+      if (facebook != "") {
+        $("#facebook-header").append('<p><i class="fa fa-facebook-square" aria-hidden="true"></i> <a href="' + facebook + 'target=_blank">Facebook Page</a></p>');
+      }
+      if (community_list != null) {
+        $("#community-header").append('<i class="fa fa-users" aria-hidden="true"></i> Community Garden:');
+        $("#community-subsection").append("<p>" + convertBoolean(community_list) + "</p>");
+      }
+      if (other_support != "") {
+        $("#support-header").append('<i class="fa fa-signing" aria-hidden="true"></i> Support Organizations:');
+        $("#support-subsection").append("<p>" + other_support + "</p>")
+      }
+  }
+
+  // Garden features
+  if ((water_system != "") || (production_list != null) || (compost != null) || (structures != "") || (animals != "") || (animals != "") || (fence != null)) {
+      // Add header
+      $("#withFeatures").append('<br><strong>Garden features</strong><br>');
+      // Add data
+      if (water_system != "") {
+        $("#water-header").append('<i class="fa fa-tint" aria-hidden="true"></i> Water System:');
+        $("#water-subsection").append("<p>" + water_system + "</p>");
+      }
+      if (production_list != null) {
+        $("#production-header").append('<i class="fa fa-cutlery" aria-hidden="true"></i> Food Producing:');
+        $("#production-subsection").append("<p>" + convertBoolean(production_list) + "</p>");
+      }
+      if (compost != null) {
+        $("#compost-header").append('<i class="fa fa-recycle" aria-hidden="true"></i> Compost Available:');
+        $("#compost-subsection").append("<p>" + convertBoolean(compost) + "</p>")
+      }
+      if (structures != "") {
+        $("#structures-header").append('<i class="fa fa-building-o" aria-hidden="true"></i> Structures and Features:');
+        $("#structures-subsection").append("<p>" + structures + "</p>")
+      }
+      if (animals != "") {
+        $("#animal-header").append('<i class="fa fa-paw" aria-hidden="true"></i> Animals:');
+        $("#animal-subsection").append("<p>" + animals + "</p>")
+      }
+      if (fence != null) {
+        $("#fence-header").append('<i class="fa fa-bars" aria-hidden="true"></i> Fenced In:');
+        $("#fence-subsection").append("<p>" + convertBoolean(fence) + "</p>")
+      }
+  }
+
+  // Information to know
+  if ((locked != "") | (dormant != "") | (season_extension != "") | (dormant != null))  {
+      // Add header
+      $("#withInformation").append('<br><strong>Other information</strong>');
+      // Add data
+      if (comm_garden_type != "") {
+        $("#commtype-header").append('<i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Community Garden Type:');
+        $("#commtype-subsection").append("<p>" + comm_garden_type + "</p>")
+      }
+      if (locked != null) {
+        $("#locked-header").append('<i class="fa fa-lock" aria-hidden="true"></i> Locked Site:');
+        $("#locked-subsection").append("<p>" + convertBoolean(locked) + "</p>")
+      }
+      if (dormant != null) {
+        $("#dormant-header").append('<i class="fa fa-pause" aria-hidden="true"></i> Dormant Site:');
+        $("#dormant-subsection").append("<p>" + convertBoolean(dormant) + "</p>")
+      }
+      if (season_extension != "") {
+        $("#seasonex-header").append('<i class="fa fa-arrow-right" aria-hidden="true"></i> Season Extension Techniques:<br>');
+        $("#seasonex-subsection").append("<p>" + season_extension + "</p>")
+      }
+  }
 };
