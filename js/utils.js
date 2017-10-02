@@ -189,3 +189,13 @@ var modalPop = function modalPop(data) {
       }
   }
 };
+
+var hiddenLink = function hiddenLink() {
+    url = window.location.href;
+    // Check if the user is trying to access the admin download. If yes, then trigger a download of all data.
+    if (url.indexOf('?admin=download') > -1) {
+      // Download data for composting
+      header_names = ["growing_site_name", "address", "address2", "ward", "municipalities", "communities"]
+      downloadCSV(header_names);
+    }
+};

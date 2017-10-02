@@ -419,16 +419,12 @@ var chicagoGardens = {
     });
   },
 
-  buildCSV: function() {
+  buildCSV: function(header_names) {
     var sql = new cartodb.SQL({ user: chicagoGardens.cartoUserName });
 
     sql.execute(chicagoGardens.gardenSQL)
       .done(function(listData) {
         obj_array = listData.rows;
-        
-        // Include only rows with useful information, i.e., suppress info about lat-long, carto_id, etc.
-        header_names = ["growing_site_name", "address", "address2", "growing_site_website", "public_contact_info", "facebook", "ward", "municipalities", "communities", "ownership",  "evidence_of_support_organizations", "is_growing_site_fenced", "is_growing_site_dormant", "food_producing", "compost_system", "is_growing_site_locked", , "other_support_organization", "season_extension_techniques", "structures_and_features", "water", "choose_growing_site_types", "community_garden", "if_it_s_a_community_garden_is_it_collective_or_allotment"]
-
         csv_data = header_names.join(", ") + "\n";
 
         // Add the rows
