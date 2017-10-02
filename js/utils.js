@@ -196,6 +196,6 @@ var hiddenLink = function hiddenLink() {
     if (url.indexOf('?admin=download') > -1) {
       // Download data for composting
       header_names = ["growing_site_name", "address", "address2", "ward", "municipalities", "communities"]
-      downloadCSV(header_names);
+      chicagoGardens.buildCSV(header_names);
     }
 };
