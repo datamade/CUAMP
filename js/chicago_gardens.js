@@ -419,46 +419,29 @@ var chicagoGardens = {
     });
   },
 
-  buildCSV: function() {
+  buildCSV: function(header_names) {
     var sql = new cartodb.SQL({ user: chicagoGardens.cartoUserName });
+    var CSVdata;
 
     sql.execute(chicagoGardens.gardenSQL)
       .done(function(listData) {
         obj_array = listData.rows;
-
-        // Get header names. Filter out unnecessary headers. 
-        header_names = Object.keys(obj_array[0]);
-        headers_to_delete = ["cartodb_id", "the_geom", "the_geom_webmercator", "description", "longitude", "latitude"]
-        indices = []
-
-        $.each(headers_to_delete, function(index, value) {
-          indices.push(header_names.indexOf(value));
-        });
-
-        reverse_indices = indices.reverse();
-
-        $.each(reverse_indices, function(index, value){
-          header_names.splice(value, 1)
-        });
-
-        csv_data = header_names.join(", ") + "\n";
-
+        CSVdata = header_names.join(", ") + "\n";
         // Add the rows
         obj_array.forEach(function(obj) {
             header_names.forEach(function(k, index) {
                 if (index) {
-                  csv_data += ", "
+                  CSVdata += ", "
                 }
                 if ($.inArray(k, header_names) >= 0) {
                   entry = obj[k];
-                  csv_data += String(entry).replace(/,/g, ' ');
+                  CSVdata += String(entry).replace(/,/g, ' ');
                 }
             });
-            csv_data += "\n";
+            CSVdata += "\n";
         });
 
-        downloadCSV(csv_data);
-
+        downloadCSV(CSVdata);
       }).error(function(errors) {
         console.log("errors:" + errors);
     });
