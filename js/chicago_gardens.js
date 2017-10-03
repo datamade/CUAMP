@@ -169,6 +169,7 @@ var chicagoGardens = {
     this.calcCollapsibleLocations();
     var gardenMap = this;
     var radius;
+    var name = $("#search-name").val();
     var owner = $("#search-ownership").select2('data');
     var garden_type = $("#search-type").select2('data');
     var garden_structure = $("#search-structure").select2('data');
@@ -176,32 +177,36 @@ var chicagoGardens = {
     var typeSQL = this.typeSelectionSQL(garden_type)
     var structureSQL = this.structureSelectionSQL(garden_structure)
 
+    if (name != '') {
+      chicagoGardens.whereClause += " AND (lower(growing_site_name) like '%" + name.toLowerCase() + "%')"
+    }
+
     if (owner != '') {
-      chicagoGardens.whereClause += ' AND (' + ownerSQL + ')'
+      chicagoGardens.whereClause += " AND (" + ownerSQL + ")"
     }
 
     if (garden_type != '') {
-      chicagoGardens.whereClause += ' AND (' + typeSQL + ')'
+      chicagoGardens.whereClause += " AND (" + typeSQL + ")"
     }
 
     if (garden_structure != '') {
-      chicagoGardens.whereClause += ' AND (' + structureSQL + ')'
+      chicagoGardens.whereClause += " AND (" + structureSQL + ")"
     }
 
     if ($('#search-production').is(':checked')) {
-      chicagoGardens.whereClause += ' AND gardens.food_producing = True'
+      chicagoGardens.whereClause += " AND gardens.food_producing = True"
     }
 
     if ($('#search-compost').is(':checked')) {
-      chicagoGardens.whereClause += ' AND gardens.compost_system = True'
+      chicagoGardens.whereClause += " AND gardens.compost_system = True"
     }
 
     if ($('#search-locked').is(':checked')) {
-      chicagoGardens.whereClause += ' AND gardens.is_growing_site_locked = True'
+      chicagoGardens.whereClause += " AND gardens.is_growing_site_locked = True"
     }
 
     if ($('#search-dormant').is(':checked')) {
-      chicagoGardens.whereClause += ' AND gardens.is_growing_site_dormant = True'
+      chicagoGardens.whereClause += " AND gardens.is_growing_site_dormant = True"
     }
 
     var location = gardenMap.locationScope;
