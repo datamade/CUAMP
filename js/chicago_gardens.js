@@ -421,28 +421,27 @@ var chicagoGardens = {
 
   buildCSV: function(header_names) {
     var sql = new cartodb.SQL({ user: chicagoGardens.cartoUserName });
+    var CSVdata;
 
     sql.execute(chicagoGardens.gardenSQL)
       .done(function(listData) {
         obj_array = listData.rows;
-        csv_data = header_names.join(", ") + "\n";
-
+        CSVdata = header_names.join(", ") + "\n";
         // Add the rows
         obj_array.forEach(function(obj) {
             header_names.forEach(function(k, index) {
                 if (index) {
-                  csv_data += ", "
+                  CSVdata += ", "
                 }
                 if ($.inArray(k, header_names) >= 0) {
                   entry = obj[k];
-                  csv_data += String(entry).replace(/,/g, ' ');
+                  CSVdata += String(entry).replace(/,/g, ' ');
                 }
             });
-            csv_data += "\n";
+            CSVdata += "\n";
         });
 
-        downloadCSV(csv_data);
-
+        downloadCSV(CSVdata);
       }).error(function(errors) {
         console.log("errors:" + errors);
     });
