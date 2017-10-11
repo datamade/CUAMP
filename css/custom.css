@@ -23,13 +23,16 @@ body {
   background-color: #e7e7e7;
 }
 
-a {
-  color: inherit !important;
-}
 
-iframe {
+
+.location iframe {
   width: 100%;
   height: 3625px;
+}
+
+.compost iframe {
+  width: 100%;
+  height: 600px;
 }
 
 .container {
@@ -69,6 +72,14 @@ iframe {
   border-color: var(--purple-color);
 }
 
+.navbar-brand a, footer a, footer a:hover {
+  color: #fff;
+}
+
+.nav > li > a {
+  padding: 1px 8px;
+}
+
 .nav > li { 
   color: #fff; 
   font-family: var(--font-sans-brand);
@@ -76,18 +87,19 @@ iframe {
 
 .navbar .navbar-brand,
 .navbar .navbar-nav li a {
-    line-height: 100px;
-    height: 100px;
-    padding-top: 0;
-    color: #fff;
-    font-family: var(--font-sans-brand);
+  line-height: 100px;
+  height: 100px;
+  padding-top: 0;
+  color: #fff;
+  font-family: var(--font-sans-brand);
+  font-size: 14px;
 }
 
 .navbar .navbar-brand {
-  font-size: 1.6em;
-    height: 50px;
-    padding: 10px;
-    line-height: 20px;
+  font-size: 1.4em;
+  height: 50px;
+  padding: 10px;
+  line-height: 20px;
 }
 
 .navbar .navbar-nav li a:hover {
@@ -137,7 +149,7 @@ iframe {
       line-height: 0;
       height: 0;
       padding-top: 0;
-      font-size: 16px;
+      font-size: 14px;
       height: 50px;
       padding: 15px 15px;
       line-height: 20px;
