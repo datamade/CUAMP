@@ -1,6 +1,6 @@
 var chicagoGardens = chicagoGardens || {};
 var chicagoGardens = {
-  cartoTableName: 'cuamp_allgardens_master',
+  cartoTableName: 'cuamp_master_allgardens',
   cartoUserName: 'cuamp',
   locationScope: 'chicago',
   mapDivName: 'mapCanvas',
@@ -256,7 +256,7 @@ var chicagoGardens = {
   },
 
   renderMap: function() {
-    chicagoGardens.gardenSQL = "SELECT gardens.* from cuamp_allgardens_master as gardens" + chicagoGardens.joinClause + " " + chicagoGardens.whereClause;
+    chicagoGardens.gardenSQL = "SELECT gardens.* from cuamp_master_allgardens as gardens" + chicagoGardens.joinClause + " " + chicagoGardens.whereClause;
 
     communityLayerSQL = "SELECT community_areas.* from boundaries_community_areas_2017 as community_areas WHERE community_areas.community = 'WICKER PARK'"
       if (chicagoGardens.neighborhood != '' && chicagoGardens.filterAddress == "") {
