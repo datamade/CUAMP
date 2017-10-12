@@ -43,7 +43,7 @@ var modalPop = function modalPop(data) {
   var contact = '<p id="modal-address"><a href="http://maps.google.com/?q=' + data.address + '" target="_blank"><i class="fa fa-map-marker" aria-hidden="true"></i> ' + data.address + '</a></span></p>'
   $('#modal-pop').appendTo('body').modal();
   $('#modal-title, #address-header, #owner-header, #community-header, #production-header, #address-subsection, #owner-subsection, #community-subsection, #production-subsection, #locked-header, #locked-subsection, #commtype-header, #commtype-subsection, #types-header, #types-subsection, #water-header, #water-subsection, #compost-header, #compost-subsection, #structures-header, #structures-subsection, #seasonex-header, #seasonex-subsection, #animal-header, #animal-subsection, #dormant-header, #dormant-subsection, #support-header, #support-subsection, #website-header, #website-subsection, #facebook-header, #facebook-subsection, #fence-header, #fence-subsection, #description-header, #description-subsection, #ward-header, #ward-subsection, #commarea-header, #commarea-subsection, #contact-header, #contact-subsection, #withContact, #withLocation, #withInformation, #withFeatures, #municipality-header, #municipality-subsection').empty();
-  $('#modal-title').html(data.growing_site_name);
+  $('#modal-title').html(data.growing_site_name + "<p>CUAMP ID: " + data.cuamp_id + "</p>");
   $('#modal-main').html(contact);
 
   // Header

@@ -34,7 +34,7 @@ var chicagoGardens = {
   communityareaSQL: '',
   gardenSQL: '',
   resultsNumber: '',
-  cartoFields: 'the_geom, the_geom_webmercator, growing_site_name, is_growing_site_locked, evidence_of_support_organizations, if_it_s_a_community_garden_is_it_collective_or_allotment, choose_growing_site_types, water, compost_system, structures_and_features, season_extension_techniques, animals, address, food_producing, community_garden, is_growing_site_dormant, latitude, longitude, ownership, other_support_organization, growing_site_website, facebook, is_growing_site_fenced, description, ward, communities, public_contact_info, growing_site_image, municipalities',
+  cartoFields: 'cuamp_id, the_geom, the_geom_webmercator, growing_site_name, is_growing_site_locked, evidence_of_support_organizations, if_it_s_a_community_garden_is_it_collective_or_allotment, choose_growing_site_types, water, compost_system, structures_and_features, season_extension_techniques, animals, address, food_producing, community_garden, is_growing_site_dormant, latitude, longitude, ownership, other_support_organization, growing_site_website, facebook, is_growing_site_fenced, description, ward, communities, public_contact_info, growing_site_image, municipalities',
 
   // Create geocoder object to access Google Maps API. Add underscore to insure variable safety.
   _geocoder: new google.maps.Geocoder(),
@@ -319,13 +319,10 @@ var chicagoGardens = {
 
       chicagoGardens.sublayerOne.on('featureOver', function(e, latlng, pos, data, subLayerIndex) {
           $(mapName).css('cursor','pointer');
-          ownership        = ''
-          food_producing   = ''
-          community_garden = ''
-          site_name        = "<h5>" + data.growing_site_name + "</h5>"
-          address          = "<p><i class='fa fa-map-marker' aria-hidden='true'></i> " + data.address + "</p>"
-
-          html = site_name + address + ownership + food_producing
+          site_name = "<h5>" + data.growing_site_name + "</h5>"
+          address = "<p><i class='fa fa-map-marker' aria-hidden='true'></i> " + data.address + "</p>"
+          cuamp_id = "<p><small>CUAMP ID: " + data.cuamp_id + "</small></p>"
+          html = site_name + address + cuamp_id
 
           chicagoGardens.updateInfoBox(html, "infoBox");
       });

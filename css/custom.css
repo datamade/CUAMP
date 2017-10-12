@@ -264,6 +264,10 @@ div#mapCanvas {
     overflow-y: auto;
 }
 
+#modal-title > p {
+  font-size: 50%;
+}
+
 #modal-address {
   var(--font-sans-brand);
   margin-bottom: 4px;
