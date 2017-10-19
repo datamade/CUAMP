@@ -83,7 +83,7 @@ var modalPop = function modalPop(data) {
   }
 
   // Location
-  if ((community_area != "") || (ward_num != "") || (community_area != ""))) {
+  if ((address_list != null) || (community_area != "") || (ward_num != "")) {
       // Add header
       $("#withLocation").append('<br><strong>Location</strong><br>');
       // Add data
