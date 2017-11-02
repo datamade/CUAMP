@@ -23,7 +23,8 @@ var chicagoGardens = {
   sublayerWards: '',
   sublayerCommunities: '',
   sublayerDistricts: '',
-  whereClause: '',
+  whereClause: "WHERE gardens.the_geom is not null AND ST_Intersects(gardens.the_geom, wards.the_geom) ",
+  fromClause: "FROM cuamp_master_allgardens as gardens, boundaries_for_wards_2015 as wards ",
   joinClause: '',
   ward_number: '',
   district_number: '',
@@ -139,8 +140,9 @@ var chicagoGardens = {
   },
 
   clearSearch: function() {
-    if (this.whereClause)
-      this.whereClause = "";
+    this.whereClause = "WHERE gardens.the_geom is not null AND ST_Intersects(gardens.the_geom, wards.the_geom) ";
+    this.fromClause = "FROM cuamp_master_allgardens as gardens, boundaries_for_wards_2015 as wards ";
+
     if (this.sublayerCommunities)
       this.sublayerCommunities.remove();
     if (this.sublayerWards)
@@ -165,7 +167,6 @@ var chicagoGardens = {
 
   doSearch: function() {
     this.clearSearch();
-    chicagoGardens.whereClause = " WHERE gardens.the_geom is not null";
     this.calcCollapsibleLocations();
     var gardenMap = this;
     var radius;
@@ -235,18 +236,17 @@ var chicagoGardens = {
     }
 
     else if (chicagoGardens.neighborhood != '') {
-      chicagoGardens.joinClause = " join boundaries_community_areas_2017 as community_areas on ST_Intersects(gardens.the_geom, community_areas.the_geom)"
-      chicagoGardens.whereClause += " AND " + chicagoGardens.communityareaSQL
+      chicagoGardens.fromClause += ', boundaries_community_areas_2017 as community_areas '
+      chicagoGardens.whereClause += 'AND ST_Intersects(gardens.the_geom, community_areas.the_geom) AND ' + chicagoGardens.communityareaSQL
     }
 
     else if (chicagoGardens.ward_number != '') {
-      chicagoGardens.joinClause = " join boundaries_for_wards_2015 as wards on ST_Intersects(gardens.the_geom, wards.the_geom)"
-      chicagoGardens.whereClause += " AND " + chicagoGardens.wardSQL
+      chicagoGardens.whereClause += 'AND ' + chicagoGardens.wardSQL
     }
 
     else if (chicagoGardens.district_number != '') {
-      chicagoGardens.joinClause = " join ccgisdata_commissioner_districts_2017 as districts on ST_Intersects(gardens.the_geom, districts.the_geom)"
-      chicagoGardens.whereClause += " AND " + chicagoGardens.districtSQL
+      chicagoGardens.fromClause += ', ccgisdata_commissioner_districts_2017 as districts '
+      chicagoGardens.whereClause += 'AND ST_Intersects(gardens.the_geom, districts.the_geom) AND ' + chicagoGardens.districtSQL
     }
 
     if (chicagoGardens.filterAddress == "") {
@@ -256,7 +256,9 @@ var chicagoGardens = {
   },
 
   renderMap: function() {
-    chicagoGardens.gardenSQL = "SELECT gardens.* from cuamp_master_allgardens as gardens" + chicagoGardens.joinClause + " " + chicagoGardens.whereClause;
+    chicagoGardens.gardenSQL = "SELECT gardens.cuamp_id, gardens.the_geom, gardens.the_geom_webmercator, gardens.growing_site_name, gardens.is_growing_site_locked, gardens.evidence_of_support_organizations, gardens.if_it_s_a_community_garden_is_it_collective_or_allotment, gardens.choose_growing_site_types, gardens.water, gardens.compost_system, gardens.structures_and_features, gardens.season_extension_techniques, gardens.animals, gardens.address, gardens.food_producing, gardens.community_garden, gardens.is_growing_site_dormant, gardens.latitude, gardens.longitude, gardens.ownership, gardens.other_support_organization, gardens.growing_site_website, gardens.facebook, gardens.is_growing_site_fenced, gardens.description, gardens.communities, gardens.public_contact_info, gardens.growing_site_image, wards.ward " +
+    chicagoGardens.fromClause +
+    chicagoGardens.whereClause;
 
     communityLayerSQL = "SELECT community_areas.* from boundaries_community_areas_2017 as community_areas WHERE community_areas.community = 'WICKER PARK'"
       if (chicagoGardens.neighborhood != '' && chicagoGardens.filterAddress == "") {
@@ -272,6 +274,9 @@ var chicagoGardens = {
       }
 
     var sql = new cartodb.SQL({  user: chicagoGardens.cartoUserName  });
+
+    console.log(chicagoGardens.gardenSQL)
+
     sql.execute(chicagoGardens.gardenSQL).done(function (data) {
       entries = data.rows
       chicagoGardens.resultsNumber = entries.length
@@ -424,7 +429,7 @@ var chicagoGardens = {
   buildCSV: function(header_names) {
     var sql = new cartodb.SQL({ user: chicagoGardens.cartoUserName });
     var CSVdata;
-
+    console.log(chicagoGardens.gardenSQL, "!!!!!!")
     sql.execute(chicagoGardens.gardenSQL)
       .done(function(listData) {
         obj_array = listData.rows;
