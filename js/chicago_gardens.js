@@ -16,6 +16,7 @@ var chicagoGardens = {
   communitySelections: '',
   productionSelections: '',
   centerMark: '',
+  radius: 8050,
   radiusCircle: '',
   wardBorder: '',
   filterAddress: '',
@@ -103,13 +104,13 @@ var chicagoGardens = {
     return createdLayer;
   },
 
-  setZoom: function(radius) {
+  setZoom: function() {
     var zoom = '';
-    if (radius >= 8050) zoom = 12; // 5 miles
-    else if (radius >= 3220) zoom = 13; // 2 miles
-    else if (radius >= 1610) zoom = 14; // 1 mile
-    else if (radius >= 805) zoom = 15; // 1/2 mile
-    else if (radius >= 400) zoom = 16; // 1/4 mile
+    if (this.radius >= 8050) zoom = 12; // 5 miles
+    else if (this.radius >= 3220) zoom = 13; // 2 miles
+    else if (this.radius >= 1610) zoom = 14; // 1 mile
+    else if (this.radius >= 805) zoom = 15; // 1/2 mile
+    else if (this.radius >= 400) zoom = 16; // 1/4 mile
     else zoom = 16;
 
     this.map.setView(new L.LatLng( this.currentPinpoint[0], this.currentPinpoint[1] ), zoom)
@@ -128,8 +129,8 @@ var chicagoGardens = {
     this.centerMark.addTo(this.map);
   },
 
-  addCircle: function(radius) {
-    this.radiusCircle = new L.circle(this.currentPinpoint, radius, {
+  addCircle: function() {
+    this.radiusCircle = new L.circle(this.currentPinpoint, this.radius, {
         fillColor:'#8A2B85',
         fillOpacity:'0.4',
         stroke: false,
@@ -169,7 +170,6 @@ var chicagoGardens = {
     this.clearSearch();
     this.calcCollapsibleLocations();
     var gardenMap = this;
-    var radius;
     var name = $("#search-name").val();
     var owner = $("#search-ownership").select2('data');
     var garden_type = $("#search-type").select2('data');
@@ -212,19 +212,15 @@ var chicagoGardens = {
 
     var location = gardenMap.locationScope;
 
-    if (radius == null && chicagoGardens.filterAddress != "") {
-      radius = 8050;
-    }
-
     if (chicagoGardens.filterAddress != "") {
       gardenMap._geocoder.geocode( { 'address' : chicagoGardens.filterAddress }, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
          gardenMap.currentPinpoint = [results[0].geometry.location.lat(), results[0].geometry.location.lng()];
-          var geoSearch = "ST_DWithin(ST_SetSRID(ST_POINT(" + gardenMap.currentPinpoint[1] + ", " + gardenMap.currentPinpoint[0] + "), 4326)::geography, gardens.the_geom::geography, " + radius + ")";
+          var geoSearch = "ST_DWithin(ST_SetSRID(ST_POINT(" + gardenMap.currentPinpoint[1] + ", " + gardenMap.currentPinpoint[0] + "), 4326)::geography, gardens.the_geom::geography, " + chicagoGardens.radius + ")";
           chicagoGardens.whereClause += " AND " + geoSearch
 
-          chicagoGardens.setZoom(radius);
-          chicagoGardens.addCircle(radius);
+          chicagoGardens.setZoom();
+          chicagoGardens.addCircle();
           chicagoGardens.addIcon();
           chicagoGardens.renderMap();
           chicagoGardens.renderList();
@@ -497,7 +493,7 @@ var chicagoGardens = {
   calcCollapsibleLocations: function() {
     if ($('div#collapseOne').hasClass('in')) {
       chicagoGardens.filterAddress = $("#search-address").val();
-      radius = $("#search-radius").val();
+      chicagoGardens.radius = $("#search-radius").val();
       // Reset other filters
       $("#search-neighborhood").val('').trigger('change');
       $("#search-ward").val('').trigger('change');
