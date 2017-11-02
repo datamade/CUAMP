@@ -50,7 +50,7 @@ var modalPop = function modalPop(data) {
     var description = data.description
     // Location
     var ward_num = data.ward
-    var community_area = data.communities
+    var community_area = data.community
     // Contact and people
     var owner_list = data.ownership
     var contact_info = data.public_contact_info
@@ -189,7 +189,7 @@ var hiddenLink = function hiddenLink() {
     // Check if the user is trying to access the admin download. If yes, then trigger a download of all data.
     if (url.indexOf('?admin=download') > -1) {
       // Download data for composting
-      header_names = ["growing_site_name", "address", "address2", "ward", "communities"]
+      header_names = ["growing_site_name", "address", "ward", "community"]
       chicagoGardens.buildCSV(header_names);
     }
 };

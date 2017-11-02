@@ -16,7 +16,7 @@ var chicagoGardens = {
   communitySelections: '',
   productionSelections: '',
   centerMark: '',
-  radius: 8050,
+  radius: '',
   radiusCircle: '',
   wardBorder: '',
   filterAddress: '',
@@ -24,8 +24,8 @@ var chicagoGardens = {
   sublayerWards: '',
   sublayerCommunities: '',
   sublayerDistricts: '',
-  whereClause: "WHERE gardens.the_geom is not null AND ST_Intersects(gardens.the_geom, wards.the_geom) ",
-  fromClause: "FROM cuamp_master_allgardens as gardens, boundaries_for_wards_2015 as wards ",
+  whereClause: "WHERE gardens.the_geom is not null AND ST_Intersects(gardens.the_geom, wards.the_geom) AND ST_Intersects(gardens.the_geom, community_areas.the_geom) ",
+  fromClause: "FROM cuamp_master_allgardens as gardens, boundaries_for_wards_2015 as wards, boundaries_community_areas_2017 as community_areas ",
   joinClause: '',
   ward_number: '',
   district_number: '',
@@ -36,7 +36,7 @@ var chicagoGardens = {
   communityareaSQL: '',
   gardenSQL: '',
   resultsNumber: '',
-  cartoFields: 'cuamp_id, the_geom, the_geom_webmercator, growing_site_name, is_growing_site_locked, evidence_of_support_organizations, if_it_s_a_community_garden_is_it_collective_or_allotment, choose_growing_site_types, water, compost_system, structures_and_features, season_extension_techniques, animals, address, food_producing, community_garden, is_growing_site_dormant, latitude, longitude, ownership, other_support_organization, growing_site_website, facebook, is_growing_site_fenced, description, ward, communities, public_contact_info, growing_site_image',
+  cartoFields: 'cuamp_id, the_geom, the_geom_webmercator, growing_site_name, is_growing_site_locked, evidence_of_support_organizations, if_it_s_a_community_garden_is_it_collective_or_allotment, choose_growing_site_types, water, compost_system, structures_and_features, season_extension_techniques, animals, address, food_producing, community_garden, is_growing_site_dormant, latitude, longitude, ownership, other_support_organization, growing_site_website, facebook, is_growing_site_fenced, description, ward, community, public_contact_info, growing_site_image',
 
   // Create geocoder object to access Google Maps API. Add underscore to insure variable safety.
   _geocoder: new google.maps.Geocoder(),
@@ -141,8 +141,8 @@ var chicagoGardens = {
   },
 
   clearSearch: function() {
-    this.whereClause = "WHERE gardens.the_geom is not null AND ST_Intersects(gardens.the_geom, wards.the_geom) ";
-    this.fromClause = "FROM cuamp_master_allgardens as gardens, boundaries_for_wards_2015 as wards ";
+    this.whereClause = "WHERE gardens.the_geom is not null AND ST_Intersects(gardens.the_geom, wards.the_geom) AND ST_Intersects(gardens.the_geom, community_areas.the_geom) ";
+    this.fromClause = "FROM cuamp_master_allgardens as gardens, boundaries_for_wards_2015 as wards, boundaries_community_areas_2017 as community_areas ";
 
     if (this.sublayerCommunities)
       this.sublayerCommunities.remove();
@@ -232,17 +232,16 @@ var chicagoGardens = {
     }
 
     else if (chicagoGardens.neighborhood != '') {
-      chicagoGardens.fromClause += ', boundaries_community_areas_2017 as community_areas '
-      chicagoGardens.whereClause += 'AND ST_Intersects(gardens.the_geom, community_areas.the_geom) AND ' + chicagoGardens.communityareaSQL
+      chicagoGardens.whereClause += ' AND ' + chicagoGardens.communityareaSQL
     }
 
     else if (chicagoGardens.ward_number != '') {
-      chicagoGardens.whereClause += 'AND ' + chicagoGardens.wardSQL
+      chicagoGardens.whereClause += ' AND ' + chicagoGardens.wardSQL
     }
 
     else if (chicagoGardens.district_number != '') {
       chicagoGardens.fromClause += ', ccgisdata_commissioner_districts_2017 as districts '
-      chicagoGardens.whereClause += 'AND ST_Intersects(gardens.the_geom, districts.the_geom) AND ' + chicagoGardens.districtSQL
+      chicagoGardens.whereClause += ' AND ST_Intersects(gardens.the_geom, districts.the_geom) AND ' + chicagoGardens.districtSQL
     }
 
     if (chicagoGardens.filterAddress == "") {
@@ -252,7 +251,7 @@ var chicagoGardens = {
   },
 
   renderMap: function() {
-    chicagoGardens.gardenSQL = "SELECT gardens.cuamp_id, gardens.the_geom, gardens.the_geom_webmercator, gardens.growing_site_name, gardens.is_growing_site_locked, gardens.evidence_of_support_organizations, gardens.if_it_s_a_community_garden_is_it_collective_or_allotment, gardens.choose_growing_site_types, gardens.water, gardens.compost_system, gardens.structures_and_features, gardens.season_extension_techniques, gardens.animals, gardens.address, gardens.food_producing, gardens.community_garden, gardens.is_growing_site_dormant, gardens.latitude, gardens.longitude, gardens.ownership, gardens.other_support_organization, gardens.growing_site_website, gardens.facebook, gardens.is_growing_site_fenced, gardens.description, gardens.communities, gardens.public_contact_info, gardens.growing_site_image, wards.ward " +
+    chicagoGardens.gardenSQL = "SELECT gardens.cuamp_id, gardens.the_geom, gardens.the_geom_webmercator, gardens.growing_site_name, gardens.is_growing_site_locked, gardens.evidence_of_support_organizations, gardens.if_it_s_a_community_garden_is_it_collective_or_allotment, gardens.choose_growing_site_types, gardens.water, gardens.compost_system, gardens.structures_and_features, gardens.season_extension_techniques, gardens.animals, gardens.address, gardens.food_producing, gardens.community_garden, gardens.is_growing_site_dormant, gardens.latitude, gardens.longitude, gardens.ownership, gardens.other_support_organization, gardens.growing_site_website, gardens.facebook, gardens.is_growing_site_fenced, gardens.description, gardens.public_contact_info, gardens.growing_site_image, wards.ward, community_areas.community " +
     chicagoGardens.fromClause +
     chicagoGardens.whereClause;
 
@@ -270,8 +269,6 @@ var chicagoGardens = {
       }
 
     var sql = new cartodb.SQL({  user: chicagoGardens.cartoUserName  });
-
-    console.log(chicagoGardens.gardenSQL)
 
     sql.execute(chicagoGardens.gardenSQL).done(function (data) {
       entries = data.rows
@@ -374,7 +371,7 @@ var chicagoGardens = {
           for (idx in obj_array) {
             var growingSiteName = obj_array[idx].growing_site_name;
             var address = obj_array[idx].address;
-            var community = obj_array[idx].communities;
+            var community = obj_array[idx].community;
             var ward = obj_array[idx].ward;
 
             if (growingSiteName != "") {
@@ -425,7 +422,6 @@ var chicagoGardens = {
   buildCSV: function(header_names) {
     var sql = new cartodb.SQL({ user: chicagoGardens.cartoUserName });
     var CSVdata;
-    console.log(chicagoGardens.gardenSQL, "!!!!!!")
     sql.execute(chicagoGardens.gardenSQL)
       .done(function(listData) {
         obj_array = listData.rows;
@@ -511,7 +507,7 @@ var chicagoGardens = {
 
     if ($('div#collapseThree').hasClass('in')) {
       chicagoGardens.ward_number = $("#search-ward").select2('data');
-      chicagoGardens.wardSQL = "wards.ward IN (" + this.multipleSelectionSQL(chicagoGardens.ward_number) + ")"
+      chicagoGardens.wardSQL = " wards.ward IN (" + this.multipleSelectionSQL(chicagoGardens.ward_number) + ")"
       // Reset other filters
       $("#search-address").val('').trigger('change');
       $("#search-neighborhood").val('').trigger('change');
