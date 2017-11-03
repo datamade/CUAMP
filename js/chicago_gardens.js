@@ -357,7 +357,6 @@ var chicagoGardens = {
     };
 
     results.empty();
-    console.log(chicagoGardens.gardenSQL)
 
     sql.execute(chicagoGardens.gardenSQL)
       .done(function(listData) {
