@@ -134,8 +134,7 @@ layout: default
         </div>
         <div id="advancedSearch" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
           <div class="panel-body">
-            <p>Click on each filter to view a list. You can pick more than one filter option.</p>
-            <div class="input-group select2-bootstrap-prepend m-top-sm">
+            <div class="input-group select2-bootstrap-prepend">
               <span class="input-group-addon"><i class="fa fa-usd fa-fw" aria-hidden="true"></i></span>
               <select class="data-array-ownership form-control" id="search-ownership" multiple="multiple"></select>
             </div>
@@ -147,8 +146,9 @@ layout: default
               <span class="input-group-addon"><i class="fa fa-building-o" aria-hidden="true"></i> </span>
               <select class="data-array-structure form-control" id="search-structure" multiple="multiple"></select>
             </div>
-            <div>
-              <div class="checkbox m-top-sm m-bottom-sm">
+            
+            <div class="row m-top-sm">
+              <div class="col-md-6 checkbox">
                 <label class="leaf-box">
                   <input type="checkbox" id="search-production">
                     <i class="fa fa-fw fa-circle-o unchecked"></i>
@@ -156,32 +156,32 @@ layout: default
                     Food producing
                 </label>
               </div>
-            </div>
+<!--             </div>
 
-            <div>
-              <div class="checkbox m-top-sm m-bottom-sm">
+            <div> -->
+              <div class="col-md-6 checkbox">
                 <label class="leaf-box">
                   <input type="checkbox" id="search-compost">
                     <i class="fa fa-fw fa-circle-o unchecked"></i>
                     <i class="fa fa-fw fa-leaf checked" id="leafbox"></i>
-                    Compost system
+                    Composting
                 </label>
               </div>
             </div>
 
-            <div>
-              <div class="checkbox m-top-sm m-bottom-sm">
+            <div class="row">
+              <div class="col-md-6 checkbox">
                 <label class="leaf-box">
                   <input type="checkbox" id="search-locked">
                     <i class="fa fa-fw fa-circle-o unchecked"></i>
                     <i class="fa fa-fw fa-leaf checked" id="leafbox"></i>
-                    Locked growing site 
+                    Locked site 
                 </label>
               </div>
-            </div>
+            <!-- </div>
 
-            <div>
-              <div class="checkbox m-top-sm m-bottom-sm">
+            <div> -->
+              <div class="col-md-6 checkbox">
                 <label class="leaf-box">
                   <input type="checkbox" id="search-dormant">
                     <i class="fa fa-fw fa-circle-o unchecked"></i>
