@@ -58,7 +58,6 @@ var modalPop = function modalPop(data) {
     var website = data.growing_site_website
     var facebook = data.facebook
     var other_support = data.other_support_organization
-    var community_list = data.community_garden
     // Features
     var water_system = data.water
     var compost = data.compost_system
@@ -67,6 +66,7 @@ var modalPop = function modalPop(data) {
     var fence = data.is_growing_site_fenced
     var production_list = data.food_producing
     // Information
+    var community_list = data.community_garden
     var comm_garden_type = data.if_it_s_a_community_garden_is_it_collective_or_allotment
     var types = data.choose_growing_site_types
     var locked = data.is_growing_site_locked
@@ -83,7 +83,7 @@ var modalPop = function modalPop(data) {
     }
 
     // Location
-    if ((address_list != null) || (community_area != "") || (ward_num != "")) {
+    if ((address_list != null) || (ward_num != null) || (community_area != "") || (district_number != "")) {
         // Add header
         $("#withLocation").append('<br><strong>Location</strong><br>');
         // Add data
@@ -106,7 +106,7 @@ var modalPop = function modalPop(data) {
     }
 
     // Contact and people
-    if ((contact_info != '') || (website != '') || (facebook != '') || (owner_list != '') || (community_list != '') || (other_support != '')) {
+    if ((contact_info != '') || (website != '') || (facebook != '') || (owner_list != '') || (other_support != '')) {
         // Add header
         $("#withContact").append('<br><strong>Contact and people</strong><br>');
         // Add data
@@ -114,19 +114,15 @@ var modalPop = function modalPop(data) {
           $("#contact-header").append('<i class="fa fa-phone aria-hidden="true"></i> Contact Info:');
           $("#contact-subsection").append("<p>" + contact_info + "</p>")
         }
-        if (owner_list != "") {
-            $("#owner-header").append('<i class="fa fa-usd" aria-hidden="true"></i> Ownership:');
-            $("#owner-subsection").append("<p>" + owner_list + "</p>");
-        }
         if (website != "") { 
           $("#website-header").append('<p><i class="fa fa-bookmark" aria-hidden="true"></i> <a href=' + website + "target=_blank'>Website</a></p>")
         }
         if (facebook != "") {
           $("#facebook-header").append('<p><i class="fa fa-facebook-square" aria-hidden="true"></i> <a href="' + facebook + 'target=_blank">Facebook Page</a></p>');
         }
-        if (community_list != "") {
-          $("#community-header").append('<i class="fa fa-users" aria-hidden="true"></i> Community Garden:');
-          $("#community-subsection").append("<p>" + convertBoolean(community_list) + "</p>");
+        if (owner_list != "") {
+            $("#owner-header").append('<i class="fa fa-usd" aria-hidden="true"></i> Ownership:');
+            $("#owner-subsection").append("<p>" + owner_list + "</p>");
         }
         if (other_support != "") {
           $("#support-header").append('<i class="fa fa-signing" aria-hidden="true"></i> Support Organizations:');
@@ -135,41 +131,45 @@ var modalPop = function modalPop(data) {
     }
 
     // Garden features
-    if ((water_system != "") || (production_list != null) || (compost != null) || (structures != "") || (animals != "") || (animals != "") || (fence != null)) {
+    if ((water_system != "" && water_system != null) || (production_list != "" && production_list != null) || (compost != "" && compost != null) || (structures != "" && structures != null) || (animals != "" && animals != null) || (fence != "" && fence != null)) {
         // Add header
         $("#withFeatures").append('<br><strong>Garden features</strong><br>');
         // Add data
-        if (water_system != "") {
+        if (water_system != "" && water_system != null) {
           $("#water-header").append('<i class="fa fa-tint" aria-hidden="true"></i> Water System:');
           $("#water-subsection").append("<p>" + water_system + "</p>");
         }
-        if (production_list != null) {
+        if (production_list != "" && production_list != null) {
           $("#production-header").append('<i class="fa fa-cutlery" aria-hidden="true"></i> Food Producing:');
           $("#production-subsection").append("<p>" + convertBoolean(production_list) + "</p>");
         }
-        if (compost != null) {
+        if (compost != "" && compost != null) {
           $("#compost-header").append('<i class="fa fa-recycle" aria-hidden="true"></i> Compost Available:');
           $("#compost-subsection").append("<p>" + convertBoolean(compost) + "</p>")
         }
-        if (structures != "") {
+        if (structures != "" && structures != null) {
           $("#structures-header").append('<i class="fa fa-building-o" aria-hidden="true"></i> Structures and Features:');
           $("#structures-subsection").append("<p>" + structures + "</p>")
         }
-        if (animals != "") {
+        if (animals != "" && animals != null) {
           $("#animal-header").append('<i class="fa fa-paw" aria-hidden="true"></i> Animals:');
           $("#animal-subsection").append("<p>" + animals + "</p>")
         }
-        if (fence != null) {
+        if (fence != "" && fence != null) {
           $("#fence-header").append('<i class="fa fa-bars" aria-hidden="true"></i> Fenced In:');
           $("#fence-subsection").append("<p>" + convertBoolean(fence) + "</p>")
         }
     }
 
     // Information to know
-    if ((locked != "") | (dormant != "") | (season_extension != "") | (dormant != null))  {
+    if ((community_list != "" && community_list != null) || (comm_garden_type != "") || (locked != "") || (season_extension != "") || (dormant != null))  {
         // Add header
         $("#withInformation").append('<br><strong>Other information</strong>');
         // Add data
+        if (community_list != "" && community_list != null) {
+          $("#community-header").append('<i class="fa fa-users" aria-hidden="true"></i> Community Garden:');
+          $("#community-subsection").append("<p>" + convertBoolean(community_list) + "</p>");
+        }
         if (comm_garden_type != "") {
           $("#commtype-header").append('<i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Community Garden Type:');
           $("#commtype-subsection").append("<p>" + comm_garden_type + "</p>")
