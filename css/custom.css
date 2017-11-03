@@ -58,7 +58,12 @@ body {
 }
 
 .bw {
-  word-break: break-word;
+  /* For Firefox */
+  white-space: pre-wrap;
+  word-break: break-all;
+
+  /* For Chrome and IE */
+  word-wrap: break-word;
 }
 
 /* Navbar and Footer*/
