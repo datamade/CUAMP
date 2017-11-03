@@ -218,11 +218,11 @@ body {
   color: var(--green-color);
 }
 
-.checkbox {
-  margin-top: 1em;
-  margin-bottom: 1.5em;
-  margin-left: -0.5em;
-}
+.checkbox+.checkbox { margin-top: 10px; }
+
+.checkbox label { padding-left: 8px; }
+
+.checkbox { margin-left: -0.5em; }
 
 /* Info window */
 .infoBox {
