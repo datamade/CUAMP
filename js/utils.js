@@ -42,7 +42,7 @@ var convertBoolean =  function convertBoolean(text) {
 var modalPop = function modalPop(data) {
     var contact = '<p id="modal-address"><a href="http://maps.google.com/?q=' + data.address + '" target="_blank"><i class="fa fa-map-marker" aria-hidden="true"></i> ' + data.address + '</a></span></p>'
     $('#modal-pop').appendTo('body').modal();
-    $('#modal-title, #address-header, #owner-header, #community-header, #production-header, #address-subsection, #owner-subsection, #community-subsection, #production-subsection, #locked-header, #locked-subsection, #commtype-header, #commtype-subsection, #types-header, #types-subsection, #water-header, #water-subsection, #compost-header, #compost-subsection, #structures-header, #structures-subsection, #seasonex-header, #seasonex-subsection, #animal-header, #animal-subsection, #dormant-header, #dormant-subsection, #support-header, #support-subsection, #website-header, #website-subsection, #facebook-header, #facebook-subsection, #fence-header, #fence-subsection, #description-header, #description-subsection, #ward-header, #ward-subsection, #commarea-header, #commarea-subsection, #district-header, #district-subsection, #contact-header, #contact-subsection, #withContact, #withLocation, #withInformation, #withFeatures').empty();
+    $('#modal-title, #address-header, #owner-header, #community-header, #production-header, #address-subsection, #owner-subsection, #community-subsection, #production-subsection, #locked-header, #locked-subsection, #commtype-header, #commtype-subsection, #types-header, #types-subsection, #water-header, #water-subsection, #compost-header, #compost-subsection, #structures-header, #structures-subsection, #seasonex-header, #seasonex-subsection, #animal-header, #animal-subsection, #dormant-header, #dormant-subsection, #support-header, #support-subsection, #website-header, #website-subsection, #facebook-header, #facebook-subsection, #fence-header, #fence-subsection, #description-header, #description-subsection, #ward-header, #ward-subsection, #commarea-header, #commarea-subsection, #district-header, #district-subsection, #municipality-header, #municipality-subsection, #contact-header, #contact-subsection, #withContact, #withLocation, #withInformation, #withFeatures').empty();
     $('#modal-title').html(data.growing_site_name + "<p>CUAMP ID: " + data.cuamp_id + "</p>");
     $('#modal-main').html(contact);
     // Header
@@ -52,6 +52,7 @@ var modalPop = function modalPop(data) {
     var ward_num = data.ward
     var community_area = data.community
     var district_number = data.district_n
+    var municipality = data.municipalities
     // Contact and people
     var owner_list = data.ownership
     var contact_info = data.public_contact_info
@@ -100,8 +101,12 @@ var modalPop = function modalPop(data) {
           $("#commarea-subsection").append("<p>" + community_area + "</p>")
         }
         if (checkTruthiness(district_number)) {
-          $("#district-header").append('<i class="fa fa-building" aria-hidden="true"></i> Cook County District:');
+          $("#district-header").append('<i class="fa fa-map" aria-hidden="true"></i> Cook County District:');
           $("#district-subsection").append("<p>" + district_number + "</p>")
+        }
+        if (checkTruthiness(municipality)) {
+          $("#municipality-header").append('<i class="fa fa-building" aria-hidden="true"></i> Municipality:');
+          $("#municipality-subsection").append("<p>" + municipality + "</p>")
         }
     }
 
@@ -201,11 +206,9 @@ var hiddenLink = function hiddenLink() {
 
 var checkTruthiness = function checkTruthiness(text) {
     if ((text != null) && (text != "")) {
-      console.log("true", text)
       return true;
     }
     else {
-      console.log(text)
       return false;
     }
 };
