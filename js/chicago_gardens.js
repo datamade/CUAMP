@@ -25,10 +25,11 @@ var chicagoGardens = {
   sublayerCommunities: '',
   sublayerDistricts: '',
   gardenSQL: '',
-  // Build the sql with WHERE and FROM clauses that join together four distinct Carto tables
+  // Build the sql with WHERE and FROM clauses that join together up to four distinct Carto tables
   // Source: https://carto.com/academy/courses/sql-postgis/joining-data/#join-two-tables-by-geospatial-intersection
-  whereClause: "WHERE gardens.the_geom is not null AND ST_Intersects(gardens.the_geom, wards.the_geom) AND ST_Intersects(gardens.the_geom, community_areas.the_geom) AND ST_Intersects(gardens.the_geom, districts.the_geom) ",
-  fromClause: "FROM cuamp_master_allgardens as gardens, boundaries_for_wards_2015 as wards, boundaries_community_areas_2017 as community_areas, ccgisdata_commissioner_districts_2017 as districts ",
+  selectClause: 'SELECT gardens.cuamp_id, gardens.the_geom, gardens.the_geom_webmercator, gardens.growing_site_name, gardens.is_growing_site_locked, gardens.evidence_of_support_organizations, gardens.if_it_s_a_community_garden_is_it_collective_or_allotment, gardens.choose_growing_site_types, gardens.water, gardens.compost_system, gardens.structures_and_features, gardens.season_extension_techniques, gardens.animals, gardens.address, gardens.food_producing, gardens.community_garden, gardens.is_growing_site_dormant, gardens.latitude, gardens.longitude, gardens.ownership, gardens.other_support_organization, gardens.growing_site_website, gardens.facebook, gardens.is_growing_site_fenced, gardens.description, gardens.public_contact_info, gardens.growing_site_image, gardens.municipalities ',
+  fromClause: 'FROM cuamp_master_allgardens as gardens ',
+  whereClause: 'WHERE gardens.the_geom is not null ',
   ward_number: '',
   district_number: '',
   garden_type: '',
@@ -37,7 +38,7 @@ var chicagoGardens = {
   districtSQL: '',
   communityareaSQL: '',
   resultsNumber: '',
-  cartoFields: 'cuamp_id, the_geom, the_geom_webmercator, growing_site_name, is_growing_site_locked, evidence_of_support_organizations, if_it_s_a_community_garden_is_it_collective_or_allotment, choose_growing_site_types, water, compost_system, structures_and_features, season_extension_techniques, animals, address, food_producing, community_garden, is_growing_site_dormant, latitude, longitude, ownership, other_support_organization, growing_site_website, facebook, is_growing_site_fenced, description, ward, community, public_contact_info, growing_site_image, municipalities, district_n',
+  cartoFields: 'cuamp_id, the_geom, the_geom_webmercator, growing_site_name, is_growing_site_locked, evidence_of_support_organizations, if_it_s_a_community_garden_is_it_collective_or_allotment, choose_growing_site_types, water, compost_system, structures_and_features, season_extension_techniques, animals, address, food_producing, community_garden, is_growing_site_dormant, latitude, longitude, ownership, other_support_organization, growing_site_website, facebook, is_growing_site_fenced, description, public_contact_info, growing_site_image, municipalities',
 
   // Create geocoder object to access Google Maps API. Add underscore to insure variable safety.
   _geocoder: new google.maps.Geocoder(),
@@ -142,8 +143,9 @@ var chicagoGardens = {
   },
 
   clearSearch: function() {
-    this.whereClause = "WHERE gardens.the_geom is not null AND ST_Intersects(gardens.the_geom, wards.the_geom) AND ST_Intersects(gardens.the_geom, community_areas.the_geom) AND ST_Intersects(gardens.the_geom, districts.the_geom) ";
-    this.fromClause = "FROM cuamp_master_allgardens as gardens, boundaries_for_wards_2015 as wards, boundaries_community_areas_2017 as community_areas, ccgisdata_commissioner_districts_2017 as districts ";
+    this.selectClause = 'SELECT gardens.cuamp_id, gardens.the_geom, gardens.the_geom_webmercator, gardens.growing_site_name, gardens.is_growing_site_locked, gardens.evidence_of_support_organizations, gardens.if_it_s_a_community_garden_is_it_collective_or_allotment, gardens.choose_growing_site_types, gardens.water, gardens.compost_system, gardens.structures_and_features, gardens.season_extension_techniques, gardens.animals, gardens.address, gardens.food_producing, gardens.community_garden, gardens.is_growing_site_dormant, gardens.latitude, gardens.longitude, gardens.ownership, gardens.other_support_organization, gardens.growing_site_website, gardens.facebook, gardens.is_growing_site_fenced, gardens.description, gardens.public_contact_info, gardens.growing_site_image, gardens.municipalities ';
+    this.whereClause = 'WHERE gardens.the_geom is not null ';
+    this.fromClause = 'FROM cuamp_master_allgardens as gardens ';
 
     if (this.sublayerCommunities)
       this.sublayerCommunities.remove();
@@ -251,21 +253,38 @@ var chicagoGardens = {
   },
 
   renderMap: function() {
-    chicagoGardens.gardenSQL = 'SELECT gardens.cuamp_id, gardens.the_geom, gardens.the_geom_webmercator, gardens.growing_site_name, gardens.is_growing_site_locked, gardens.evidence_of_support_organizations, gardens.if_it_s_a_community_garden_is_it_collective_or_allotment, gardens.choose_growing_site_types, gardens.water, gardens.compost_system, gardens.structures_and_features, gardens.season_extension_techniques, gardens.animals, gardens.address, gardens.food_producing, gardens.community_garden, gardens.is_growing_site_dormant, gardens.latitude, gardens.longitude, gardens.ownership, gardens.other_support_organization, gardens.growing_site_website, gardens.facebook, gardens.is_growing_site_fenced, gardens.description, gardens.public_contact_info, gardens.growing_site_image, gardens.municipalities, wards.ward, community_areas.community, districts.district_n ' + (chicagoGardens.fromClause + chicagoGardens.whereClause);
+    wardLayerSQL = "SELECT wards.* from boundaries_for_wards_2015 as wards WHERE wards.ward = '51'"
+    if (chicagoGardens.ward_number != "" && chicagoGardens.neighborhood == "" && chicagoGardens.filterAddress == "") {
+        // Prepare SQL to query the ward layer
+        wardLayerSQL += "OR " + chicagoGardens.wardSQL;
+        // Update main SQL with JOIN tables
+        chicagoGardens.selectClause += ', wards.ward ';
+        chicagoGardens.whereClause += 'AND ST_Intersects(gardens.the_geom, wards.the_geom) ';
+        chicagoGardens.fromClause += ', boundaries_for_wards_2015 as wards ';
+    }
 
     communityLayerSQL = "SELECT community_areas.* from boundaries_community_areas_2017 as community_areas WHERE community_areas.community = 'WICKER PARK'"
-      if (chicagoGardens.neighborhood != '' && chicagoGardens.filterAddress == "") {
+    if (chicagoGardens.neighborhood != '' && chicagoGardens.filterAddress == "") {
+        // Prepare SQL to query the communities layer
         communityLayerSQL += "OR " + chicagoGardens.communityareaSQL;
-      }
-    wardLayerSQL = "SELECT wards.* from boundaries_for_wards_2015 as wards WHERE wards.ward = '51'"
-      if (chicagoGardens.ward_number != "" && chicagoGardens.neighborhood == "" && chicagoGardens.filterAddress == "") {
-          wardLayerSQL += "OR " + chicagoGardens.wardSQL;
-      }
-    districtLayerSQL = "SELECT districts.* from ccgisdata_commissioner_districts_2017 as districts WHERE districts.district_n = '18'"
-      if (chicagoGardens.district_number != "" && chicagoGardens.neighborhood == "" && chicagoGardens.filterAddress == "" && chicagoGardens.ward_number == "") {
-          districtLayerSQL += "OR " + chicagoGardens.districtSQL;
+        // Update main SQL with JOIN tables
+        chicagoGardens.selectClause += ', community_areas.community ';
+        chicagoGardens.whereClause += 'AND ST_Intersects(gardens.the_geom, community_areas.the_geom) ';
+        chicagoGardens.fromClause += ', boundaries_community_areas_2017 as community_areas ';
       }
 
+
+    districtLayerSQL = "SELECT districts.* from ccgisdata_commissioner_districts_2017 as districts WHERE districts.district_n = '18'"
+    if (chicagoGardens.district_number != "" && chicagoGardens.neighborhood == "" && chicagoGardens.filterAddress == "" && chicagoGardens.ward_number == "") {
+        // Prepare SQL to query the communities layer
+        districtLayerSQL += "OR " + chicagoGardens.districtSQL;
+        // Update main SQL with JOIN tables
+        chicagoGardens.selectClause += ', districts.district_n ';
+        chicagoGardens.whereClause += 'AND ST_Intersects(gardens.the_geom, districts.the_geom) ';
+        chicagoGardens.fromClause += ', ccgisdata_commissioner_districts_2017 as districts ';        
+    }
+
+    chicagoGardens.gardenSQL = chicagoGardens.selectClause + chicagoGardens.fromClause + chicagoGardens.whereClause;
     var sql = new cartodb.SQL({  user: chicagoGardens.cartoUserName  });
 
     sql.execute(chicagoGardens.gardenSQL).done(function (data) {
@@ -375,15 +394,15 @@ var chicagoGardens = {
             if (growingSiteName != "") {
               elements["growing_site_name"] = growingSiteName;
             }
-            if (community != "") {
-              elements["community"] = capitalizeConversion(community);
-            }
+            // if (community != "") {
+            //   elements["community"] = capitalizeConversion(community);
+            // }
             if (address != "") {
               elements["address"] = address;
             }
-            if (ward != "") {
-              elements["ward"] = ward;
-            }
+            // if (ward != "") {
+            //   elements["ward"] = ward;
+            // }
 
             var output = Mustache.render("<tr>" +
             // Name column
