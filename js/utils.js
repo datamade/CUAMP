@@ -1,4 +1,6 @@
 // Used in chicago_gardens.js
+var mainSelect = 'SELECT gardens.cuamp_id, gardens.the_geom, gardens.the_geom_webmercator, gardens.growing_site_name, gardens.is_growing_site_locked, gardens.evidence_of_support_organizations, gardens.if_it_s_a_community_garden_is_it_collective_or_allotment, gardens.choose_growing_site_types, gardens.water, gardens.compost_system, gardens.structures_and_features, gardens.season_extension_techniques, gardens.animals, gardens.address, gardens.food_producing, gardens.community_garden, gardens.is_growing_site_dormant, gardens.latitude, gardens.longitude, gardens.ownership, gardens.other_support_organization, gardens.growing_site_website, gardens.facebook, gardens.is_growing_site_fenced, gardens.description, gardens.public_contact_info, gardens.growing_site_image, gardens.municipalities ';
+
 var capitalizeConversion = function capitalizeConversion(str) {
   var lower = str.toLowerCase();
   return lower.replace(/(^| )(\w)/g, function(x) {
