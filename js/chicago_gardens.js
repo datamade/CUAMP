@@ -370,9 +370,8 @@ var chicagoGardens = {
     var results = $('#results-list');
     var elements = {
       growing_site_name: '',
-      community: '',
+      type: '',
       address: '',
-      ward: ''
     };
 
     results.empty();
@@ -388,21 +387,13 @@ var chicagoGardens = {
           for (idx in obj_array) {
             var growingSiteName = obj_array[idx].growing_site_name;
             var address = obj_array[idx].address;
-            var community = obj_array[idx].community;
-            var ward = obj_array[idx].ward;
 
             if (growingSiteName != "") {
               elements["growing_site_name"] = growingSiteName;
-            }
-            // if (community != "") {
-            //   elements["community"] = capitalizeConversion(community);
-            // }
+            }           
             if (address != "") {
               elements["address"] = address;
             }
-            // if (ward != "") {
-            //   elements["ward"] = ward;
-            // }
 
             var output = Mustache.render("<tr>" +
             // Name column
@@ -410,9 +401,7 @@ var chicagoGardens = {
             "<span class='hidden-sm hidden-md hidden-lg'><i class='fa fa-map-marker'></i>&nbsp&nbsp{{address}}</td>" +
 
             // Location column
-            "<td class='hidden-xs'><i class='fa fa-map-marker' aria-hidden='true'></i>&nbsp&nbsp<span class='facility-address'>{{address}}</span><br>" +
-            "<i class='fa fa-home' aria-hidden='true'></i> {{community}} Neighborhood<br>" +
-            "<i class='fa fa-university' aria-hidden='true'></i> Ward {{ward}}</td>" +
+            "<td class='hidden-xs'><i class='fa fa-map-marker' aria-hidden='true'></i>&nbsp&nbsp<span class='facility-address'>{{address}}</span><br></td>" +
 
             // Directions column
             "<td class='hidden-xs'><span class='modal-directions' style='white-space: nowrap;'><a href='http://maps.google.com/?q={{address}}' target='_blank'>Get directions</a></span></td>" +

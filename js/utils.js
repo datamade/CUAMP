@@ -42,7 +42,6 @@ var convertBoolean =  function convertBoolean(text) {
 var modalPop = function modalPop(data) {
     locationSQL = 'SELECT wards.ward, community_areas.community, districts.district_n ' + 'FROM cuamp_master_allgardens as gardens, boundaries_for_wards_2015 as wards, boundaries_community_areas_2017 as community_areas, ccgisdata_commissioner_districts_2017 as districts ' + 'WHERE ST_Intersects(gardens.the_geom, wards.the_geom) AND ST_Intersects(gardens.the_geom, community_areas.the_geom)  AND ST_Intersects(gardens.the_geom, districts.the_geom) AND gardens.cuamp_id=' + data.cuamp_id
     var sql = new cartodb.SQL({  user: chicagoGardens.cartoUserName  });
-    console.log(locationSQL, "$$$")
 
     sql.execute(locationSQL).done(function (locationData) {
       var contact = '<p id="modal-address"><a href="http://maps.google.com/?q=' + data.address + '" target="_blank"><i class="fa fa-map-marker" aria-hidden="true"></i> ' + data.address + '</a></span></p>'
@@ -102,7 +101,7 @@ var modalPop = function modalPop(data) {
             $("#ward-subsection").append("<p>" + ward_num + "</p>")
           }
           if (checkTruthiness(community_area)) {
-            $("#commarea-header").append('<i class="fa fa-map-marker" aria-hidden="true"></i> Community Area:');
+            $("#commarea-header").append('<i class="fa fa-home" aria-hidden="true"></i> Community Area:');
             $("#commarea-subsection").append("<p>" + community_area + "</p>")
           }
           if (checkTruthiness(district_number)) {
