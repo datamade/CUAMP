@@ -1,6 +1,6 @@
 var chicagoGardens = chicagoGardens || {};
 var chicagoGardens = {
-  cartoTableName: 'cuamp_master_allgardens',
+  cartoTableName: 'cuamp_master_allgardens_1',
   cartoUserName: 'cuamp',
   locationScope: 'chicago',
   mapDivName: 'mapCanvas',
@@ -34,7 +34,7 @@ var chicagoGardens = {
   districtSQL: '',
   communityareaSQL: '',
   resultsNumber: '',
-  cartoFields: 'cuamp_id, the_geom, the_geom_webmercator, growing_site_name, is_growing_site_locked, evidence_of_support_organizations, if_it_s_a_community_garden_is_it_collective_or_allotment, choose_growing_site_types, water, compost_system, structures_and_features, season_extension_techniques, animals, address, food_producing, community_garden, is_growing_site_dormant, latitude, longitude, ownership, other_support_organization, growing_site_website, facebook, is_growing_site_fenced, description, public_contact_info, growing_site_image, municipalities',
+  cartoFields: 'cuamp_id, the_geom, the_geom_webmercator, growing_site_name, is_growing_site_locked_, evidence_of_support_organizations_, if_it_s_a_community_garden_is_it_collective_or_allotment_, choose_growing_site_types, water, compost_system, structures_and_features, season_extension_techniques, animals, address, food_producing, community_garden, is_growing_site_dormant_, latitude, longitude, ownership, other_support_organization, growing_site_website, facebook, is_growing_site_fenced_, description, public_contact_info, growing_site_image, municipalities',
 
   // Create geocoder object to access Google Maps API. Add underscore to insure variable safety.
   _geocoder: new google.maps.Geocoder(),
@@ -202,11 +202,11 @@ var chicagoGardens = {
     }
 
     if ($('#search-locked').is(':checked')) {
-      chicagoGardens.whereClause += " AND gardens.is_growing_site_locked = True"
+      chicagoGardens.whereClause += " AND gardens.is_growing_site_locked_ = True"
     }
 
     if ($('#search-dormant').is(':checked')) {
-      chicagoGardens.whereClause += " AND gardens.is_growing_site_dormant = True"
+      chicagoGardens.whereClause += " AND gardens.is_growing_site_dormant_ = True"
     }
 
     var location = gardenMap.locationScope;
