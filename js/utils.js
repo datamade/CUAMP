@@ -1,5 +1,5 @@
 // Used in chicago_gardens.js
-var mainSelect = 'SELECT gardens.cuamp_id, gardens.the_geom, gardens.the_geom_webmercator, gardens.growing_site_name, gardens.is_growing_site_locked_, gardens.evidence_of_support_organizations_, gardens.if_it_s_a_community_garden_is_it_collective_or_allotment_, gardens.choose_growing_site_types, gardens.water, gardens.compost_system, gardens.structures_and_features, gardens.season_extension_techniques, gardens.animals, gardens.address, gardens.food_producing, gardens.community_garden, gardens.is_growing_site_dormant_, gardens.latitude, gardens.longitude, gardens.ownership, gardens.other_support_organization, gardens.growing_site_website, gardens.facebook, gardens.is_growing_site_fenced_, gardens.description, gardens.public_contact_info, gardens.growing_site_image, gardens.municipalities ';
+var mainSelect = 'SELECT gardens.cuamp_id, gardens.the_geom, gardens.the_geom_webmercator, gardens.growing_site_name, gardens.is_growing_site_dormant, gardens.evidence_of_support_organizations, gardens.if_it_s_a_community_garden_is_it_collective_or_allotment, gardens.choose_growing_site_types, gardens.water, gardens.compost_system, gardens.structures_and_features, gardens.season_extension_techniques, gardens.animals, gardens.address, gardens.food_producing, gardens.community_garden, gardens.is_growing_site_locked, gardens.latitude, gardens.longitude, gardens.ownership, gardens.other_support_organization, gardens.growing_site_website, gardens.facebook, gardens.is_growing_site_fenced, gardens.description, gardens.public_contact_info, gardens.growing_site_image, gardens.municipalities ';
 
 var capitalizeConversion = function capitalizeConversion(str) {
   var lower = str.toLowerCase();
@@ -42,7 +42,7 @@ var convertBoolean =  function convertBoolean(text) {
 };
 
 var modalPop = function modalPop(data) {
-    locationSQL = 'SELECT wards.ward, community_areas.community, districts.district_n ' + 'FROM cuamp_master_allgardens as gardens, boundaries_for_wards_2015 as wards, boundaries_community_areas_2017 as community_areas, ccgisdata_commissioner_districts_2017 as districts ' + 'WHERE ST_Intersects(gardens.the_geom, wards.the_geom) AND ST_Intersects(gardens.the_geom, community_areas.the_geom)  AND ST_Intersects(gardens.the_geom, districts.the_geom) AND gardens.cuamp_id=' + data.cuamp_id
+    locationSQL = 'SELECT wards.ward, community_areas.community, districts.district_n ' + 'FROM cuamp_master_allgardens as gardens, chicago_wards_2015 as wards, chicago_community_areas as community_areas, ccgisdata_commissioner_districts_2017 as districts ' + 'WHERE ST_Intersects(gardens.the_geom, wards.the_geom) AND ST_Intersects(gardens.the_geom, community_areas.the_geom)  AND ST_Intersects(gardens.the_geom, districts.the_geom) AND gardens.cuamp_id=' + data.cuamp_id
     var sql = new cartodb.SQL({  user: chicagoGardens.cartoUserName  });
 
     sql.execute(locationSQL).done(function (locationData) {
@@ -70,15 +70,15 @@ var modalPop = function modalPop(data) {
       var compost = data.compost_system
       var structures = data.structures_and_features
       var animals = data.animals
-      var fence = data.is_growing_site_fenced_
+      var fence = data.is_growing_site_fenced
       var production_list = data.food_producing
       // Information
       var community_list = data.community_garden
-      var comm_garden_type = data.if_it_s_a_community_garden_is_it_collective_or_allotment_
+      var comm_garden_type = data.if_it_s_a_community_garden_is_it_collective_or_allotment
       var types = data.choose_growing_site_types
-      var locked = data.is_growing_site_locked_
+      var locked = data.is_growing_site_locked
       var season_extension = data.season_extension_techniques
-      var dormant = data.is_growing_site_dormant_
+      var dormant = data.is_growing_site_dormant
       
       // Find all instances of "yes."
       if (types != "") {
